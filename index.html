@@ -173,6 +173,26 @@ input[type=file] { display:none; }
 }
 .toast.show { transform:translateY(0); opacity:1; }
 
+/* Filename modal */
+.filename-modal {
+  display:none; position:fixed; inset:0; z-index:260; background:#000000aa;
+  align-items:center; justify-content:center; padding:20px;
+}
+.filename-modal.show { display:flex; }
+.filename-dialog {
+  width:min(420px, 100%); background:#161b22; border:1px solid #30363d;
+  border-radius:10px; padding:18px; box-shadow:0 20px 60px #00000066;
+}
+.filename-dialog h2 { font-size:1rem; margin-bottom:12px; color:#fff; }
+.filename-dialog label { display:block; color:#8b949e; font-size:.8rem; margin-bottom:6px; }
+.filename-input {
+  width:100%; min-height:42px; background:#0d1117; border:1px solid #30363d;
+  border-radius:8px; color:#e1e4e8; padding:9px 11px; font-size:.95rem;
+}
+.filename-input:focus { outline:none; border-color:#58a6ff; box-shadow:0 0 0 2px #58a6ff33; }
+.filename-actions { display:flex; gap:10px; justify-content:flex-end; margin-top:14px; }
+.filename-actions .btn { justify-content:center; }
+
 /* Copyright */
 .copyright {
   text-align:center; color:#484f58; font-size:.7rem; padding:16px 0 40px; letter-spacing:.3px;
@@ -197,6 +217,9 @@ input[type=file] { display:none; }
   .page-controls { overflow-x:auto; flex-wrap:nowrap; padding-bottom:2px; }
   .page-range-input { min-width:140px; }
   .status-bar { align-items:flex-start; flex-direction:column; gap:3px; padding-left:12px; padding-right:12px; }
+  .filename-dialog { padding:16px; }
+  .filename-actions { flex-direction:column-reverse; }
+  .filename-actions .btn { width:100%; }
 }
 </style>
 </head>
@@ -249,6 +272,18 @@ input[type=file] { display:none; }
   <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
 </div>
 
+<div class="filename-modal" id="filenameModal" aria-hidden="true">
+  <form class="filename-dialog" onsubmit="event.preventDefault();confirmFileName();">
+    <h2>저장할 파일명</h2>
+    <label for="outputFileNameInput">PDF 파일명</label>
+    <input class="filename-input" id="outputFileNameInput" type="text" inputmode="text" autocomplete="off" autocapitalize="off" spellcheck="false">
+    <div class="filename-actions">
+      <button class="btn" type="button" onclick="cancelFileName()">취소</button>
+      <button class="btn primary" type="submit">저장</button>
+    </div>
+  </form>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -260,6 +295,7 @@ const state = {
 
 let dragSrcCardIdx = null;
 let pageDragSrc = null; // { pdfIdx, pageIdx }
+let filenameResolver = null;
 
 // === Drop Zone ===
 const dropZone = document.getElementById('dropZone');
@@ -674,6 +710,9 @@ async function mergePDFs() {
   const totalSelected = state.pdfs.reduce((s, p) => s + p.selectedPages.size, 0);
   if (!totalSelected) { showToast('선택된 페이지가 없습니다', '#f85149'); return; }
 
+  const downloadName = await requestOutputFileName(getSuggestedOutputName());
+  if (!downloadName) return;
+
   showOverlay('PDF 합치는 중...');
   try {
     const merged = await PDFLib.PDFDocument.create();
@@ -703,13 +742,7 @@ async function mergePDFs() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-
-    // Generate filename
-    if (state.pdfs.length === 1) {
-      a.download = makeOutputName(state.pdfs[0].name);
-    } else {
-      a.download = 'merged_' + new Date().toISOString().slice(0,10) + '.pdf';
-    }
+    a.download = downloadName;
     a.click();
     URL.revokeObjectURL(url);
 
@@ -822,6 +855,49 @@ function makeOutputName(name) {
   const dot = name.lastIndexOf('.');
   if (dot <= 0) return `${name}_edited.pdf`;
   return `${name.slice(0, dot)}_edited.pdf`;
+}
+
+function getSuggestedOutputName() {
+  if (state.pdfs.length === 1) return makeOutputName(state.pdfs[0].name);
+  return 'merged_' + new Date().toISOString().slice(0,10) + '.pdf';
+}
+
+function normalizeOutputFileName(name, fallback) {
+  const cleaned = (name || '').trim().replace(/[\\/:*?"<>|]+/g, '-');
+  const base = cleaned || fallback || getSuggestedOutputName();
+  return /\.pdf$/i.test(base) ? base : `${base}.pdf`;
+}
+
+function requestOutputFileName(defaultName) {
+  const modal = document.getElementById('filenameModal');
+  const input = document.getElementById('outputFileNameInput');
+  input.value = defaultName;
+  modal.classList.add('show');
+  modal.setAttribute('aria-hidden', 'false');
+
+  setTimeout(() => {
+    input.focus();
+    input.select();
+  }, 0);
+
+  return new Promise(resolve => {
+    filenameResolver = value => {
+      filenameResolver = null;
+      modal.classList.remove('show');
+      modal.setAttribute('aria-hidden', 'true');
+      resolve(value);
+    };
+  });
+}
+
+function confirmFileName() {
+  if (!filenameResolver) return;
+  const input = document.getElementById('outputFileNameInput');
+  filenameResolver(normalizeOutputFileName(input.value, getSuggestedOutputName()));
+}
+
+function cancelFileName() {
+  if (filenameResolver) filenameResolver(null);
 }
 
 function updateStatus() {
