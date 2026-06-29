@@ -12,6 +12,7 @@ User browser
 ```
 
 The frontend must remain a local-first file processor. PDF, image, text, and video contents should not be uploaded to the analytics backend.
+Remote analytics must stay opt-in. The frontend should only send events after consent, and `/api/events` should reject payloads without the consent marker.
 
 ## Recommended Domain Setup
 
@@ -91,6 +92,8 @@ Do not loosen these without a specific reason:
 - No raw file upload endpoint for PDFs, images, text, or videos.
 - No file names or file contents in analytics.
 - No browser session IDs in analytics.
+- No remote analytics before browser-side consent.
+- Worker rejects event writes without an explicit analytics consent marker.
 - No `ignoreEncryption` PDF loading.
 - Keep the risky PDF active-content marker guard enabled.
 - No SVG input for PDF merging.

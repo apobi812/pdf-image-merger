@@ -21,6 +21,7 @@
   const STORE_KEY = 'toolkitStats.v1';
   const ADMIN_KEY = 'toolkitAdmin.v1';
   const ADMIN_TOKEN_KEY = 'toolkitAdminToken.v1';
+  const CONSENT_KEY = 'toolkitConsent.v1';
   const ADMIN_PBKDF2_ITERATIONS = 210_000;
   const ALLOWED_IMAGE_TYPES = new Set(['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/bmp']);
   const ALLOWED_VIDEO_TYPES = new Set(['video/mp4', 'video/quicktime', 'video/webm', 'video/ogg', 'video/x-m4v']);
@@ -106,6 +107,8 @@
       adminTitle: '관리 페이지', adminDesc: '이 정적 버전은 개인정보를 수집하지 않는 로컬 집계만 제공합니다. 서버형 분석은 Worker/D1 연결이 필요합니다.',
       fileCount: '파일', pageUnit: '페이지', copyStats: '통계 복사', noKeywords: '아직 주요 단어가 없습니다.',
       statsCopied: '통계를 복사했습니다.', readingSpeed: '읽기 속도', minutesShort: '분',
+      analyticsConsentTitle: '분석 사용 동의', analyticsConsentDesc: '접속자 수와 기능 사용 횟수를 집계해 도구를 개선합니다. 파일명과 파일 내용은 전송하지 않습니다.',
+      acceptAnalytics: '동의', declineAnalytics: '거절', analyticsEnabled: '분석 동의가 저장되었습니다.', analyticsDisabled: '원격 분석을 사용하지 않습니다.',
       securityGuardrails: '보안 보호 장치', guardClientSide: '브라우저 안에서만 처리', guardFileValidation: '파일 형식과 크기 검증', guardNoFileAnalytics: '파일 내용 분석 저장 안 함',
       creatingPdf: 'PDF를 만드는 중...', pdfCreated: 'PDF가 생성되었습니다.', pdfCreationFailed: 'PDF 생성에 실패했습니다.',
       encryptedPdfBlocked: '암호화된 PDF는 안전을 위해 처리하지 않습니다.', unsafePdfBlocked: '자동 실행, 스크립트, 첨부파일 등 위험 요소가 있는 PDF는 처리하지 않습니다.', unsupportedFile: '지원하지 않거나 너무 큰 파일입니다.', fileReadFailed: '파일을 읽을 수 없습니다.',
@@ -132,6 +135,8 @@
     adminTitle: 'Admin', adminDesc: 'This static version provides privacy-safe local aggregates only. Server analytics requires Worker/D1 integration.',
     fileCount: 'files', pageUnit: 'page', copyStats: 'Copy stats', noKeywords: 'No keywords yet.',
     statsCopied: 'Stats copied.', readingSpeed: 'Reading speed', minutesShort: 'min',
+    analyticsConsentTitle: 'Analytics consent', analyticsConsentDesc: 'Help improve the tools with aggregate visits and feature counts. File names and file contents are never sent.',
+    acceptAnalytics: 'Allow', declineAnalytics: 'Decline', analyticsEnabled: 'Analytics consent saved.', analyticsDisabled: 'Remote analytics will stay off.',
     securityGuardrails: 'Security guardrails', guardClientSide: 'Client-side processing only', guardFileValidation: 'File type and size validation', guardNoFileAnalytics: 'No file content analytics',
     creatingPdf: 'Creating PDF...', pdfCreated: 'PDF created.', pdfCreationFailed: 'PDF creation failed.',
     encryptedPdfBlocked: 'Encrypted PDFs are blocked for safety.', unsafePdfBlocked: 'PDFs with scripts, auto actions, attachments, or rich media are blocked.', unsupportedFile: 'Unsupported or too large.', fileReadFailed: 'Could not read file.',
@@ -470,6 +475,8 @@
       adminTitle: '管理ページ', adminDesc: 'この静的版ではプライバシーに配慮したローカル集計のみ提供します。サーバー分析にはWorker/D1接続が必要です。',
       fileCount: 'ファイル', pageUnit: 'ページ', copyStats: '統計をコピー', noKeywords: '主要単語はまだありません。',
       statsCopied: '統計をコピーしました。', readingSpeed: '読書速度', minutesShort: '分',
+      analyticsConsentTitle: '分析への同意', analyticsConsentDesc: '訪問数と機能利用回数を集計して改善に役立てます。ファイル名や内容は送信しません。',
+      acceptAnalytics: '同意', declineAnalytics: '拒否', analyticsEnabled: '分析への同意を保存しました。', analyticsDisabled: 'リモート分析は使用しません。',
       securityGuardrails: 'セキュリティ保護', guardClientSide: 'ブラウザ内のみで処理', guardFileValidation: 'ファイル形式とサイズを検証', guardNoFileAnalytics: 'ファイル内容を分析保存しません',
       creatingPdf: 'PDFを作成中...', pdfCreated: 'PDFを作成しました。', pdfCreationFailed: 'PDF作成に失敗しました。',
       encryptedPdfBlocked: '暗号化PDFは安全のため処理しません。', unsafePdfBlocked: 'スクリプト、自動実行、添付ファイル、リッチメディアを含むPDFは処理しません。', unsupportedFile: '未対応または大きすぎるファイルです。', fileReadFailed: 'ファイルを読み込めません。',
@@ -486,6 +493,8 @@
       adminTitle: '管理页面', adminDesc: '此静态版本仅提供注重隐私的本地统计。服务器分析需要连接 Worker/D1。',
       fileCount: '个文件', pageUnit: '页', copyStats: '复制统计', noKeywords: '暂无关键词。',
       statsCopied: '统计已复制。', readingSpeed: '阅读速度', minutesShort: '分钟',
+      analyticsConsentTitle: '分析同意', analyticsConsentDesc: '通过汇总访问量和功能使用次数改进工具。不会发送文件名或文件内容。',
+      acceptAnalytics: '同意', declineAnalytics: '拒绝', analyticsEnabled: '已保存分析同意。', analyticsDisabled: '远程分析将保持关闭。',
       securityGuardrails: '安全防护', guardClientSide: '仅在浏览器内处理', guardFileValidation: '验证文件类型和大小', guardNoFileAnalytics: '不保存文件内容分析',
       creatingPdf: '正在创建 PDF...', pdfCreated: 'PDF 已创建。', pdfCreationFailed: 'PDF 创建失败。',
       encryptedPdfBlocked: '出于安全原因，不处理加密 PDF。', unsafePdfBlocked: '包含脚本、自动操作、附件或富媒体的 PDF 会被阻止。', unsupportedFile: '文件不支持或过大。', fileReadFailed: '无法读取文件。',
@@ -502,6 +511,8 @@
       adminTitle: 'Administración', adminDesc: 'Esta versión estática solo ofrece métricas locales con privacidad. La analítica de servidor requiere Worker/D1.',
       fileCount: 'archivos', pageUnit: 'página', copyStats: 'Copiar estadísticas', noKeywords: 'Aún no hay palabras clave.',
       statsCopied: 'Estadísticas copiadas.', readingSpeed: 'Velocidad de lectura', minutesShort: 'min',
+      analyticsConsentTitle: 'Consentimiento de analítica', analyticsConsentDesc: 'Ayuda a mejorar las herramientas con visitas y uso de funciones agregados. No se envían nombres ni contenidos de archivos.',
+      acceptAnalytics: 'Permitir', declineAnalytics: 'Rechazar', analyticsEnabled: 'Consentimiento de analítica guardado.', analyticsDisabled: 'La analítica remota seguirá desactivada.',
       securityGuardrails: 'Protecciones de seguridad', guardClientSide: 'Procesamiento solo en el navegador', guardFileValidation: 'Validación de tipo y tamaño', guardNoFileAnalytics: 'Sin análisis de contenido de archivos',
       creatingPdf: 'Creando PDF...', pdfCreated: 'PDF creado.', pdfCreationFailed: 'No se pudo crear el PDF.',
       encryptedPdfBlocked: 'Los PDF cifrados se bloquean por seguridad.', unsafePdfBlocked: 'Se bloquean los PDF con scripts, acciones automáticas, adjuntos o medios enriquecidos.', unsupportedFile: 'Archivo no compatible o demasiado grande.', fileReadFailed: 'No se pudo leer el archivo.',
@@ -518,6 +529,8 @@
       adminTitle: 'Administration', adminDesc: 'Cette version statique fournit uniquement des métriques locales respectueuses de la vie privée. L’analytique serveur nécessite Worker/D1.',
       fileCount: 'fichiers', pageUnit: 'page', copyStats: 'Copier les statistiques', noKeywords: 'Aucun mot clé pour le moment.',
       statsCopied: 'Statistiques copiées.', readingSpeed: 'Vitesse de lecture', minutesShort: 'min',
+      analyticsConsentTitle: 'Consentement aux statistiques', analyticsConsentDesc: 'Aidez à améliorer les outils avec des visites et usages agrégés. Les noms et contenus de fichiers ne sont pas envoyés.',
+      acceptAnalytics: 'Accepter', declineAnalytics: 'Refuser', analyticsEnabled: 'Consentement aux statistiques enregistré.', analyticsDisabled: 'Les statistiques distantes restent désactivées.',
       securityGuardrails: 'Protections de sécurité', guardClientSide: 'Traitement uniquement dans le navigateur', guardFileValidation: 'Validation du type et de la taille', guardNoFileAnalytics: 'Aucune analyse du contenu des fichiers',
       creatingPdf: 'Création du PDF...', pdfCreated: 'PDF créé.', pdfCreationFailed: 'Échec de la création du PDF.',
       encryptedPdfBlocked: 'Les PDF chiffrés sont bloqués par sécurité.', unsafePdfBlocked: 'Les PDF avec scripts, actions automatiques, pièces jointes ou médias enrichis sont bloqués.', unsupportedFile: 'Fichier non compatible ou trop volumineux.', fileReadFailed: 'Impossible de lire le fichier.',
@@ -534,6 +547,8 @@
       adminTitle: 'Administration', adminDesc: 'Diese statische Version bietet nur datenschutzfreundliche lokale Auswertungen. Server-Analytik benötigt Worker/D1.',
       fileCount: 'Dateien', pageUnit: 'Seite', copyStats: 'Statistik kopieren', noKeywords: 'Noch keine Keywords.',
       statsCopied: 'Statistik kopiert.', readingSpeed: 'Lesegeschwindigkeit', minutesShort: 'Min.',
+      analyticsConsentTitle: 'Analytics-Einwilligung', analyticsConsentDesc: 'Helfen Sie, die Tools mit aggregierten Besuchen und Funktionsnutzung zu verbessern. Dateinamen und Inhalte werden nicht gesendet.',
+      acceptAnalytics: 'Erlauben', declineAnalytics: 'Ablehnen', analyticsEnabled: 'Analytics-Einwilligung gespeichert.', analyticsDisabled: 'Remote-Analytics bleibt deaktiviert.',
       securityGuardrails: 'Sicherheitsregeln', guardClientSide: 'Nur im Browser verarbeiten', guardFileValidation: 'Dateityp und Größe prüfen', guardNoFileAnalytics: 'Keine Inhaltsanalyse speichern',
       creatingPdf: 'PDF wird erstellt...', pdfCreated: 'PDF erstellt.', pdfCreationFailed: 'PDF-Erstellung fehlgeschlagen.',
       encryptedPdfBlocked: 'Verschlüsselte PDFs werden aus Sicherheitsgründen blockiert.', unsafePdfBlocked: 'PDFs mit Skripten, Auto-Aktionen, Anhängen oder Rich Media werden blockiert.', unsupportedFile: 'Nicht unterstützte oder zu große Datei.', fileReadFailed: 'Datei konnte nicht gelesen werden.',
@@ -550,6 +565,8 @@
       adminTitle: 'Administração', adminDesc: 'Esta versão estática fornece apenas métricas locais com privacidade. A análise no servidor exige Worker/D1.',
       fileCount: 'arquivos', pageUnit: 'página', copyStats: 'Copiar estatísticas', noKeywords: 'Ainda não há palavras principais.',
       statsCopied: 'Estatísticas copiadas.', readingSpeed: 'Velocidade de leitura', minutesShort: 'min',
+      analyticsConsentTitle: 'Consentimento de análise', analyticsConsentDesc: 'Ajude a melhorar as ferramentas com visitas e uso de recursos agregados. Nomes e conteúdos de arquivos não são enviados.',
+      acceptAnalytics: 'Permitir', declineAnalytics: 'Recusar', analyticsEnabled: 'Consentimento de análise salvo.', analyticsDisabled: 'A análise remota ficará desativada.',
       securityGuardrails: 'Proteções de segurança', guardClientSide: 'Processamento apenas no navegador', guardFileValidation: 'Validação de tipo e tamanho', guardNoFileAnalytics: 'Sem análise do conteúdo dos arquivos',
       creatingPdf: 'Criando PDF...', pdfCreated: 'PDF criado.', pdfCreationFailed: 'Falha ao criar PDF.',
       encryptedPdfBlocked: 'PDFs criptografados são bloqueados por segurança.', unsafePdfBlocked: 'PDFs com scripts, ações automáticas, anexos ou mídia avançada são bloqueados.', unsupportedFile: 'Arquivo não compatível ou muito grande.', fileReadFailed: 'Não foi possível ler o arquivo.',
@@ -566,6 +583,8 @@
       adminTitle: 'एडमिन पेज', adminDesc: 'यह स्थिर संस्करण गोपनीयता-सुरक्षित स्थानीय आँकड़े ही देता है। सर्वर विश्लेषण के लिए Worker/D1 कनेक्शन चाहिए।',
       fileCount: 'फ़ाइलें', pageUnit: 'पेज', copyStats: 'आँकड़े कॉपी करें', noKeywords: 'अभी कोई मुख्य शब्द नहीं।',
       statsCopied: 'आँकड़े कॉपी हो गए।', readingSpeed: 'पढ़ने की गति', minutesShort: 'मिनट',
+      analyticsConsentTitle: 'विश्लेषण सहमति', analyticsConsentDesc: 'कुल विज़िट और फ़ीचर उपयोग से टूल सुधारने में मदद करें। फ़ाइल नाम और सामग्री नहीं भेजी जाती।',
+      acceptAnalytics: 'अनुमति दें', declineAnalytics: 'अस्वीकार', analyticsEnabled: 'विश्लेषण सहमति सेव हो गई।', analyticsDisabled: 'रिमोट विश्लेषण बंद रहेगा।',
       securityGuardrails: 'सुरक्षा नियंत्रण', guardClientSide: 'केवल ब्राउज़र में प्रोसेसिंग', guardFileValidation: 'फ़ाइल प्रकार और आकार जाँच', guardNoFileAnalytics: 'फ़ाइल सामग्री विश्लेषण सेव नहीं',
       creatingPdf: 'PDF बनाया जा रहा है...', pdfCreated: 'PDF बन गया।', pdfCreationFailed: 'PDF बनाने में विफल।',
       encryptedPdfBlocked: 'सुरक्षा के लिए एन्क्रिप्टेड PDF रोके गए हैं।', unsafePdfBlocked: 'स्क्रिप्ट, ऑटो-एक्शन, अटैचमेंट या रिच मीडिया वाले PDF रोके जाते हैं।', unsupportedFile: 'फ़ाइल समर्थित नहीं या बहुत बड़ी है।', fileReadFailed: 'फ़ाइल पढ़ी नहीं जा सकी।',
@@ -582,6 +601,8 @@
       adminTitle: 'صفحة الإدارة', adminDesc: 'توفر هذه النسخة الثابتة إحصاءات محلية تحافظ على الخصوصية فقط. يتطلب تحليل الخادم ربط Worker/D1.',
       fileCount: 'ملفات', pageUnit: 'صفحة', copyStats: 'نسخ الإحصاءات', noKeywords: 'لا توجد كلمات مهمة بعد.',
       statsCopied: 'تم نسخ الإحصاءات.', readingSpeed: 'سرعة القراءة', minutesShort: 'دقيقة',
+      analyticsConsentTitle: 'الموافقة على التحليلات', analyticsConsentDesc: 'ساعد في تحسين الأدوات عبر زيارات واستخدام مجمعين. لا يتم إرسال أسماء الملفات أو محتواها.',
+      acceptAnalytics: 'موافقة', declineAnalytics: 'رفض', analyticsEnabled: 'تم حفظ الموافقة على التحليلات.', analyticsDisabled: 'ستبقى التحليلات عن بعد متوقفة.',
       securityGuardrails: 'ضوابط الأمان', guardClientSide: 'المعالجة داخل المتصفح فقط', guardFileValidation: 'التحقق من النوع والحجم', guardNoFileAnalytics: 'لا يتم حفظ تحليل محتوى الملفات',
       creatingPdf: 'جار إنشاء PDF...', pdfCreated: 'تم إنشاء PDF.', pdfCreationFailed: 'فشل إنشاء PDF.',
       encryptedPdfBlocked: 'يتم حظر ملفات PDF المشفرة لأسباب أمنية.', unsafePdfBlocked: 'يتم حظر ملفات PDF التي تحتوي على نصوص أو إجراءات تلقائية أو مرفقات أو وسائط تفاعلية.', unsupportedFile: 'الملف غير مدعوم أو كبير جداً.', fileReadFailed: 'تعذرت قراءة الملف.',
@@ -599,7 +620,8 @@
     video: { file: null, url: '', duration: 0, interval: 5, maxFrames: 12, frames: [] },
     homeCategory: 'all',
     filenameResolver: null,
-    adminToken: sessionStorage.getItem(ADMIN_TOKEN_KEY) || ''
+    adminToken: sessionStorage.getItem(ADMIN_TOKEN_KEY) || '',
+    analyticsConsent: localStorage.getItem(CONSENT_KEY) || ''
   };
 
   const $ = selector => document.querySelector(selector);
@@ -627,6 +649,10 @@
 
   function hasAnalyticsBackend() {
     return Boolean(API_BASE_URL);
+  }
+
+  function hasAnalyticsConsent() {
+    return state.analyticsConsent === 'granted';
   }
 
   function apiUrl(path) {
@@ -727,7 +753,9 @@
 
   function sendAnalyticsEvent(eventName, tool) {
     if (!hasAnalyticsBackend()) return;
+    if (!hasAnalyticsConsent()) return;
     const payload = JSON.stringify({
+      consent: 'analytics',
       event: eventName,
       tool,
       route: state.route,
@@ -798,6 +826,58 @@
     else if (state.route === 'admin') renderAdminPage();
     else if (['about', 'privacy', 'terms', 'security'].includes(state.route)) renderLegalPage(state.route);
     else renderPdfTool();
+    renderConsentBanner();
+  }
+
+  function renderConsentBanner() {
+    const existing = $('#consentBanner');
+    if (!hasAnalyticsBackend() || state.analyticsConsent) {
+      existing?.remove();
+      return;
+    }
+    const banner = existing || document.createElement('section');
+    banner.id = 'consentBanner';
+    banner.className = 'consent-banner';
+    banner.setAttribute('role', 'region');
+    banner.setAttribute('aria-label', t('analyticsConsentTitle'));
+    banner.innerHTML = `
+      <div>
+        <strong>${escapeHtml(t('analyticsConsentTitle'))}</strong>
+        <p>${escapeHtml(t('analyticsConsentDesc'))}</p>
+      </div>
+      <div class="consent-actions">
+        <button class="button ghost" type="button" data-consent-choice="denied">${escapeHtml(t('declineAnalytics'))}</button>
+        <button class="button primary" type="button" data-consent-choice="granted">${escapeHtml(t('acceptAnalytics'))}</button>
+      </div>
+    `;
+    if (!existing) document.body.append(banner);
+  }
+
+  function setAnalyticsConsent(value) {
+    state.analyticsConsent = value === 'granted' ? 'granted' : 'denied';
+    localStorage.setItem(CONSENT_KEY, state.analyticsConsent);
+    renderConsentBanner();
+    showToast(state.analyticsConsent === 'granted' ? t('analyticsEnabled') : t('analyticsDisabled'));
+    if (state.analyticsConsent === 'granted') track('analytics_consent_granted', 'system');
+  }
+
+  function privacyControlsHtml() {
+    if (!hasAnalyticsBackend()) return '';
+    const status = state.analyticsConsent === 'granted'
+      ? t('analyticsEnabled')
+      : state.analyticsConsent === 'denied'
+        ? t('analyticsDisabled')
+        : t('analyticsConsentDesc');
+    return `
+      <div class="setting-group privacy-control">
+        <div class="setting-label">${escapeHtml(t('analyticsConsentTitle'))}</div>
+        <p class="file-meta">${escapeHtml(status)}</p>
+        <div class="button-row">
+          <button class="button ghost" type="button" data-consent-choice="denied">${escapeHtml(t('declineAnalytics'))}</button>
+          <button class="button primary" type="button" data-consent-choice="granted">${escapeHtml(t('acceptAnalytics'))}</button>
+        </div>
+      </div>
+    `;
   }
 
   function renderHomePage() {
@@ -1342,7 +1422,7 @@
       ${content.sections.map(section => `<section class="legal-section"><h3>${escapeHtml(section.title)}</h3><ul>${section.items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul></section>`).join('')}
       <section class="legal-section"><h3>문의 및 업데이트</h3><ul><li>문의: apobi812@gmail.com</li><li>마지막 업데이트: 2026-06-29</li></ul></section>
     </div></section>`;
-    settingsPanel.innerHTML = `<h2>${t('settings')}</h2><div class="rail-ad"><span>${t('adLabel')}</span><small>300x250</small></div>`;
+    settingsPanel.innerHTML = `<h2>${t('settings')}</h2>${privacyControlsHtml()}<div class="rail-ad"><span>${t('adLabel')}</span><small>300x250</small></div>`;
   }
 
   function legalContent() {
@@ -1352,7 +1432,7 @@
         description: '툴킷은 PDF 관리, 글자수 세기, 동영상 프레임 추출을 제공하는 브라우저 기반 도구 모음입니다.',
         sections: [
           { title: '서비스 목적', items: ['반복적인 문서·텍스트·미디어 작업을 설치 없이 빠르게 처리할 수 있도록 돕습니다.', '현재 제공 기능은 PDF와 이미지 병합, 글자수·단어수 계산, 동영상 프레임 추출입니다.', '홈 화면은 약 20개 내외의 도구를 담을 수 있는 구조로 설계되어 향후 기능 확장이 가능합니다.'] },
-          { title: '처리 방식', items: ['가능한 작업은 사용자의 브라우저 안에서 실행되며 원본 파일을 서버로 업로드하지 않습니다.', '서버형 분석을 연결하더라도 파일명, 파일 내용, 원본 문서, 원본 동영상은 수집하지 않습니다.', '광고 영역은 운영비를 충당하기 위한 위치이며 실제 광고 코드는 AdSense 승인 이후 별도로 연결합니다.'] },
+          { title: '처리 방식', items: ['가능한 작업은 사용자의 브라우저 안에서 실행되며 원본 파일을 서버로 업로드하지 않습니다.', '서버형 분석을 연결하더라도 파일명, 파일 내용, 원본 문서, 원본 동영상은 수집하지 않습니다.', '원격 분석은 API 연결 후에도 사용자가 동의한 경우에만 전송됩니다.', '광고 영역은 운영비를 충당하기 위한 위치이며 실제 광고 코드는 AdSense 승인 이후 별도로 연결합니다.'] },
           { title: '운영 원칙', items: ['기능은 단순하고 명확한 작업 흐름을 우선합니다.', '보안상 위험한 파일 형식은 허용하지 않고, 처리 가능한 형식도 크기와 시그니처를 확인합니다.', '중요한 업무 문서는 결과물을 다운로드한 뒤 사용자가 직접 검수해야 합니다.'] }
         ]
       },
@@ -1362,7 +1442,7 @@
         sections: [
           { title: '수집하지 않는 정보', items: ['PDF, 이미지, 텍스트, 동영상 원본 파일은 서버로 업로드하지 않습니다.', '파일명, 파일 내용, 문서 안의 개인정보, 영상 프레임 내용은 분석 목적으로 저장하지 않습니다.', '기본 GitHub Pages 정적 배포 상태에서는 전체 사용자 분석 데이터베이스가 존재하지 않습니다.'] },
           { title: '브라우저 안에 저장되는 정보', items: ['언어 선택, 로컬 사용 횟수, 로컬 관리자 잠금 설정은 사용자의 브라우저 localStorage 또는 sessionStorage에 저장될 수 있습니다.', '이 정보는 같은 브라우저의 사용자 경험을 유지하기 위한 것이며, 정적 배포 상태에서는 운영자 서버로 전송되지 않습니다.', '사용자는 브라우저 사이트 데이터 삭제 기능으로 이 정보를 삭제할 수 있습니다.'] },
-          { title: '서버형 분석 연결 시 수집될 수 있는 정보', items: ['Cloudflare Worker + D1 백엔드를 연결하면 이벤트명, 도구명, 경로, 언어, 화면 크기, 브라우저 계열, Cloudflare 국가 코드, 일별 방문자 해시가 저장될 수 있습니다.', '방문자 해시는 원 IP를 저장하지 않고 일 단위로 회전하도록 설계되어 장기 추적을 줄입니다.', '수집 목적은 접속자 수, 기능 사용 횟수, 국가·언어별 사용 통계를 확인하고 서비스를 개선하기 위한 것입니다.'] },
+          { title: '서버형 분석 연결 시 수집될 수 있는 정보', items: ['Cloudflare Worker + D1 백엔드를 연결해도 원격 분석은 사용자가 동의한 뒤에만 전송됩니다.', '동의한 경우 이벤트명, 도구명, 경로, 언어, 화면 크기, 브라우저 계열, Cloudflare 국가 코드, 일별 방문자 해시가 저장될 수 있습니다.', '방문자 해시는 원 IP를 저장하지 않고 일 단위로 회전하도록 설계되어 장기 추적을 줄입니다.', '수집 목적은 접속자 수, 기능 사용 횟수, 국가·언어별 사용 통계를 확인하고 서비스를 개선하기 위한 것입니다.'] },
           { title: '광고와 쿠키', items: ['AdSense 등 광고를 연결하는 경우 광고 제공자가 쿠키 또는 유사 기술을 사용할 수 있습니다.', '광고와 쿠키 기반 분석을 실제로 활성화하기 전에는 별도의 고지와 필요한 동의 절차를 추가해야 합니다.', '광고 영역은 현재 자리만 마련되어 있으며, 승인 전에는 실제 광고 스크립트를 넣지 않습니다.'] },
           { title: '보관 기간과 권리', items: ['로컬 저장 정보는 사용자가 브라우저 데이터를 삭제할 때까지 남을 수 있습니다.', '서버형 집계 데이터의 보관 기간은 운영 정책에 따라 정하고, 법령 또는 보안상 필요한 경우를 제외하고 불필요한 장기 보관을 피합니다.', '개인정보 관련 문의, 삭제 요청, 오류 정정 요청은 문의 이메일로 접수할 수 있습니다.'] }
         ]
@@ -1385,7 +1465,7 @@
           { title: '클라이언트 처리', items: ['PDF, 이미지, 텍스트, 동영상 처리는 가능한 한 브라우저 안에서 실행합니다.', '정적 배포 상태에서는 원본 파일을 받는 서버 업로드 엔드포인트가 없습니다.', '다운로드 결과물은 사용자의 브라우저에서 생성됩니다.'] },
           { title: '파일 입력 방어', items: ['PDF는 실제 PDF 시그니처를 확인한 뒤 처리합니다.', '암호화된 PDF와 JavaScript, 자동 실행, 첨부파일, 리치 미디어 같은 위험 구조가 보이는 PDF는 처리하지 않습니다.', '이미지는 PNG, JPG, WebP, GIF, BMP 등 허용 형식만 받고 SVG 같은 능동 콘텐츠 가능성이 있는 형식은 병합 대상에서 제외합니다.', '이미지는 디코딩 후 픽셀 수 제한을 적용해 과도한 메모리 사용을 줄입니다.', '동영상은 MP4, MOV, WebM, OGG 계열의 일반 브라우저 지원 형식으로 제한합니다.'] },
           { title: '브라우저 보안 정책', items: ['Content Security Policy를 적용해 외부 스크립트와 임의 네트워크 연결을 기본 차단합니다.', 'object-src를 차단하고, 지원 호스팅에서는 HTTP 보안 헤더로 frame-ancestors와 X-Frame-Options를 적용합니다.', 'GitHub Pages처럼 보안 헤더를 직접 적용하기 어려운 환경에서는 앱 시작 시 프레임 안 실행을 감지해 탈출하거나 화면을 숨깁니다.', '서비스워커는 앱 셸 캐시를 관리하되 설정 파일과 내비게이션은 새 버전을 우선 확인하도록 설계했습니다.'] },
-          { title: '관리자와 분석 보안', items: ['화면에서 관리자 링크를 노출하지 않고, 관리자는 직접 주소를 알고 접근하는 방식으로 분리합니다.', '정적 배포의 로컬 관리자 잠금은 운영 보안 경계가 아니며, 실제 운영용 관리는 Worker 백엔드의 서버 인증을 연결해야 합니다.', '서버형 분석은 파일명과 파일 내용을 저장하지 않고, 집계 통계와 일별 방문자 해시만 저장하도록 설계했습니다.'] },
+          { title: '관리자와 분석 보안', items: ['화면에서 관리자 링크를 노출하지 않고, 관리자는 직접 주소를 알고 접근하는 방식으로 분리합니다.', '정적 배포의 로컬 관리자 잠금은 운영 보안 경계가 아니며, 실제 운영용 관리는 Worker 백엔드의 서버 인증을 연결해야 합니다.', '서버형 분석은 사용자 동의가 있는 이벤트만 받으며, 파일명과 파일 내용을 저장하지 않고 집계 통계와 일별 방문자 해시만 저장하도록 설계했습니다.'] },
           { title: '남은 운영 과제', items: ['도메인 연결 후에는 HTTPS, 보안 헤더, 관리자 비밀번호 정책, 백업, 로그 보관 기간을 운영 정책으로 확정해야 합니다.', '광고와 쿠키 기반 분석을 붙이면 동의 배너와 개인정보 고지를 보강해야 합니다.', '법적 문서는 실제 운영 주체, 국가, 수익 귀속 구조에 맞춰 법무·세무 검토가 필요합니다.'] }
         ]
       }
@@ -1781,6 +1861,10 @@
       const button = e.target.closest('[data-page]');
       if (button) setRoute(button.dataset.page);
     });
+    document.addEventListener('click', e => {
+      const button = e.target.closest('[data-consent-choice]');
+      if (button) setAnalyticsConsent(button.dataset.consentChoice);
+    });
     $('#filenameForm').addEventListener('submit', e => {
       e.preventDefault();
       if (state.filenameResolver) state.filenameResolver(normalizeFileName($('#outputFileNameInput').value));
@@ -1801,7 +1885,7 @@
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js?v=20260629-fileguard', { updateViaCache: 'none' })
+      navigator.serviceWorker.register('./sw.js?v=20260629-consent2', { updateViaCache: 'none' })
         .then(registration => registration.update())
         .catch(error => console.warn('Service worker registration failed:', error));
     });

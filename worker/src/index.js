@@ -58,6 +58,8 @@ async function recordEvent(request, env, ctx) {
   assertJsonSize(request);
 
   const body = await readJson(request);
+  if (body.consent !== 'analytics') throw new HttpError(403, 'analytics_consent_required');
+
   const now = Date.now();
   const day = new Date(now).toISOString().slice(0, 10);
   const visitorHash = await visitorHashForRequest(request, env, day);
@@ -136,6 +138,7 @@ async function adminSummary(request, env) {
       rawIpStored: false,
       fileNamesStored: false,
       fileContentsStored: false,
+      analyticsConsentRequired: true,
       visitorHashRotation: 'daily'
     }
   });

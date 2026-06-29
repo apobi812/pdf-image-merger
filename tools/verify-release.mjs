@@ -44,17 +44,17 @@ for (const file of htmlFiles) {
   assert(!html.includes('frame-ancestors'), `${file}: frame-ancestors must be an HTTP header, not meta CSP`);
   assert(html.includes('object-src'), `${file}: CSP missing object-src`);
   assert(html.includes('mobile-web-app-capable'), `${file}: missing mobile web app meta`);
-  assert(html.includes('app.js?v=20260629-fileguard'), `${file}: stale app.js cache version`);
-  assert(html.includes('styles.css?v=20260629-fileguard'), `${file}: stale styles.css cache version`);
+  assert(html.includes('app.js?v=20260629-consent2'), `${file}: stale app.js cache version`);
+  assert(html.includes('styles.css?v=20260629-consent2'), `${file}: stale styles.css cache version`);
 }
 
 assert(includes('admin/index.html', 'noindex,nofollow'), 'admin page must be noindex,nofollow');
 assert(!includes('index.html', 'data-route="admin"'), 'public home must not link admin route');
 assert(!sw.includes('./admin/index.html'), 'service worker must not precache admin page');
-assert(sw.includes("const CACHE_NAME = 'toolkit-v18'"), 'service worker cache name not bumped');
+assert(sw.includes("const CACHE_NAME = 'toolkit-v20'"), 'service worker cache name not bumped');
 assert(sw.includes("const OFFLINE_URL = './offline.html'"), 'service worker missing offline fallback');
-assert(sw.includes("'./app.js?v=20260629-fileguard'"), 'service worker has stale app cache version');
-assert(app.includes("./sw.js?v=20260629-fileguard"), 'app registers a stale service worker cache version');
+assert(sw.includes("'./app.js?v=20260629-consent2'"), 'service worker has stale app cache version');
+assert(app.includes("./sw.js?v=20260629-consent2"), 'app registers a stale service worker cache version');
 assert(!sitemap.includes('/admin/'), 'sitemap must not include admin page');
 assert(existsSync(join(root, '.well-known/security.txt')), 'security.txt is missing');
 assert(existsSync(join(root, '_headers')), '_headers template is missing');
@@ -77,12 +77,19 @@ assert(app.includes('unsafePdfBlocked'), 'unsafe PDF warning message is missing'
 assert(app.includes('isExpectedFileRejection(error)'), 'expected file rejections should not be logged as console errors');
 assert(app.includes('hasAllowedVideoSignature'), 'video signature guard is missing');
 assert(app.includes('window.top !== window.self'), 'JavaScript frame guard is missing');
+assert(app.includes("const CONSENT_KEY = 'toolkitConsent.v1'"), 'analytics consent storage key is missing');
+assert(app.includes('hasAnalyticsConsent()'), 'analytics consent gate is missing');
+assert(app.includes("consent: 'analytics'"), 'analytics payload consent marker is missing');
+assert(app.includes('renderConsentBanner()'), 'analytics consent banner is missing');
+assert(app.includes('privacyControlsHtml()'), 'privacy page consent controls are missing');
 assert(!app.includes('sessionId'), 'frontend must not send sessionId to analytics');
 assert(!app.includes('toolkitSession'), 'frontend session storage key must not exist');
 assert(app.includes('pbkdf2-sha256'), 'local admin lock must use PBKDF2');
 assert(app.includes('ADMIN_PBKDF2_ITERATIONS = 210_000'), 'local admin PBKDF2 iterations changed or missing');
 
 assert(worker.includes('unsupported_media_type'), 'worker must reject non-JSON API writes');
+assert(worker.includes('analytics_consent_required'), 'worker must reject analytics writes without consent');
+assert(worker.includes("body.consent !== 'analytics'"), 'worker consent marker check is missing');
 assert(!worker.includes('session_id'), 'worker must not store session_id');
 assert(!schema.includes('session_id'), 'D1 schema must not include session_id');
 assert(config.includes("apiBaseUrl: ''"), 'default config must keep apiBaseUrl empty for static Pages');

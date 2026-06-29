@@ -17,6 +17,7 @@ This project is a static, client-side PWA. It is designed so user files are proc
 - Video files are checked against expected container headers before browser decoding
 - No file-name or file-content analytics
 - No browser session IDs are sent to the optional analytics backend
+- Remote analytics is sent only after browser-side consent, and the Worker rejects events without the explicit consent marker
 - Local-only admin dashboard with a browser passcode stored with PBKDF2-SHA-256
 - Admin UI is not linked from the public navigation; `/admin/` is direct-address only
 - Optional Cloudflare Worker + D1 backend for server-side admin auth and aggregate analytics
