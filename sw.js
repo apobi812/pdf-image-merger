@@ -1,4 +1,4 @@
-const CACHE_NAME = 'toolkit-v2';
+const CACHE_NAME = 'toolkit-v3';
 const APP_SHELL = [
   './',
   './index.html',
@@ -10,8 +10,8 @@ const APP_SHELL = [
   './terms/index.html',
   './security/index.html',
   './admin/index.html',
-  './styles.css',
-  './app.js',
+  './styles.css?v=20260629-routes',
+  './app.js?v=20260629-routes',
   './manifest.webmanifest',
   './robots.txt',
   './sitemap.xml',
@@ -46,10 +46,10 @@ self.addEventListener('fetch', event => {
       fetch(event.request)
         .then(response => {
           const copy = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put('./index.html', copy));
+          caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
           return response;
         })
-        .catch(() => caches.match('./index.html'))
+        .catch(() => caches.match(event.request).then(cached => cached || caches.match('./index.html')))
     );
     return;
   }
