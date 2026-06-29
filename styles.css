@@ -329,6 +329,17 @@ h1 { margin: 0; font-size: clamp(1.35rem, 2.6vw, 2.2rem); letter-spacing: 0; }
 .toast.error { background: #991b1b; }
 .toast.warn { background: #92400e; }
 
+.noscript-panel {
+  position: fixed;
+  inset: 16px;
+  z-index: 40;
+  background: #111827;
+  border: 1px solid #ef4444;
+  border-radius: var(--radius);
+  color: var(--text);
+  padding: 18px;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;

@@ -1,7 +1,15 @@
-const CACHE_NAME = 'toolkit-v1';
+const CACHE_NAME = 'toolkit-v2';
 const APP_SHELL = [
   './',
   './index.html',
+  './pdf/index.html',
+  './word-count/index.html',
+  './video-extractor/index.html',
+  './about/index.html',
+  './privacy/index.html',
+  './terms/index.html',
+  './security/index.html',
+  './admin/index.html',
   './styles.css',
   './app.js',
   './manifest.webmanifest',

@@ -11,6 +11,31 @@
   const MAX_FRAMES = 30;
   const STORE_KEY = 'toolkitStats.v1';
   const ADMIN_KEY = 'toolkitAdmin.v1';
+  const BASE_PATH = getBasePath();
+  const routeMap = {
+    '': 'pdf',
+    '/': 'pdf',
+    pdf: 'pdf',
+    'word-count': 'word-count',
+    word: 'word-count',
+    'video-extractor': 'video-extractor',
+    video: 'video-extractor',
+    admin: 'admin',
+    about: 'about',
+    privacy: 'privacy',
+    terms: 'terms',
+    security: 'security'
+  };
+  const routePaths = {
+    pdf: 'pdf/',
+    'word-count': 'word-count/',
+    'video-extractor': 'video-extractor/',
+    admin: 'admin/',
+    about: 'about/',
+    privacy: 'privacy/',
+    terms: 'terms/',
+    security: 'security/'
+  };
 
   const languages = [
     ['ko', '🇰🇷', '한국어'], ['en', '🇺🇸', 'English'], ['ja', '🇯🇵', '日本語'],
@@ -141,7 +166,7 @@
 
   const state = {
     lang: localStorage.getItem('toolkitLang') || 'ko',
-    route: 'pdf',
+    route: readRoute(),
     pdfItems: [],
     pdfOutputName: 'merged.pdf',
     wordText: '',
@@ -153,6 +178,31 @@
   const $ = selector => document.querySelector(selector);
   const workspace = $('#workspace');
   const settingsPanel = $('#settingsPanel');
+
+  function getBasePath() {
+    const marker = '/pdf-image-merger/';
+    if (location.pathname.includes(marker)) return marker;
+    return '/';
+  }
+
+  function readRoute() {
+    const hashRoute = location.hash.replace('#', '');
+    if (hashRoute) return routeMap[hashRoute] || 'pdf';
+    let path = location.pathname;
+    if (path.startsWith(BASE_PATH)) path = path.slice(BASE_PATH.length);
+    path = path.replace(/^\/+|\/+$/g, '');
+    return routeMap[path] || 'pdf';
+  }
+
+  function routeUrl(route) {
+    const path = routePaths[route] || routePaths.pdf;
+    return `${BASE_PATH}${path}`;
+  }
+
+  function absoluteRouteUrl(route) {
+    const path = routePaths[route] || routePaths.pdf;
+    return `https://apobi812.github.io/pdf-image-merger/${path}`;
+  }
 
   function t(key) {
     return (i18n[state.lang] && i18n[state.lang][key])
@@ -211,8 +261,9 @@
   }
 
   function setRoute(route) {
-    state.route = route || 'pdf';
-    location.hash = state.route;
+    state.route = routeMap[route] || 'pdf';
+    const nextUrl = routeUrl(state.route);
+    if (location.pathname !== nextUrl) history.pushState({ route: state.route }, '', nextUrl);
     render();
     track('route_open', state.route);
   }
@@ -233,6 +284,12 @@
   }
 
   function renderHeader(meta) {
+    const title = `${meta.title} - 툴킷`;
+    document.title = title;
+    const description = document.querySelector('meta[name="description"]');
+    const canonical = document.querySelector('link[rel="canonical"]');
+    if (description) description.setAttribute('content', meta.description);
+    if (canonical) canonical.setAttribute('href', absoluteRouteUrl(state.route));
     $('#toolEyebrow').textContent = meta.eyebrow;
     $('#toolTitle').textContent = meta.title;
     $('#toolDescription').textContent = meta.description;
@@ -241,8 +298,8 @@
 
   function render() {
     renderChrome();
-    if (state.route === 'word') renderWordTool();
-    else if (state.route === 'video') renderVideoTool();
+    if (state.route === 'word-count') renderWordTool();
+    else if (state.route === 'video-extractor') renderVideoTool();
     else if (state.route === 'admin') renderAdminPage();
     else if (['about', 'privacy', 'terms', 'security'].includes(state.route)) renderLegalPage(state.route);
     else renderPdfTool();
@@ -818,15 +875,14 @@
     $('#cancelFileName').addEventListener('click', () => {
       if (state.filenameResolver) state.filenameResolver(null);
     });
-    window.addEventListener('hashchange', () => {
-      const route = location.hash.replace('#', '') || 'pdf';
-      state.route = route;
+    window.addEventListener('popstate', () => {
+      state.route = readRoute();
       render();
     });
   }
 
   bindGlobalEvents();
-  state.route = location.hash.replace('#', '') || 'pdf';
+  state.route = readRoute();
   render();
   track('app_open', state.route);
 
