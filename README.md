@@ -48,6 +48,7 @@ window.TOOLKIT_CONFIG = {
 
 ```bash
 cd "/Users/jihun/Documents/1 2/pdf-image-merger-pwa"
+npm run check
 python3 -m http.server 8765 --bind 127.0.0.1
 ```
 
@@ -58,6 +59,7 @@ python3 -m http.server 8765 --bind 127.0.0.1
 GitHub Pages에 배포됩니다.
 
 ```bash
+npm run check
 git add .
 git commit -m "Update toolkit"
 git push
@@ -73,6 +75,8 @@ https://apobi812.github.io/pdf-image-merger/
 
 - 커스텀 도메인 연결
 - AdSense 승인 후 광고 슬롯에 실제 광고 코드 삽입
-- Search Console, sitemap, robots.txt 추가
+- Search Console 연결 및 sitemap 제출
 - Cloudflare Worker/D1 배포 및 `config.js` 연결
 - 개인정보처리방침/이용약관을 실제 운영 주체와 세무 구조에 맞게 법무 검토
+
+운영 구조, 도메인 연결 방식, 보안 불변조건은 `docs/OPERATIONS.md`를 기준으로 관리합니다.

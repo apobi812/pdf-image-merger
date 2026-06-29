@@ -1,4 +1,4 @@
-const CACHE_NAME = 'toolkit-v12';
+const CACHE_NAME = 'toolkit-v13';
 const APP_SHELL = [
   './',
   './index.html',
@@ -9,11 +9,12 @@ const APP_SHELL = [
   './privacy/index.html',
   './terms/index.html',
   './security/index.html',
-  './styles.css?v=20260629-security1',
-  './app.js?v=20260629-security1',
+  './styles.css?v=20260629-ops1',
+  './app.js?v=20260629-ops1',
   './manifest.webmanifest',
   './robots.txt',
   './sitemap.xml',
+  './.well-known/security.txt',
   './vendor/pdf.min.js',
   './vendor/pdf.worker.min.js',
   './vendor/pdf-lib.min.js',

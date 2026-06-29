@@ -20,6 +20,8 @@ This project is a static, client-side PWA. It is designed so user files are proc
 - Admin UI is not linked from the public navigation; `/admin/` is direct-address only
 - Optional Cloudflare Worker + D1 backend for server-side admin auth and aggregate analytics
 - Server analytics stores daily visitor hashes, not raw IP addresses
+- `_headers` provides production security headers for Cloudflare Pages or compatible static hosting
+- `tools/verify-release.mjs` checks release security invariants before deployment
 
 ## Limits
 
@@ -38,3 +40,5 @@ If the Worker is hosted on a separate origin, update the CSP `connect-src` direc
 - Security headers at the hosting/CDN layer
 - Dependency update process
 - Abuse contact and takedown flow
+
+Run `npm run check` before each release.
