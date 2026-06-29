@@ -21,6 +21,7 @@ This project is a static, client-side PWA. It is designed so user files are proc
 - No file-name or file-content analytics
 - No browser session IDs are sent to the optional analytics backend
 - Remote analytics is sent only after browser-side consent, and the Worker rejects events without the explicit consent marker
+- Ad slots are placeholders by default; no third-party ad script is loaded until approval, consent review, and CSP updates are completed
 - Worker analytics accepts only allowlisted event names, tools, public routes, languages, and small JSON payloads
 - Local-only admin dashboard with a browser passcode stored with PBKDF2-SHA-256
 - Admin UI is not linked from the public navigation; `/admin/` is direct-address only

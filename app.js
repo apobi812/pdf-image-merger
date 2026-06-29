@@ -37,6 +37,7 @@
   const BASE_PATH = resolveRuntimeBasePath(CONFIG_BASE_PATH);
   const SITE_ROOT_URL = `${SITE_ORIGIN}${CONFIG_BASE_PATH || BASE_PATH}`;
   const API_BASE_URL = normalizeApiBaseUrl(CONFIG.apiBaseUrl);
+  const ADS_CONFIG = normalizeAdsConfig(CONFIG.ads);
   const routeMap = {
     '': 'home',
     '/': 'home',
@@ -97,7 +98,7 @@
 
   const i18n = {
     ko: {
-      brand: '툴킷', brandSub: '빠른 브라우저 도구', admin: '관리', adLabel: '광고 영역',
+      brand: '툴킷', brandSub: '빠른 브라우저 도구', admin: '관리', adLabel: '광고 영역', adPending: '광고 준비 영역', adConfigured: '광고 슬롯 설정됨',
       about: '소개', privacy: '개인정보처리방침', terms: '이용약관', security: '보안',
       pdfTool: 'PDF 관리', wordTool: '글자수 세기', videoTool: '동영상 추출',
       saveAs: '저장할 파일명', fileName: '파일명', cancel: '취소', save: '저장',
@@ -125,7 +126,7 @@
   };
 
   const fallback = {
-    brand: 'Toolkit', brandSub: 'Fast browser tools', admin: 'Admin', adLabel: 'Ad space',
+    brand: 'Toolkit', brandSub: 'Fast browser tools', admin: 'Admin', adLabel: 'Ad space', adPending: 'Ad placeholder', adConfigured: 'Ad slot configured',
     about: 'About', privacy: 'Privacy', terms: 'Terms', security: 'Security',
     pdfTool: 'PDF tools', wordTool: 'Word counter', videoTool: 'Video extraction',
     saveAs: 'Save as', fileName: 'File name', cancel: 'Cancel', save: 'Save',
@@ -679,6 +680,44 @@
     }
   }
 
+  function normalizeAdsConfig(value) {
+    const raw = value && typeof value === 'object' ? value : {};
+    const slots = raw.slots && typeof raw.slots === 'object' ? raw.slots : {};
+    const clean = input => String(input || '').trim();
+    return {
+      provider: clean(raw.provider).toLowerCase(),
+      client: clean(raw.client),
+      slots: {
+        leftRail: clean(slots.leftRail || slots['left-rail']),
+        settingsRail: clean(slots.settingsRail || slots['settings-rail']),
+        footer: clean(slots.footer)
+      }
+    };
+  }
+
+  function normalizeAdPlacement(value) {
+    const key = String(value || '')
+      .trim()
+      .replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
+    return ['leftRail', 'settingsRail', 'footer'].includes(key) ? key : 'settingsRail';
+  }
+
+  function adPlacementAttr(value) {
+    return normalizeAdPlacement(value).replace(/[A-Z]/g, letter => `-${letter.toLowerCase()}`);
+  }
+
+  function hasConfiguredAds() {
+    return ADS_CONFIG.provider === 'adsense' && /^ca-pub-\d{10,30}$/.test(ADS_CONFIG.client);
+  }
+
+  function adSlotId(placement) {
+    return ADS_CONFIG.slots[normalizeAdPlacement(placement)] || '';
+  }
+
+  function hasConfiguredAdSlot(placement) {
+    return hasConfiguredAds() && /^\d{5,30}$/.test(adSlotId(placement));
+  }
+
   function hasAnalyticsBackend() {
     return Boolean(API_BASE_URL);
   }
@@ -925,6 +964,7 @@
     else if (['about', 'privacy', 'terms', 'security'].includes(state.route)) renderLegalPage(state.route);
     else renderPdfTool();
     renderConsentBanner();
+    refreshAdSlots();
   }
 
   function renderConsentBanner() {
@@ -978,6 +1018,30 @@
     `;
   }
 
+  function renderAdSlot(placement, sizeLabel) {
+    const slotKey = normalizeAdPlacement(placement);
+    const className = slotKey === 'footer' ? 'footer-ad' : 'rail-ad';
+    const configured = hasConfiguredAdSlot(slotKey);
+    const detail = `${sizeLabel} · ${configured ? t('adConfigured') : t('adPending')}`;
+    const adAttrs = configured
+      ? ` data-ad-client="${escapeHtml(ADS_CONFIG.client)}" data-ad-unit="${escapeHtml(adSlotId(slotKey))}"`
+      : '';
+    return `
+      <div class="${className} ${configured ? 'is-configured' : 'is-placeholder'}" aria-label="${escapeHtml(t('adLabel'))}" data-ad-slot="${escapeHtml(adPlacementAttr(slotKey))}" data-ad-size="${escapeHtml(sizeLabel)}" data-ad-provider="${configured ? 'adsense' : 'none'}"${adAttrs}>
+        <span>${escapeHtml(t('adLabel'))}</span>
+        <small>${escapeHtml(detail)}</small>
+      </div>
+    `;
+  }
+
+  function refreshAdSlots() {
+    document.querySelectorAll('[data-ad-slot]').forEach(slot => {
+      const placement = slot.dataset.adSlot || 'settings-rail';
+      const size = slot.dataset.adSize || (normalizeAdPlacement(placement) === 'footer' ? '970x90' : '300x250');
+      slot.outerHTML = renderAdSlot(placement, size);
+    });
+  }
+
   function renderHomePage() {
     renderHeader({ eyebrow: 'Toolkit', title: t('homeTitle'), description: t('homeDesc') });
     const readyCount = toolCatalog.filter(tool => tool.status === 'ready').length;
@@ -1016,7 +1080,7 @@
           ${categoryCounts}
         </div>
       </div>
-      <div class="rail-ad"><span>${t('adLabel')}</span><small>300x250</small></div>
+      ${renderAdSlot('settingsRail', '300x250')}
     `;
     bindHomeEvents();
   }
@@ -1118,7 +1182,7 @@
         <label class="check-row"><input type="checkbox" checked disabled> ${t('guardImageMetadata')}</label>
         <label class="check-row"><input type="checkbox" checked disabled> ${t('guardNoFileAnalytics')}</label>
       </div>
-      <div class="rail-ad"><span>${t('adLabel')}</span><small>300x250</small></div>
+      ${renderAdSlot('settingsRail', '300x250')}
     `;
     $('#pdfOutputName').addEventListener('input', e => state.pdfOutputName = normalizeFileName(e.target.value || 'merged.pdf'));
   }
@@ -1391,7 +1455,7 @@
         <input class="input" id="readingWpm" type="number" min="120" max="800" value="${state.wordSettings.readingWpm}">
         <p class="file-meta">${formatTemplate(t('textLimitLabel'), { count: formatNumber(MAX_TEXT_CHARS) })}</p>
       </div>
-      <div class="rail-ad"><span>${t('adLabel')}</span><small>300x250</small></div>
+      ${renderAdSlot('settingsRail', '300x250')}
     `;
     $('#readingWpm').addEventListener('input', e => {
       state.wordSettings.readingWpm = Number(e.target.value) || 250;
@@ -1450,7 +1514,7 @@
         <label class="setting-label" for="maxFrames">${t('maxFrames')}</label>
         <input class="input" id="maxFrames" type="number" min="1" max="${MAX_FRAMES}" value="${state.video.maxFrames}">
       </div>
-      <div class="rail-ad"><span>${t('adLabel')}</span><small>300x250</small></div>
+      ${renderAdSlot('settingsRail', '300x250')}
     `;
     $('#frameInterval').addEventListener('input', e => state.video.interval = Math.max(1, Number(e.target.value) || 5));
     $('#maxFrames').addEventListener('input', e => state.video.maxFrames = Math.min(MAX_FRAMES, Math.max(1, Number(e.target.value) || 12)));
@@ -1542,7 +1606,7 @@
       ${content.sections.map(section => `<section class="legal-section"><h3>${escapeHtml(section.title)}</h3><ul>${section.items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul></section>`).join('')}
       <section class="legal-section"><h3>문의 및 업데이트</h3><ul><li>문의: apobi812@gmail.com</li><li>마지막 업데이트: 2026-06-29</li></ul></section>
     </div></section>`;
-    settingsPanel.innerHTML = `<h2>${t('settings')}</h2>${privacyControlsHtml()}<div class="rail-ad"><span>${t('adLabel')}</span><small>300x250</small></div>`;
+    settingsPanel.innerHTML = `<h2>${t('settings')}</h2>${privacyControlsHtml()}${renderAdSlot('settingsRail', '300x250')}`;
   }
 
   function legalContent() {
@@ -2002,7 +2066,7 @@
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js?v=20260629-domaincfg', { updateViaCache: 'none' })
+      navigator.serviceWorker.register('./sw.js?v=20260629-adcfg', { updateViaCache: 'none' })
         .then(registration => registration.update())
         .catch(error => console.warn('Service worker registration failed:', error));
     });

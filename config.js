@@ -7,5 +7,18 @@ window.TOOLKIT_CONFIG = {
   // Keep empty for the static GitHub Pages-only version.
   // Set to "/api" when a same-origin Worker route is connected.
   // Set to "https://your-worker.example.workers.dev/api" only after updating CSP connect-src.
-  apiBaseUrl: ''
+  apiBaseUrl: '',
+
+  // Keep disabled until AdSense approval, consent review, and CSP updates are complete.
+  // Example after approval:
+  // ads: { provider: 'adsense', client: 'ca-pub-1234567890123456', slots: { leftRail: '1234567890', settingsRail: '2345678901', footer: '3456789012' } }
+  ads: {
+    provider: '',
+    client: '',
+    slots: {
+      leftRail: '',
+      settingsRail: '',
+      footer: ''
+    }
+  }
 };

@@ -133,11 +133,13 @@ Do not loosen these without a specific reason:
 
 ## Ads And Consent
 
-Ad slots are placeholders until AdSense approval. Before enabling ad scripts:
+Ad slots are config-driven placeholders until AdSense approval. The default `config.js` keeps `ads.provider`, `ads.client`, and every slot ID empty, and the app must not load third-party ad scripts in this state. Before enabling ad scripts:
 
+- Fill `config.js` with the approved AdSense publisher ID and explicit slot IDs.
 - Add consent handling if required by target countries.
 - Update the privacy policy with the ad provider and cookie behavior.
 - Add the exact script origins to CSP instead of broad wildcards.
+- Add `ads.txt` only after the real publisher ID is issued.
 - Re-run `npm run check` and manually inspect all routes.
 
 ## Incident Response

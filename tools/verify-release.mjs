@@ -46,17 +46,20 @@ for (const file of htmlFiles) {
   assert(!html.includes('frame-ancestors'), `${file}: frame-ancestors must be an HTTP header, not meta CSP`);
   assert(html.includes('object-src'), `${file}: CSP missing object-src`);
   assert(html.includes('mobile-web-app-capable'), `${file}: missing mobile web app meta`);
-  assert(html.includes('app.js?v=20260629-domaincfg'), `${file}: stale app.js cache version`);
-  assert(html.includes('styles.css?v=20260629-domaincfg'), `${file}: stale styles.css cache version`);
+  assert(html.includes('app.js?v=20260629-adcfg'), `${file}: stale app.js cache version`);
+  assert(html.includes('styles.css?v=20260629-adcfg'), `${file}: stale styles.css cache version`);
+  assert(html.includes('data-ad-slot="left-rail"'), `${file}: left rail ad placeholder is missing`);
+  assert(html.includes('data-ad-slot="footer"'), `${file}: footer ad placeholder is missing`);
+  assert(html.includes('data-ad-provider="none"'), `${file}: ads must stay disabled by default`);
 }
 
 assert(includes('admin/index.html', 'noindex,nofollow'), 'admin page must be noindex,nofollow');
 assert(!includes('index.html', 'data-route="admin"'), 'public home must not link admin route');
 assert(!sw.includes('./admin/index.html'), 'service worker must not precache admin page');
-assert(sw.includes("const CACHE_NAME = 'toolkit-v26'"), 'service worker cache name not bumped');
+assert(sw.includes("const CACHE_NAME = 'toolkit-v27'"), 'service worker cache name not bumped');
 assert(sw.includes("const OFFLINE_URL = './offline.html'"), 'service worker missing offline fallback');
-assert(sw.includes("'./app.js?v=20260629-domaincfg'"), 'service worker has stale app cache version');
-assert(app.includes("./sw.js?v=20260629-domaincfg"), 'app registers a stale service worker cache version');
+assert(sw.includes("'./app.js?v=20260629-adcfg'"), 'service worker has stale app cache version');
+assert(app.includes("./sw.js?v=20260629-adcfg"), 'app registers a stale service worker cache version');
 assert(!sitemap.includes('/admin/'), 'sitemap must not include admin page');
 assert(sitemap.includes('xmlns:xhtml="http://www.w3.org/1999/xhtml"'), 'sitemap must include xhtml namespace for hreflang');
 for (const lang of ['ko', 'en', 'ja', 'zh', 'es', 'fr', 'de', 'pt', 'hi', 'ar', 'x-default']) {
@@ -109,6 +112,9 @@ assert(app.includes('normalizeBasePath(CONFIG.basePath)'), 'runtime basePath con
 assert(app.includes('normalizeSiteOrigin(CONFIG.siteOrigin)'), 'runtime siteOrigin config support is missing');
 assert(app.includes('resolveRuntimeBasePath(CONFIG_BASE_PATH)'), 'runtime asset base path resolver is missing');
 assert(app.includes('SITE_ROOT_URL'), 'runtime site root URL helper is missing');
+assert(app.includes('normalizeAdsConfig(CONFIG.ads)'), 'runtime ad config support is missing');
+assert(app.includes('renderAdSlot('), 'ad slot renderer is missing');
+assert(app.includes('hasConfiguredAdSlot('), 'ad slot validation is missing');
 assert(!app.includes('https://apobi812.github.io/pdf-image-merger/'), 'runtime canonical URL must come from config, not a hard-coded GitHub Pages URL');
 assert(app.includes('updateAlternateLanguageLinks()'), 'runtime hreflang alternate updater is missing');
 assert(app.includes('link.hreflang = code'), 'runtime hreflang code assignment is missing');
@@ -137,6 +143,13 @@ assert(!schema.includes('session_id'), 'D1 schema must not include session_id');
 assert(config.includes("siteOrigin: 'https://apobi812.github.io'"), 'default siteOrigin config is missing');
 assert(config.includes("basePath: '/pdf-image-merger/'"), 'default basePath config is missing');
 assert(config.includes("apiBaseUrl: ''"), 'default config must keep apiBaseUrl empty for static Pages');
+assert(config.includes("provider: ''"), 'default ad provider must stay disabled');
+assert(config.includes("client: ''"), 'default ad client must stay empty');
+assert(config.includes("leftRail: ''"), 'default left rail ad slot must stay empty');
+assert(config.includes("settingsRail: ''"), 'default settings ad slot must stay empty');
+assert(config.includes("footer: ''"), 'default footer ad slot must stay empty');
+assert(!app.includes('pagead2.googlesyndication.com'), 'default app must not load AdSense scripts');
+assert(!config.includes('ca-pub-1234567890123456') || config.includes('// ads:'), 'sample AdSense client must remain commented');
 
 if (errors.length) {
   console.error(`Release verification failed (${errors.length}):`);

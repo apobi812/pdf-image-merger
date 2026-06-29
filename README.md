@@ -96,7 +96,7 @@ https://apobi812.github.io/pdf-image-merger/
 ## 다음 단계
 
 - 커스텀 도메인 연결
-- AdSense 승인 후 광고 슬롯에 실제 광고 코드 삽입
+- AdSense 승인 후 `config.js`의 `ads` 슬롯을 실제 publisher/slot ID로 채우고, 동의 절차·CSP·개인정보 고지를 검토한 뒤 광고 스크립트 연결
 - Search Console 연결 및 sitemap 제출
 - Cloudflare Worker/D1 배포 및 `config.js` 연결
 - 개인정보처리방침/이용약관을 실제 운영 주체와 세무 구조에 맞게 법무 검토
