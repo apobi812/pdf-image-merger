@@ -105,6 +105,8 @@ Do not loosen these without a specific reason:
 - No `ignoreEncryption` PDF loading.
 - Keep the risky PDF active-content marker guard enabled.
 - No SVG input for PDF merging.
+- Keep the PDF/image total input-size cap enabled to reduce browser memory exhaustion.
+- Keep the word-counter text-length cap enabled to reduce CPU and memory exhaustion from oversized pastes.
 - Local admin lock uses PBKDF2-SHA-256 and remains labeled as local-only protection.
 - PWA install metadata, tool shortcuts, and offline fallback stay enabled.
 - Language switching keeps a shareable `?lang=` URL and does not create separate language HTML files.

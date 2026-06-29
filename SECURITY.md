@@ -8,6 +8,8 @@ This project is a static, client-side PWA. It is designed so user files are proc
 - No third-party runtime scripts
 - Local `pdf.js` and `pdf-lib` vendor files
 - File type and size checks before processing
+- PDF/image merge inputs are capped by both per-file size and total selected input size
+- Word counter input is capped to reduce browser memory and CPU exhaustion from oversized pastes
 - PDF and image magic-byte checks before previewing or merging
 - Encrypted PDFs are blocked instead of being loaded with encryption bypass flags
 - PDFs with JavaScript, auto actions, embedded files, rich media, or XFA markers are blocked as high-risk active content

@@ -45,17 +45,17 @@ for (const file of htmlFiles) {
   assert(!html.includes('frame-ancestors'), `${file}: frame-ancestors must be an HTTP header, not meta CSP`);
   assert(html.includes('object-src'), `${file}: CSP missing object-src`);
   assert(html.includes('mobile-web-app-capable'), `${file}: missing mobile web app meta`);
-  assert(html.includes('app.js?v=20260629-seoalt'), `${file}: stale app.js cache version`);
-  assert(html.includes('styles.css?v=20260629-seoalt'), `${file}: stale styles.css cache version`);
+  assert(html.includes('app.js?v=20260629-limits'), `${file}: stale app.js cache version`);
+  assert(html.includes('styles.css?v=20260629-limits'), `${file}: stale styles.css cache version`);
 }
 
 assert(includes('admin/index.html', 'noindex,nofollow'), 'admin page must be noindex,nofollow');
 assert(!includes('index.html', 'data-route="admin"'), 'public home must not link admin route');
 assert(!sw.includes('./admin/index.html'), 'service worker must not precache admin page');
-assert(sw.includes("const CACHE_NAME = 'toolkit-v22'"), 'service worker cache name not bumped');
+assert(sw.includes("const CACHE_NAME = 'toolkit-v23'"), 'service worker cache name not bumped');
 assert(sw.includes("const OFFLINE_URL = './offline.html'"), 'service worker missing offline fallback');
-assert(sw.includes("'./app.js?v=20260629-seoalt'"), 'service worker has stale app cache version');
-assert(app.includes("./sw.js?v=20260629-seoalt"), 'app registers a stale service worker cache version');
+assert(sw.includes("'./app.js?v=20260629-limits'"), 'service worker has stale app cache version');
+assert(app.includes("./sw.js?v=20260629-limits"), 'app registers a stale service worker cache version');
 assert(!sitemap.includes('/admin/'), 'sitemap must not include admin page');
 assert(sitemap.includes('xmlns:xhtml="http://www.w3.org/1999/xhtml"'), 'sitemap must include xhtml namespace for hreflang');
 for (const lang of ['ko', 'en', 'ja', 'zh', 'es', 'fr', 'de', 'pt', 'hi', 'ar', 'x-default']) {
@@ -82,6 +82,10 @@ assert(app.includes('PDF_RISKY_MARKERS'), 'risky PDF marker list is missing');
 assert(app.includes('hasRiskyPdfFeatures(data)'), 'risky PDF feature guard is missing');
 assert(app.includes('unsafePdfBlocked'), 'unsafe PDF warning message is missing');
 assert(app.includes('isExpectedFileRejection(error)'), 'expected file rejections should not be logged as console errors');
+assert(app.includes('MAX_TOTAL_PDF_INPUT_SIZE = 500 * 1024 * 1024'), 'PDF/image total input-size cap is missing or changed');
+assert(app.includes('currentPdfInputBytes() + file.size > MAX_TOTAL_PDF_INPUT_SIZE'), 'PDF/image total input-size enforcement is missing');
+assert(app.includes('MAX_TEXT_CHARS = 1_000_000'), 'word-counter text cap is missing or changed');
+assert(app.includes('normalizeWordText(e.target.value)'), 'word-counter text cap enforcement is missing');
 assert(app.includes('hasAllowedVideoSignature'), 'video signature guard is missing');
 assert(app.includes('window.top !== window.self'), 'JavaScript frame guard is missing');
 assert(app.includes("const CONSENT_KEY = 'toolkitConsent.v1'"), 'analytics consent storage key is missing');
