@@ -5,6 +5,44 @@ const ADMIN_RATE_LIMIT_PER_MINUTE = 10;
 const ADMIN_SESSION_SECONDS = 8 * 60 * 60;
 const DEFAULT_ADMIN_PASSWORD_KDF = 'pbkdf2-sha256';
 const DEFAULT_ADMIN_PASSWORD_ITERATIONS = 210_000;
+const ALLOWED_EVENTS = new Set([
+  'app_open',
+  'route_open',
+  'language_change',
+  'analytics_consent_granted',
+  'pdf_clear',
+  'pdf_files_added',
+  'pdf_download',
+  'word_clear',
+  'word_copy_stats',
+  'video_loaded',
+  'video_frame_current',
+  'video_frame_interval'
+]);
+const ALLOWED_TOOLS = new Set([
+  'home',
+  'pdf',
+  'word',
+  'word-count',
+  'video',
+  'video-extractor',
+  'system',
+  'about',
+  'privacy',
+  'terms',
+  'security'
+]);
+const ALLOWED_ROUTES = new Set([
+  'home',
+  'pdf',
+  'word-count',
+  'video-extractor',
+  'about',
+  'privacy',
+  'terms',
+  'security'
+]);
+const ALLOWED_LANGS = new Set(['ko', 'en', 'ja', 'zh', 'es', 'fr', 'de', 'pt', 'hi', 'ar']);
 
 export default {
   async fetch(request, env, ctx) {
@@ -60,18 +98,15 @@ async function recordEvent(request, env, ctx) {
   assertJsonSize(request);
 
   const body = await readJson(request);
+  assertPlainObject(body);
   if (body.consent !== 'analytics') throw new HttpError(403, 'analytics_consent_required');
+  const event = validateAnalyticsEvent(body);
 
   const now = Date.now();
   const day = new Date(now).toISOString().slice(0, 10);
   const visitorHash = await visitorHashForRequest(request, env, day);
   await enforceRateLimit(env, `event:${visitorHash}`, now, EVENT_RATE_LIMIT_PER_MINUTE);
 
-  const eventName = cleanToken(body.event, 'unknown', 64);
-  const tool = cleanToken(body.tool, 'unknown', 32);
-  const route = cleanToken(body.route, 'unknown', 48);
-  const lang = cleanToken(body.lang, 'unknown', 12);
-  const screen = cleanScreen(body.screen);
   const referrerHost = hostOnly(request.headers.get('Referer'));
   const browser = browserFamily(request.headers.get('User-Agent') || '');
   const country = cleanCountry(request.cf?.country);
@@ -80,7 +115,7 @@ async function recordEvent(request, env, ctx) {
     INSERT INTO events (
       day, ts, event, tool, route, lang, country, visitor_hash, browser, screen, referrer_host
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `).bind(day, now, eventName, tool, route, lang, country, visitorHash, browser, screen, referrerHost).run();
+  `).bind(day, now, event.name, event.tool, event.route, event.lang, country, visitorHash, browser, event.screen, referrerHost).run();
 
   ctx.waitUntil(cleanExpiredRateLimits(env, now));
   return json(request, env, { ok: true }, 202);
@@ -99,6 +134,7 @@ async function adminLogin(request, env) {
   await enforceRateLimit(env, `admin:${visitorHash}`, now, ADMIN_RATE_LIMIT_PER_MINUTE);
 
   const body = await readJson(request);
+  assertPlainObject(body);
   const password = String(body.password || '');
   if (!await verifyAdminPassword(password, env)) {
     throw new HttpError(401, 'invalid_credentials');
@@ -241,6 +277,24 @@ async function readJson(request) {
   } catch {
     throw new HttpError(400, 'invalid_json');
   }
+}
+
+function assertPlainObject(value) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    throw new HttpError(400, 'invalid_payload');
+  }
+}
+
+function validateAnalyticsEvent(body) {
+  const name = cleanToken(body.event, '', 64);
+  const tool = cleanToken(body.tool, '', 32);
+  const route = cleanToken(body.route, '', 48);
+  const lang = cleanToken(body.lang, '', 12);
+  if (!ALLOWED_EVENTS.has(name)) throw new HttpError(400, 'invalid_event');
+  if (!ALLOWED_TOOLS.has(tool)) throw new HttpError(400, 'invalid_tool');
+  if (!ALLOWED_ROUTES.has(route)) throw new HttpError(400, 'invalid_route');
+  if (!ALLOWED_LANGS.has(lang)) throw new HttpError(400, 'invalid_language');
+  return { name, tool, route, lang, screen: cleanScreen(body.screen) };
 }
 
 async function enforceRateLimit(env, subject, now, limit) {

@@ -101,6 +101,7 @@ Do not loosen these without a specific reason:
 - No browser session IDs in analytics.
 - No remote analytics before browser-side consent.
 - Worker rejects event writes without an explicit analytics consent marker.
+- Worker rejects unknown analytics event names, tools, routes, languages, admin-route analytics, and oversized JSON payloads.
 - Server admin password verification uses PBKDF2-SHA-256 by default.
 - No `ignoreEncryption` PDF loading.
 - Keep the risky PDF active-content marker guard enabled.

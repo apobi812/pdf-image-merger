@@ -88,6 +88,7 @@ For a separate Worker URL, set `apiBaseUrl` to the Worker `/api` URL and update 
 - Admin password hashes use PBKDF2-SHA-256 by default.
 - Admin passwords are never stored in source code.
 - Event and admin login endpoints have D1-backed per-minute rate limits.
+- Event writes reject unknown event names, tools, routes, languages, oversized JSON, and admin-route analytics payloads.
 - CORS allows only configured origins.
 - Raw IP addresses and raw user-agent strings are not stored.
 - Analytics export returns aggregate data, not event rows with visitor hashes.

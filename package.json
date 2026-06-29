@@ -2,6 +2,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "check": "node --check app.js && node --check sw.js && node --check worker/src/index.js && node --check worker/generate-admin-secret.mjs && node tools/verify-release.mjs"
+    "check": "node --check app.js && node --check sw.js && node --check worker/src/index.js && node --check worker/generate-admin-secret.mjs && node --check tools/worker-smoke.mjs && node tools/verify-release.mjs && node tools/worker-smoke.mjs"
   }
 }
