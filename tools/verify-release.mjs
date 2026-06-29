@@ -131,6 +131,10 @@ assert(app.includes('ADMIN_PBKDF2_ITERATIONS = 210_000'), 'local admin PBKDF2 it
 assert(worker.includes('unsupported_media_type'), 'worker must reject non-JSON API writes');
 assert(worker.includes('analytics_consent_required'), 'worker must reject analytics writes without consent');
 assert(worker.includes("body.consent !== 'analytics'"), 'worker consent marker check is missing');
+assert(worker.includes('SECURITY_HEADERS'), 'worker API security header set is missing');
+assert(worker.includes("Content-Security-Policy': \"default-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'\""), 'worker API CSP header is missing');
+assert(worker.includes("if (!origin) throw new HttpError(403, 'origin_required')"), 'worker must reject protected API requests without Origin');
+assert(worker.includes('responseHeaders(request, env'), 'worker must apply common security headers to API responses');
 assert(worker.includes('ALLOWED_EVENTS'), 'worker analytics event allowlist is missing');
 assert(worker.includes('ALLOWED_TOOLS'), 'worker analytics tool allowlist is missing');
 assert(worker.includes('ALLOWED_ROUTES'), 'worker analytics route allowlist is missing');

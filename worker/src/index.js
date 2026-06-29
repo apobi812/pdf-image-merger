@@ -5,6 +5,15 @@ const ADMIN_RATE_LIMIT_PER_MINUTE = 10;
 const ADMIN_SESSION_SECONDS = 8 * 60 * 60;
 const DEFAULT_ADMIN_PASSWORD_KDF = 'pbkdf2-sha256';
 const DEFAULT_ADMIN_PASSWORD_ITERATIONS = 210_000;
+const SECURITY_HEADERS = {
+  'Cache-Control': 'no-store',
+  'Content-Security-Policy': "default-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'",
+  'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=()',
+  'Referrer-Policy': 'no-referrer',
+  'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+  'X-Content-Type-Options': 'nosniff',
+  'X-Frame-Options': 'DENY'
+};
 const ALLOWED_EVENTS = new Set([
   'app_open',
   'route_open',
@@ -60,7 +69,7 @@ export default {
 
 async function handleRequest(request, env, ctx) {
   if (request.method === 'OPTIONS') {
-    return new Response(null, { status: 204, headers: corsHeaders(request, env) });
+    return new Response(null, { status: 204, headers: responseHeaders(request, env) });
   }
 
   const url = new URL(request.url);
@@ -210,6 +219,7 @@ async function listRows(env, column, limit = 20, order = 'count DESC') {
 
 async function requireAdmin(request, env) {
   requireAdminSecrets(env);
+  assertAllowedOrigin(request, env);
   const header = request.headers.get('Authorization') || '';
   const token = header.startsWith('Bearer ') ? header.slice(7) : '';
   if (!token || !await verifyToken(token, env.ADMIN_SESSION_SECRET)) {
@@ -253,7 +263,7 @@ function adminPasswordIterations(env) {
 
 function assertAllowedOrigin(request, env) {
   const origin = request.headers.get('Origin');
-  if (!origin) return;
+  if (!origin) throw new HttpError(403, 'origin_required');
   if (!allowedOrigins(env).includes(origin)) throw new HttpError(403, 'origin_not_allowed');
 }
 
@@ -376,14 +386,18 @@ function corsHeaders(request, env) {
 function json(request, env, body, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: {
-      'Content-Type': 'application/json; charset=utf-8',
-      'Cache-Control': 'no-store',
-      'X-Content-Type-Options': 'nosniff',
-      'Referrer-Policy': 'no-referrer',
-      ...corsHeaders(request, env)
-    }
+    headers: responseHeaders(request, env, {
+      'Content-Type': 'application/json; charset=utf-8'
+    })
   });
+}
+
+function responseHeaders(request, env, extra = {}) {
+  return {
+    ...SECURITY_HEADERS,
+    ...corsHeaders(request, env),
+    ...extra
+  };
 }
 
 async function signToken(payload, secret) {

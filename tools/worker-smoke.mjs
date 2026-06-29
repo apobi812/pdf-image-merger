@@ -60,13 +60,14 @@ function createCtx() {
 }
 
 function jsonRequest(path, body, origin = ALLOWED_ORIGIN) {
+  const headers = {
+    'Content-Type': 'application/json',
+    'User-Agent': 'Mozilla/5.0 Chrome/120.0'
+  };
+  if (origin) headers.Origin = origin;
   return new Request(`${BASE_URL}${path}`, {
     method: 'POST',
-    headers: {
-      Origin: origin,
-      'Content-Type': 'application/json',
-      'User-Agent': 'Mozilla/5.0 Chrome/120.0'
-    },
+    headers,
     body: typeof body === 'string' ? body : JSON.stringify(body)
   });
 }
@@ -91,6 +92,29 @@ const validEvent = {
   const result = await fetchJson(jsonRequest('/api/events', validEvent), env);
   assert(result.status === 202, `valid event should be accepted, got ${result.status}`);
   assert(env.state.events.length === 1, 'valid event should be inserted');
+}
+
+{
+  const env = createMockEnv();
+  const response = await worker.fetch(jsonRequest('/api/events', validEvent), env, createCtx());
+  assert(response.headers.get('Access-Control-Allow-Origin') === ALLOWED_ORIGIN, 'allowed origin should receive a CORS allow header');
+  assert(response.headers.get('Content-Security-Policy')?.includes("default-src 'none'"), 'JSON responses must include restrictive CSP');
+  assert(response.headers.get('X-Frame-Options') === 'DENY', 'JSON responses must deny framing');
+  assert(response.headers.get('Strict-Transport-Security')?.includes('max-age=31536000'), 'JSON responses must include HSTS');
+}
+
+{
+  const env = createMockEnv();
+  const response = await worker.fetch(new Request(`${BASE_URL}/api/events`, {
+    method: 'OPTIONS',
+    headers: {
+      Origin: ALLOWED_ORIGIN,
+      'Access-Control-Request-Method': 'POST'
+    }
+  }), env, createCtx());
+  assert(response.status === 204, 'preflight should return 204');
+  assert(response.headers.get('Access-Control-Allow-Origin') === ALLOWED_ORIGIN, 'preflight should echo allowed origin');
+  assert(response.headers.get('X-Content-Type-Options') === 'nosniff', 'preflight should include security headers');
 }
 
 {
@@ -128,6 +152,21 @@ const validEvent = {
   const env = createMockEnv();
   const result = await fetchJson(jsonRequest('/api/events', validEvent, 'https://evil.example'), env);
   assert(result.status === 403 && result.body.error === 'origin_not_allowed', 'disallowed origin must be rejected');
+}
+
+{
+  const env = createMockEnv();
+  const result = await fetchJson(jsonRequest('/api/events', validEvent, ''), env);
+  assert(result.status === 403 && result.body.error === 'origin_required', 'missing origin must be rejected');
+}
+
+{
+  const env = createMockEnv();
+  const result = await fetchJson(new Request(`${BASE_URL}/api/admin/summary`, {
+    method: 'GET',
+    headers: { Authorization: 'Bearer invalid' }
+  }), env);
+  assert(result.status === 403 && result.body.error === 'origin_required', 'admin reads must require an allowed origin before token checks');
 }
 
 console.log('Worker smoke verification passed.');

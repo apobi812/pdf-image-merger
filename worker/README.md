@@ -95,6 +95,7 @@ For a separate Worker URL, set `apiBaseUrl` to the Worker `/api` URL and update 
 - Admin passwords are never stored in source code.
 - Event and admin login endpoints have D1-backed per-minute rate limits.
 - Event writes reject unknown event names, tools, routes, languages, oversized JSON, and admin-route analytics payloads.
-- CORS allows only configured origins.
+- CORS allows only configured origins, and protected event/admin endpoints reject requests without an `Origin` header.
+- JSON and preflight responses include restrictive API security headers such as `Content-Security-Policy: default-src 'none'`, `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, and HSTS.
 - Raw IP addresses and raw user-agent strings are not stored.
 - Analytics export returns aggregate data, not event rows with visitor hashes.
