@@ -48,26 +48,26 @@
   };
 
   const toolCatalog = [
-    { route: 'pdf', symbol: 'PDF', title: 'PDF 관리', desc: 'PDF와 이미지를 병합', category: 'PDF', status: 'ready' },
-    { route: 'word-count', symbol: 'TXT', title: '글자수 세기', desc: '글자, 단어, 문장 분석', category: '텍스트', status: 'ready' },
-    { route: 'video-extractor', symbol: 'VID', title: '동영상 프레임 추출', desc: '영상에서 PNG 프레임 추출', category: '미디어', status: 'ready' },
-    { symbol: 'SPL', title: 'PDF 분할', desc: '원하는 페이지를 분리', category: 'PDF', status: 'planned' },
-    { symbol: 'ZIP', title: 'PDF 압축', desc: '용량 줄이기', category: 'PDF', status: 'planned' },
-    { symbol: 'ROT', title: 'PDF 회전', desc: '페이지 방향 정리', category: 'PDF', status: 'planned' },
-    { symbol: 'DEL', title: '페이지 삭제', desc: '불필요한 페이지 제거', category: 'PDF', status: 'planned' },
-    { symbol: 'I2P', title: '이미지 PDF 변환', desc: '이미지를 PDF로 저장', category: 'PDF', status: 'planned' },
-    { symbol: 'P2I', title: 'PDF 이미지 변환', desc: '페이지를 이미지로 추출', category: 'PDF', status: 'planned' },
-    { symbol: 'LCK', title: 'PDF 보호', desc: '암호 설정', category: 'PDF', status: 'planned' },
-    { symbol: 'ULK', title: 'PDF 잠금해제', desc: '권한 있는 문서 해제', category: 'PDF', status: 'planned' },
-    { symbol: 'WMK', title: '워터마크', desc: '문서에 표시 추가', category: 'PDF', status: 'planned' },
-    { symbol: 'OCR', title: 'OCR 텍스트 추출', desc: '이미지 문자를 텍스트로', category: '문서', status: 'planned' },
-    { symbol: 'Aa', title: '대소문자 변환', desc: '영문 서식 변환', category: '텍스트', status: 'planned' },
-    { symbol: 'DIF', title: '텍스트 비교', desc: '두 문장의 차이 확인', category: '텍스트', status: 'planned' },
-    { symbol: 'KEY', title: '키워드 추출', desc: '반복 단어 요약', category: '텍스트', status: 'planned' },
-    { symbol: 'UNQ', title: '중복 줄 제거', desc: '목록 정리', category: '텍스트', status: 'planned' },
-    { symbol: 'IMG', title: '이미지 리사이즈', desc: '크기와 비율 조정', category: '이미지', status: 'planned' },
-    { symbol: 'CMP', title: '이미지 압축', desc: '이미지 용량 줄이기', category: '이미지', status: 'planned' },
-    { symbol: 'QR', title: 'QR 생성', desc: '텍스트를 QR로 변환', category: '기타', status: 'planned' }
+    { key: 'pdfMerge', route: 'pdf', symbol: 'PDF', category: 'pdf', status: 'ready' },
+    { key: 'wordCounter', route: 'word-count', symbol: 'TXT', category: 'text', status: 'ready' },
+    { key: 'videoFrames', route: 'video-extractor', symbol: 'VID', category: 'media', status: 'ready' },
+    { key: 'pdfSplit', symbol: 'SPL', category: 'pdf', status: 'planned' },
+    { key: 'pdfCompress', symbol: 'ZIP', category: 'pdf', status: 'planned' },
+    { key: 'pdfRotate', symbol: 'ROT', category: 'pdf', status: 'planned' },
+    { key: 'pdfDelete', symbol: 'DEL', category: 'pdf', status: 'planned' },
+    { key: 'imageToPdf', symbol: 'I2P', category: 'pdf', status: 'planned' },
+    { key: 'pdfToImage', symbol: 'P2I', category: 'pdf', status: 'planned' },
+    { key: 'pdfProtect', symbol: 'LCK', category: 'pdf', status: 'planned' },
+    { key: 'pdfUnlock', symbol: 'ULK', category: 'pdf', status: 'planned' },
+    { key: 'watermark', symbol: 'WMK', category: 'pdf', status: 'planned' },
+    { key: 'ocr', symbol: 'OCR', category: 'document', status: 'planned' },
+    { key: 'caseConvert', symbol: 'Aa', category: 'text', status: 'planned' },
+    { key: 'textDiff', symbol: 'DIF', category: 'text', status: 'planned' },
+    { key: 'keywordExtract', symbol: 'KEY', category: 'text', status: 'planned' },
+    { key: 'duplicateLines', symbol: 'UNQ', category: 'text', status: 'planned' },
+    { key: 'imageResize', symbol: 'IMG', category: 'image', status: 'planned' },
+    { key: 'imageCompress', symbol: 'CMP', category: 'image', status: 'planned' },
+    { key: 'qrCode', symbol: 'QR', category: 'other', status: 'planned' }
   ];
 
   const languages = [
@@ -201,6 +201,325 @@
     }
   };
 
+  const categoryTranslations = {
+    ko: { all: '전체', pdf: 'PDF', text: '텍스트', media: '미디어', document: '문서', image: '이미지', other: '기타' },
+    en: { all: 'All', pdf: 'PDF', text: 'Text', media: 'Media', document: 'Documents', image: 'Images', other: 'Other' },
+    ja: { all: 'すべて', pdf: 'PDF', text: 'テキスト', media: 'メディア', document: '文書', image: '画像', other: 'その他' },
+    zh: { all: '全部', pdf: 'PDF', text: '文本', media: '媒体', document: '文档', image: '图片', other: '其他' },
+    es: { all: 'Todo', pdf: 'PDF', text: 'Texto', media: 'Multimedia', document: 'Documentos', image: 'Imágenes', other: 'Otros' },
+    fr: { all: 'Tout', pdf: 'PDF', text: 'Texte', media: 'Média', document: 'Documents', image: 'Images', other: 'Autres' },
+    de: { all: 'Alle', pdf: 'PDF', text: 'Text', media: 'Medien', document: 'Dokumente', image: 'Bilder', other: 'Sonstiges' },
+    pt: { all: 'Tudo', pdf: 'PDF', text: 'Texto', media: 'Mídia', document: 'Documentos', image: 'Imagens', other: 'Outros' },
+    hi: { all: 'सभी', pdf: 'PDF', text: 'टेक्स्ट', media: 'मीडिया', document: 'दस्तावेज़', image: 'इमेज', other: 'अन्य' },
+    ar: { all: 'الكل', pdf: 'PDF', text: 'نص', media: 'وسائط', document: 'مستندات', image: 'صور', other: 'أخرى' }
+  };
+
+  const toolTranslations = {
+    ko: {
+      pdfMerge: ['PDF 관리', 'PDF와 이미지를 병합'],
+      wordCounter: ['글자수 세기', '글자, 단어, 문장 분석'],
+      videoFrames: ['동영상 프레임 추출', '영상에서 PNG 프레임 추출'],
+      pdfSplit: ['PDF 분할', '원하는 페이지를 분리'],
+      pdfCompress: ['PDF 압축', '용량 줄이기'],
+      pdfRotate: ['PDF 회전', '페이지 방향 정리'],
+      pdfDelete: ['페이지 삭제', '불필요한 페이지 제거'],
+      imageToPdf: ['이미지 PDF 변환', '이미지를 PDF로 저장'],
+      pdfToImage: ['PDF 이미지 변환', '페이지를 이미지로 추출'],
+      pdfProtect: ['PDF 보호', '암호 설정'],
+      pdfUnlock: ['PDF 잠금해제', '권한 있는 문서 해제'],
+      watermark: ['워터마크', '문서에 표시 추가'],
+      ocr: ['OCR 텍스트 추출', '이미지 문자를 텍스트로'],
+      caseConvert: ['대소문자 변환', '영문 서식 변환'],
+      textDiff: ['텍스트 비교', '두 문장의 차이 확인'],
+      keywordExtract: ['키워드 추출', '반복 단어 요약'],
+      duplicateLines: ['중복 줄 제거', '목록 정리'],
+      imageResize: ['이미지 리사이즈', '크기와 비율 조정'],
+      imageCompress: ['이미지 압축', '이미지 용량 줄이기'],
+      qrCode: ['QR 생성', '텍스트를 QR로 변환']
+    },
+    en: {
+      pdfMerge: ['PDF tools', 'Merge PDFs and images'],
+      wordCounter: ['Word counter', 'Analyze characters and words'],
+      videoFrames: ['Video frame extraction', 'Save frames as PNG'],
+      pdfSplit: ['Split PDF', 'Separate selected pages'],
+      pdfCompress: ['Compress PDF', 'Reduce file size'],
+      pdfRotate: ['Rotate PDF', 'Fix page orientation'],
+      pdfDelete: ['Delete pages', 'Remove unwanted pages'],
+      imageToPdf: ['Image to PDF', 'Save images as a PDF'],
+      pdfToImage: ['PDF to image', 'Extract pages as images'],
+      pdfProtect: ['Protect PDF', 'Add a password'],
+      pdfUnlock: ['Unlock PDF', 'Open authorized files'],
+      watermark: ['Watermark', 'Add marks to documents'],
+      ocr: ['OCR text extraction', 'Read text from images'],
+      caseConvert: ['Case converter', 'Change English letter case'],
+      textDiff: ['Text comparison', 'Find differences'],
+      keywordExtract: ['Keyword extraction', 'Summarize repeated words'],
+      duplicateLines: ['Remove duplicate lines', 'Clean up lists'],
+      imageResize: ['Image resize', 'Adjust size and ratio'],
+      imageCompress: ['Image compression', 'Reduce image size'],
+      qrCode: ['QR generator', 'Turn text into QR']
+    },
+    ja: {
+      pdfMerge: ['PDF管理', 'PDFと画像を結合'],
+      wordCounter: ['文字数カウント', '文字・単語・文を分析'],
+      videoFrames: ['動画フレーム抽出', 'PNGフレームを保存'],
+      pdfSplit: ['PDF分割', '必要なページを分離'],
+      pdfCompress: ['PDF圧縮', 'ファイルサイズを削減'],
+      pdfRotate: ['PDF回転', 'ページ向きを調整'],
+      pdfDelete: ['ページ削除', '不要なページを削除'],
+      imageToPdf: ['画像をPDFへ', '画像をPDFで保存'],
+      pdfToImage: ['PDFを画像へ', 'ページを画像で抽出'],
+      pdfProtect: ['PDF保護', 'パスワードを追加'],
+      pdfUnlock: ['PDF解除', '権限のある文書を解除'],
+      watermark: ['透かし', '文書に表示を追加'],
+      ocr: ['OCRテキスト抽出', '画像文字をテキスト化'],
+      caseConvert: ['大文字小文字変換', '英字表記を変換'],
+      textDiff: ['テキスト比較', '違いを確認'],
+      keywordExtract: ['キーワード抽出', '頻出語を要約'],
+      duplicateLines: ['重複行削除', 'リストを整理'],
+      imageResize: ['画像リサイズ', 'サイズと比率を調整'],
+      imageCompress: ['画像圧縮', '画像容量を削減'],
+      qrCode: ['QR作成', 'テキストをQRへ変換']
+    },
+    zh: {
+      pdfMerge: ['PDF 管理', '合并 PDF 和图片'],
+      wordCounter: ['字数统计', '分析字符、单词和句子'],
+      videoFrames: ['视频帧提取', '保存 PNG 帧'],
+      pdfSplit: ['拆分 PDF', '分离指定页面'],
+      pdfCompress: ['压缩 PDF', '减小文件大小'],
+      pdfRotate: ['旋转 PDF', '调整页面方向'],
+      pdfDelete: ['删除页面', '移除不需要的页面'],
+      imageToPdf: ['图片转 PDF', '将图片保存为 PDF'],
+      pdfToImage: ['PDF 转图片', '将页面提取为图片'],
+      pdfProtect: ['保护 PDF', '添加密码'],
+      pdfUnlock: ['解锁 PDF', '打开授权文档'],
+      watermark: ['水印', '为文档添加标记'],
+      ocr: ['OCR 文字提取', '从图片读取文字'],
+      caseConvert: ['大小写转换', '转换英文大小写'],
+      textDiff: ['文本比较', '查找差异'],
+      keywordExtract: ['关键词提取', '汇总重复词'],
+      duplicateLines: ['删除重复行', '整理列表'],
+      imageResize: ['图片调整大小', '调整尺寸和比例'],
+      imageCompress: ['图片压缩', '减小图片大小'],
+      qrCode: ['QR 生成器', '将文本转为 QR']
+    },
+    es: {
+      pdfMerge: ['Herramientas PDF', 'Une PDF e imágenes'],
+      wordCounter: ['Contador de palabras', 'Analiza caracteres y palabras'],
+      videoFrames: ['Extraer fotogramas', 'Guarda fotogramas PNG'],
+      pdfSplit: ['Dividir PDF', 'Separa páginas elegidas'],
+      pdfCompress: ['Comprimir PDF', 'Reduce el tamaño'],
+      pdfRotate: ['Girar PDF', 'Corrige la orientación'],
+      pdfDelete: ['Eliminar páginas', 'Quita páginas innecesarias'],
+      imageToPdf: ['Imagen a PDF', 'Guarda imágenes como PDF'],
+      pdfToImage: ['PDF a imagen', 'Extrae páginas como imágenes'],
+      pdfProtect: ['Proteger PDF', 'Añade una contraseña'],
+      pdfUnlock: ['Desbloquear PDF', 'Abre documentos autorizados'],
+      watermark: ['Marca de agua', 'Añade marcas al documento'],
+      ocr: ['OCR de texto', 'Lee texto desde imágenes'],
+      caseConvert: ['Cambiar mayúsculas', 'Convierte texto en inglés'],
+      textDiff: ['Comparar texto', 'Encuentra diferencias'],
+      keywordExtract: ['Extraer palabras clave', 'Resume palabras repetidas'],
+      duplicateLines: ['Eliminar líneas duplicadas', 'Limpia listas'],
+      imageResize: ['Redimensionar imagen', 'Ajusta tamaño y proporción'],
+      imageCompress: ['Comprimir imagen', 'Reduce el peso de imagen'],
+      qrCode: ['Generador QR', 'Convierte texto en QR']
+    },
+    fr: {
+      pdfMerge: ['Outils PDF', 'Fusionner PDF et images'],
+      wordCounter: ['Compteur de mots', 'Analyser caractères et mots'],
+      videoFrames: ['Extraire des images vidéo', 'Enregistrer en PNG'],
+      pdfSplit: ['Diviser PDF', 'Séparer les pages choisies'],
+      pdfCompress: ['Compresser PDF', 'Réduire la taille'],
+      pdfRotate: ['Faire pivoter PDF', 'Corriger l’orientation'],
+      pdfDelete: ['Supprimer des pages', 'Retirer les pages inutiles'],
+      imageToPdf: ['Image en PDF', 'Enregistrer des images en PDF'],
+      pdfToImage: ['PDF en image', 'Extraire les pages en images'],
+      pdfProtect: ['Protéger PDF', 'Ajouter un mot de passe'],
+      pdfUnlock: ['Déverrouiller PDF', 'Ouvrir les documents autorisés'],
+      watermark: ['Filigrane', 'Ajouter une marque au document'],
+      ocr: ['Extraction OCR', 'Lire le texte des images'],
+      caseConvert: ['Changer la casse', 'Modifier la casse anglaise'],
+      textDiff: ['Comparer du texte', 'Repérer les différences'],
+      keywordExtract: ['Extraire les mots-clés', 'Résumer les mots répétés'],
+      duplicateLines: ['Supprimer les doublons', 'Nettoyer les listes'],
+      imageResize: ['Redimensionner image', 'Ajuster taille et ratio'],
+      imageCompress: ['Compresser image', 'Réduire le poids image'],
+      qrCode: ['Générateur QR', 'Transformer du texte en QR']
+    },
+    de: {
+      pdfMerge: ['PDF-Werkzeuge', 'PDFs und Bilder zusammenführen'],
+      wordCounter: ['Wörter zählen', 'Zeichen und Wörter analysieren'],
+      videoFrames: ['Videoframes extrahieren', 'Frames als PNG speichern'],
+      pdfSplit: ['PDF teilen', 'Ausgewählte Seiten trennen'],
+      pdfCompress: ['PDF komprimieren', 'Dateigröße reduzieren'],
+      pdfRotate: ['PDF drehen', 'Seitenausrichtung korrigieren'],
+      pdfDelete: ['Seiten löschen', 'Unnötige Seiten entfernen'],
+      imageToPdf: ['Bild zu PDF', 'Bilder als PDF speichern'],
+      pdfToImage: ['PDF zu Bild', 'Seiten als Bilder exportieren'],
+      pdfProtect: ['PDF schützen', 'Passwort hinzufügen'],
+      pdfUnlock: ['PDF entsperren', 'Berechtigte Dateien öffnen'],
+      watermark: ['Wasserzeichen', 'Markierung hinzufügen'],
+      ocr: ['OCR Texterkennung', 'Text aus Bildern lesen'],
+      caseConvert: ['Groß-/Kleinschreibung', 'Englische Schreibweise ändern'],
+      textDiff: ['Text vergleichen', 'Unterschiede finden'],
+      keywordExtract: ['Keywords extrahieren', 'Wiederholte Wörter bündeln'],
+      duplicateLines: ['Doppelte Zeilen entfernen', 'Listen bereinigen'],
+      imageResize: ['Bildgröße ändern', 'Größe und Verhältnis anpassen'],
+      imageCompress: ['Bild komprimieren', 'Bildgröße reduzieren'],
+      qrCode: ['QR-Generator', 'Text in QR umwandeln']
+    },
+    pt: {
+      pdfMerge: ['Ferramentas PDF', 'Una PDFs e imagens'],
+      wordCounter: ['Contador de palavras', 'Analise caracteres e palavras'],
+      videoFrames: ['Extrair quadros', 'Salvar quadros em PNG'],
+      pdfSplit: ['Dividir PDF', 'Separe páginas escolhidas'],
+      pdfCompress: ['Comprimir PDF', 'Reduza o tamanho'],
+      pdfRotate: ['Girar PDF', 'Corrija a orientação'],
+      pdfDelete: ['Excluir páginas', 'Remova páginas desnecessárias'],
+      imageToPdf: ['Imagem para PDF', 'Salve imagens como PDF'],
+      pdfToImage: ['PDF para imagem', 'Extraia páginas como imagens'],
+      pdfProtect: ['Proteger PDF', 'Adicione uma senha'],
+      pdfUnlock: ['Desbloquear PDF', 'Abra documentos autorizados'],
+      watermark: ['Marca d’água', 'Adicione marcas ao documento'],
+      ocr: ['Extração OCR', 'Leia texto em imagens'],
+      caseConvert: ['Converter maiúsculas', 'Altere texto em inglês'],
+      textDiff: ['Comparar texto', 'Encontre diferenças'],
+      keywordExtract: ['Extrair palavras-chave', 'Resuma palavras repetidas'],
+      duplicateLines: ['Remover linhas duplicadas', 'Limpe listas'],
+      imageResize: ['Redimensionar imagem', 'Ajuste tamanho e proporção'],
+      imageCompress: ['Comprimir imagem', 'Reduza o tamanho da imagem'],
+      qrCode: ['Gerador QR', 'Transforme texto em QR']
+    },
+    hi: {
+      pdfMerge: ['PDF टूल्स', 'PDF और इमेज मिलाएं'],
+      wordCounter: ['शब्द गणना', 'अक्षर और शब्द विश्लेषण'],
+      videoFrames: ['वीडियो फ़्रेम निकालें', 'PNG फ़्रेम सेव करें'],
+      pdfSplit: ['PDF विभाजित करें', 'चुने हुए पेज अलग करें'],
+      pdfCompress: ['PDF कंप्रेस करें', 'फ़ाइल आकार घटाएं'],
+      pdfRotate: ['PDF घुमाएं', 'पेज दिशा ठीक करें'],
+      pdfDelete: ['पेज हटाएं', 'अनचाहे पेज हटाएं'],
+      imageToPdf: ['इमेज से PDF', 'इमेज को PDF में सेव करें'],
+      pdfToImage: ['PDF से इमेज', 'पेज को इमेज में निकालें'],
+      pdfProtect: ['PDF सुरक्षित करें', 'पासवर्ड जोड़ें'],
+      pdfUnlock: ['PDF अनलॉक करें', 'अधिकृत दस्तावेज़ खोलें'],
+      watermark: ['वॉटरमार्क', 'दस्तावेज़ में निशान जोड़ें'],
+      ocr: ['OCR टेक्स्ट निकालें', 'इमेज से टेक्स्ट पढ़ें'],
+      caseConvert: ['केस बदलें', 'अंग्रेज़ी अक्षर शैली बदलें'],
+      textDiff: ['टेक्स्ट तुलना', 'अंतर खोजें'],
+      keywordExtract: ['कीवर्ड निकालें', 'दोहराए शब्दों का सार'],
+      duplicateLines: ['डुप्लिकेट लाइन हटाएं', 'सूचियां साफ करें'],
+      imageResize: ['इमेज आकार बदलें', 'आकार और अनुपात बदलें'],
+      imageCompress: ['इमेज कंप्रेस करें', 'इमेज आकार घटाएं'],
+      qrCode: ['QR जनरेटर', 'टेक्स्ट को QR बनाएं']
+    },
+    ar: {
+      pdfMerge: ['أدوات PDF', 'دمج PDF والصور'],
+      wordCounter: ['عد الكلمات', 'تحليل الأحرف والكلمات'],
+      videoFrames: ['استخراج إطارات الفيديو', 'حفظ الإطارات بصيغة PNG'],
+      pdfSplit: ['تقسيم PDF', 'فصل الصفحات المختارة'],
+      pdfCompress: ['ضغط PDF', 'تقليل حجم الملف'],
+      pdfRotate: ['تدوير PDF', 'تصحيح اتجاه الصفحات'],
+      pdfDelete: ['حذف الصفحات', 'إزالة الصفحات غير المطلوبة'],
+      imageToPdf: ['صورة إلى PDF', 'حفظ الصور كملف PDF'],
+      pdfToImage: ['PDF إلى صورة', 'استخراج الصفحات كصور'],
+      pdfProtect: ['حماية PDF', 'إضافة كلمة مرور'],
+      pdfUnlock: ['فتح PDF', 'فتح المستندات المصرح بها'],
+      watermark: ['علامة مائية', 'إضافة علامة إلى المستند'],
+      ocr: ['استخراج النص OCR', 'قراءة النص من الصور'],
+      caseConvert: ['تغيير حالة الأحرف', 'تغيير حروف الإنجليزية'],
+      textDiff: ['مقارنة النص', 'العثور على الاختلافات'],
+      keywordExtract: ['استخراج الكلمات المفتاحية', 'تلخيص الكلمات المتكررة'],
+      duplicateLines: ['إزالة الأسطر المكررة', 'تنظيف القوائم'],
+      imageResize: ['تغيير حجم الصورة', 'ضبط الحجم والنسبة'],
+      imageCompress: ['ضغط الصورة', 'تقليل حجم الصورة'],
+      qrCode: ['مولد QR', 'تحويل النص إلى QR']
+    }
+  };
+
+  const uiTranslations = {
+    ja: {
+      homeTitle: 'ツールキット', homeDesc: '必要なブラウザツールを選んでください。可能な限りファイルは端末内で処理されます。',
+      allTools: 'すべてのツール', availableNow: '利用可能', plannedTools: '準備中', openTool: '開く', comingSoon: '近日公開',
+      chooseFiles: 'ファイルを選択', dropPdf: 'PDFまたは画像ファイルをここに置くか選択してください', mergeDownload: 'PDFを結合してダウンロード',
+      clear: 'クリア', emptyFiles: 'まだファイルが追加されていません。', settings: '設定', outputName: '出力ファイル名',
+      textInput: 'テキスト入力', pasteText: 'ここにテキストを貼り付けてください。', chars: '文字数', charsNoSpace: '空白を除く',
+      words: '単語数', sentences: '文', paragraphs: '段落', reading: '読了時間', keywords: '主要単語',
+      videoChoose: '動画を選択', extractCurrent: '現在のフレームを抽出', extractInterval: '間隔で抽出', frames: '抽出フレーム',
+      adminTitle: '管理ページ', adminDesc: 'この静的版ではプライバシーに配慮したローカル集計のみ提供します。サーバー分析にはWorker/D1接続が必要です。'
+    },
+    zh: {
+      homeTitle: '工具箱', homeDesc: '选择需要的浏览器工具。文件会尽可能在你的设备内处理。',
+      allTools: '全部工具', availableNow: '可用', plannedTools: '开发中', openTool: '打开', comingSoon: '即将推出',
+      chooseFiles: '选择文件', dropPdf: '将 PDF 或图片文件拖到这里，或点击选择', mergeDownload: '合并并下载 PDF',
+      clear: '清除', emptyFiles: '尚未添加文件。', settings: '设置', outputName: '输出文件名',
+      textInput: '文本输入', pasteText: '在这里粘贴文本。', chars: '字符数', charsNoSpace: '不含空格',
+      words: '词数', sentences: '句子', paragraphs: '段落', reading: '阅读时间', keywords: '关键词',
+      videoChoose: '选择视频', extractCurrent: '提取当前帧', extractInterval: '按间隔提取', frames: '提取的帧',
+      adminTitle: '管理页面', adminDesc: '此静态版本仅提供注重隐私的本地统计。服务器分析需要连接 Worker/D1。'
+    },
+    es: {
+      homeTitle: 'Kit de herramientas', homeDesc: 'Elige una herramienta del navegador. Los archivos se procesan localmente siempre que sea posible.',
+      allTools: 'Todas las herramientas', availableNow: 'Disponible', plannedTools: 'Planificadas', openTool: 'Abrir', comingSoon: 'Próximamente',
+      chooseFiles: 'Elegir archivos', dropPdf: 'Suelta PDF o imágenes aquí, o elige archivos', mergeDownload: 'Unir y descargar PDF',
+      clear: 'Limpiar', emptyFiles: 'Aún no hay archivos.', settings: 'Ajustes', outputName: 'Nombre del archivo final',
+      textInput: 'Entrada de texto', pasteText: 'Pega el texto aquí.', chars: 'Caracteres', charsNoSpace: 'Sin espacios',
+      words: 'Palabras', sentences: 'Frases', paragraphs: 'Párrafos', reading: 'Tiempo de lectura', keywords: 'Palabras clave',
+      videoChoose: 'Elegir video', extractCurrent: 'Extraer fotograma actual', extractInterval: 'Extraer por intervalo', frames: 'Fotogramas extraídos',
+      adminTitle: 'Administración', adminDesc: 'Esta versión estática solo ofrece métricas locales con privacidad. La analítica de servidor requiere Worker/D1.'
+    },
+    fr: {
+      homeTitle: 'Boîte à outils', homeDesc: 'Choisissez un outil du navigateur. Les fichiers sont traités localement autant que possible.',
+      allTools: 'Tous les outils', availableNow: 'Disponible', plannedTools: 'Prévu', openTool: 'Ouvrir', comingSoon: 'Bientôt',
+      chooseFiles: 'Choisir des fichiers', dropPdf: 'Déposez des PDF ou images ici, ou choisissez des fichiers', mergeDownload: 'Fusionner et télécharger le PDF',
+      clear: 'Effacer', emptyFiles: 'Aucun fichier ajouté.', settings: 'Réglages', outputName: 'Nom du fichier final',
+      textInput: 'Saisie de texte', pasteText: 'Collez le texte ici.', chars: 'Caractères', charsNoSpace: 'Sans espaces',
+      words: 'Mots', sentences: 'Phrases', paragraphs: 'Paragraphes', reading: 'Temps de lecture', keywords: 'Mots clés',
+      videoChoose: 'Choisir une vidéo', extractCurrent: 'Extraire l’image actuelle', extractInterval: 'Extraire par intervalle', frames: 'Images extraites',
+      adminTitle: 'Administration', adminDesc: 'Cette version statique fournit uniquement des métriques locales respectueuses de la vie privée. L’analytique serveur nécessite Worker/D1.'
+    },
+    de: {
+      homeTitle: 'Werkzeugkasten', homeDesc: 'Wählen Sie ein Browser-Tool. Dateien werden möglichst lokal auf Ihrem Gerät verarbeitet.',
+      allTools: 'Alle Werkzeuge', availableNow: 'Verfügbar', plannedTools: 'Geplant', openTool: 'Öffnen', comingSoon: 'Demnächst',
+      chooseFiles: 'Dateien wählen', dropPdf: 'PDF- oder Bilddateien hier ablegen oder auswählen', mergeDownload: 'PDF zusammenführen und herunterladen',
+      clear: 'Leeren', emptyFiles: 'Noch keine Dateien hinzugefügt.', settings: 'Einstellungen', outputName: 'Ausgabedateiname',
+      textInput: 'Texteingabe', pasteText: 'Text hier einfügen.', chars: 'Zeichen', charsNoSpace: 'Ohne Leerzeichen',
+      words: 'Wörter', sentences: 'Sätze', paragraphs: 'Absätze', reading: 'Lesezeit', keywords: 'Wichtige Wörter',
+      videoChoose: 'Video wählen', extractCurrent: 'Aktuellen Frame extrahieren', extractInterval: 'Nach Intervall extrahieren', frames: 'Extrahierte Frames',
+      adminTitle: 'Administration', adminDesc: 'Diese statische Version bietet nur datenschutzfreundliche lokale Auswertungen. Server-Analytik benötigt Worker/D1.'
+    },
+    pt: {
+      homeTitle: 'Kit de ferramentas', homeDesc: 'Escolha uma ferramenta do navegador. Sempre que possível, os arquivos são processados no seu dispositivo.',
+      allTools: 'Todas as ferramentas', availableNow: 'Disponível', plannedTools: 'Planejadas', openTool: 'Abrir', comingSoon: 'Em breve',
+      chooseFiles: 'Escolher arquivos', dropPdf: 'Solte PDFs ou imagens aqui, ou escolha arquivos', mergeDownload: 'Unir e baixar PDF',
+      clear: 'Limpar', emptyFiles: 'Nenhum arquivo adicionado ainda.', settings: 'Configurações', outputName: 'Nome do arquivo final',
+      textInput: 'Entrada de texto', pasteText: 'Cole o texto aqui.', chars: 'Caracteres', charsNoSpace: 'Sem espaços',
+      words: 'Palavras', sentences: 'Frases', paragraphs: 'Parágrafos', reading: 'Tempo de leitura', keywords: 'Palavras principais',
+      videoChoose: 'Escolher vídeo', extractCurrent: 'Extrair quadro atual', extractInterval: 'Extrair por intervalo', frames: 'Quadros extraídos',
+      adminTitle: 'Administração', adminDesc: 'Esta versão estática fornece apenas métricas locais com privacidade. A análise no servidor exige Worker/D1.'
+    },
+    hi: {
+      homeTitle: 'टूलकिट', homeDesc: 'ज़रूरी ब्राउज़र टूल चुनें। जहाँ संभव हो, फ़ाइलें आपके डिवाइस पर ही प्रोसेस होती हैं।',
+      allTools: 'सभी टूल', availableNow: 'उपलब्ध', plannedTools: 'योजनाबद्ध', openTool: 'खोलें', comingSoon: 'जल्द',
+      chooseFiles: 'फ़ाइलें चुनें', dropPdf: 'PDF या इमेज फ़ाइलें यहाँ छोड़ें, या फ़ाइलें चुनें', mergeDownload: 'PDF मिलाकर डाउनलोड करें',
+      clear: 'साफ़ करें', emptyFiles: 'अभी कोई फ़ाइल नहीं जोड़ी गई।', settings: 'सेटिंग्स', outputName: 'आउटपुट फ़ाइल नाम',
+      textInput: 'टेक्स्ट इनपुट', pasteText: 'टेक्स्ट यहाँ पेस्ट करें।', chars: 'अक्षर', charsNoSpace: 'स्पेस हटाकर',
+      words: 'शब्द', sentences: 'वाक्य', paragraphs: 'पैराग्राफ', reading: 'पढ़ने का समय', keywords: 'मुख्य शब्द',
+      videoChoose: 'वीडियो चुनें', extractCurrent: 'मौजूदा फ़्रेम निकालें', extractInterval: 'अंतराल से निकालें', frames: 'निकाले गए फ़्रेम',
+      adminTitle: 'एडमिन पेज', adminDesc: 'यह स्थिर संस्करण गोपनीयता-सुरक्षित स्थानीय आँकड़े ही देता है। सर्वर विश्लेषण के लिए Worker/D1 कनेक्शन चाहिए।'
+    },
+    ar: {
+      homeTitle: 'مجموعة أدوات', homeDesc: 'اختر أداة المتصفح التي تحتاجها. تتم معالجة الملفات على جهازك كلما أمكن.',
+      allTools: 'كل الأدوات', availableNow: 'متاح', plannedTools: 'قيد التخطيط', openTool: 'فتح', comingSoon: 'قريباً',
+      chooseFiles: 'اختيار ملفات', dropPdf: 'أسقط ملفات PDF أو الصور هنا، أو اختر الملفات', mergeDownload: 'دمج PDF وتنزيله',
+      clear: 'مسح', emptyFiles: 'لم تتم إضافة ملفات بعد.', settings: 'الإعدادات', outputName: 'اسم ملف الإخراج',
+      textInput: 'إدخال النص', pasteText: 'الصق النص هنا.', chars: 'الأحرف', charsNoSpace: 'بدون مسافات',
+      words: 'الكلمات', sentences: 'الجمل', paragraphs: 'الفقرات', reading: 'وقت القراءة', keywords: 'الكلمات المهمة',
+      videoChoose: 'اختيار فيديو', extractCurrent: 'استخراج الإطار الحالي', extractInterval: 'استخراج حسب الفاصل', frames: 'الإطارات المستخرجة',
+      adminTitle: 'صفحة الإدارة', adminDesc: 'توفر هذه النسخة الثابتة إحصاءات محلية تحافظ على الخصوصية فقط. يتطلب تحليل الخادم ربط Worker/D1.'
+    }
+  };
+
   const state = {
     lang: localStorage.getItem('toolkitLang') || 'ko',
     route: readRoute(),
@@ -277,9 +596,25 @@
   function t(key) {
     return (i18n[state.lang] && i18n[state.lang][key])
       || (localized[state.lang] && localized[state.lang][key])
+      || (uiTranslations[state.lang] && uiTranslations[state.lang][key])
       || fallback[key]
       || i18n.ko[key]
       || key;
+  }
+
+  function categoryLabel(category) {
+    return (categoryTranslations[state.lang] && categoryTranslations[state.lang][category])
+      || (categoryTranslations.en && categoryTranslations.en[category])
+      || (categoryTranslations.ko && categoryTranslations.ko[category])
+      || category;
+  }
+
+  function toolText(tool) {
+    const entry = (toolTranslations[state.lang] && toolTranslations[state.lang][tool.key])
+      || (toolTranslations.en && toolTranslations.en[tool.key])
+      || (toolTranslations.ko && toolTranslations.ko[tool.key])
+      || [tool.key, ''];
+    return { title: entry[0], desc: entry[1] };
   }
 
   function escapeHtml(value) {
@@ -360,6 +695,8 @@
 
   function renderChrome() {
     document.documentElement.lang = state.lang;
+    document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr';
+    updateStaticAssetLinks();
     document.querySelectorAll('[data-i18n]').forEach(el => {
       el.textContent = t(el.dataset.i18n);
     });
@@ -373,8 +710,17 @@
     });
   }
 
+  function updateStaticAssetLinks() {
+    const manifest = document.querySelector('link[rel="manifest"]');
+    const icon = document.querySelector('link[rel="icon"]');
+    const appleIcon = document.querySelector('link[rel="apple-touch-icon"]');
+    if (manifest) manifest.setAttribute('href', `${BASE_PATH}manifest.webmanifest`);
+    if (icon) icon.setAttribute('href', `${BASE_PATH}icons/icon-192.png`);
+    if (appleIcon) appleIcon.setAttribute('href', `${BASE_PATH}icons/icon-180.png`);
+  }
+
   function renderHeader(meta) {
-    const title = state.route === 'home' ? '툴킷 - 무료 브라우저 도구 모음' : `${meta.title} - 툴킷`;
+    const title = state.route === 'home' ? `${t('homeTitle')} - ${t('brandSub')}` : `${meta.title} - ${t('brand')}`;
     document.title = title;
     const description = document.querySelector('meta[name="description"]');
     const canonical = document.querySelector('link[rel="canonical"]');
@@ -411,8 +757,8 @@
             <h2>${t('allTools')}</h2>
             <p>${readyCount} ${t('availableNow')} · ${plannedCount} ${t('plannedTools')}</p>
           </div>
-          <div class="category-tabs" id="categoryTabs" aria-label="도구 카테고리">
-            ${categories.map(category => `<button class="category-tab ${state.homeCategory === category ? 'active' : ''}" type="button" data-category="${escapeHtml(category)}">${escapeHtml(category === 'all' ? '전체' : category)}</button>`).join('')}
+          <div class="category-tabs" id="categoryTabs" aria-label="${escapeHtml(t('allTools'))}">
+            ${categories.map(category => `<button class="category-tab ${state.homeCategory === category ? 'active' : ''}" type="button" data-category="${escapeHtml(category)}">${escapeHtml(categoryLabel(category))}</button>`).join('')}
           </div>
         </div>
         <div class="tool-grid">
@@ -423,14 +769,14 @@
     const categoryCounts = categories.filter(category => category !== 'all').map(category => {
       const total = toolCatalog.filter(tool => tool.category === category).length;
       const ready = toolCatalog.filter(tool => tool.category === category && tool.status === 'ready').length;
-      return `<div class="mini-stat"><span>${escapeHtml(category)}</span><strong>${ready}/${total}</strong></div>`;
+      return `<div class="mini-stat"><span>${escapeHtml(categoryLabel(category))}</span><strong>${ready}/${total}</strong></div>`;
     }).join('');
     settingsPanel.innerHTML = `
       <h2>${t('settings')}</h2>
       <div class="setting-group">
         <div class="setting-label">${t('availableNow')}</div>
         <div class="mini-stat-grid">
-          <div class="mini-stat"><span>전체</span><strong>${readyCount}/${toolCatalog.length}</strong></div>
+          <div class="mini-stat"><span>${escapeHtml(categoryLabel('all'))}</span><strong>${readyCount}/${toolCatalog.length}</strong></div>
           ${categoryCounts}
         </div>
       </div>
@@ -441,11 +787,12 @@
 
   function renderToolCard(tool) {
     const disabled = tool.status !== 'ready';
+    const text = toolText(tool);
     return `<button class="tool-card ${disabled ? 'is-planned' : 'is-ready'}" type="button" ${disabled ? 'disabled' : `data-route="${tool.route}"`}>
       <span class="tool-symbol">${escapeHtml(tool.symbol)}</span>
       <span class="tool-card-body">
-        <strong>${escapeHtml(tool.title)}</strong>
-        <small>${escapeHtml(tool.desc)}</small>
+        <strong>${escapeHtml(text.title)}</strong>
+        <small>${escapeHtml(text.desc)}</small>
       </span>
       <span class="tool-card-meta">${disabled ? t('comingSoon') : t('openTool')}</span>
     </button>`;
@@ -1250,7 +1597,7 @@
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js?v=20260629-home-nav2', { updateViaCache: 'none' })
+      navigator.serviceWorker.register('./sw.js?v=20260629-i18n-home2', { updateViaCache: 'none' })
         .then(registration => registration.update())
         .catch(error => console.warn('Service worker registration failed:', error));
     });

@@ -94,6 +94,15 @@ button { cursor: pointer; }
   color: var(--text);
 }
 .tool-link.active { box-shadow: inset 3px 0 0 var(--blue); }
+html[dir="rtl"] .brand-button,
+html[dir="rtl"] .tool-link,
+html[dir="rtl"] .tool-card,
+html[dir="rtl"] .panel,
+html[dir="rtl"] .settings-block,
+html[dir="rtl"] .legal-page {
+  text-align: right;
+}
+html[dir="rtl"] .tool-link.active { box-shadow: inset -3px 0 0 var(--blue); }
 .tool-icon {
   min-width: 38px; height: 28px; border-radius: 6px; display: grid; place-items: center;
   background: #e0edff; color: #1d4ed8; font-size: .68rem; font-weight: 800;
