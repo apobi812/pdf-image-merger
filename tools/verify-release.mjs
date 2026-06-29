@@ -53,6 +53,7 @@ assert(!sw.includes('./admin/index.html'), 'service worker must not precache adm
 assert(sw.includes("const CACHE_NAME = 'toolkit-v15'"), 'service worker cache name not bumped');
 assert(sw.includes("const OFFLINE_URL = './offline.html'"), 'service worker missing offline fallback');
 assert(sw.includes("'./app.js?v=20260629-pwa1'"), 'service worker has stale app cache version');
+assert(app.includes("./sw.js?v=20260629-pwa1"), 'app registers a stale service worker cache version');
 assert(!sitemap.includes('/admin/'), 'sitemap must not include admin page');
 assert(existsSync(join(root, '.well-known/security.txt')), 'security.txt is missing');
 assert(existsSync(join(root, '_headers')), '_headers template is missing');
