@@ -11,6 +11,7 @@ This project is a static, client-side PWA. It is designed so user files are proc
 - PDF/image merge inputs are capped by both per-file size and total selected input size
 - Word counter input is capped to reduce browser memory and CPU exhaustion from oversized pastes
 - PDF and image magic-byte checks before previewing or merging
+- Images are re-encoded through browser canvas before PDF embedding to strip source metadata such as EXIF and location data
 - Encrypted PDFs are blocked instead of being loaded with encryption bypass flags
 - PDFs with JavaScript, auto actions, embedded files, rich media, or XFA markers are blocked as high-risk active content
 - SVG and other active/vector image formats are rejected for PDF merging

@@ -113,7 +113,7 @@
       statsCopied: '통계를 복사했습니다.', readingSpeed: '읽기 속도', minutesShort: '분',
       analyticsConsentTitle: '분석 사용 동의', analyticsConsentDesc: '접속자 수와 기능 사용 횟수를 집계해 도구를 개선합니다. 파일명과 파일 내용은 전송하지 않습니다.',
       acceptAnalytics: '동의', declineAnalytics: '거절', analyticsEnabled: '분석 동의가 저장되었습니다.', analyticsDisabled: '원격 분석을 사용하지 않습니다.',
-      securityGuardrails: '보안 보호 장치', guardClientSide: '브라우저 안에서만 처리', guardFileValidation: '파일 형식과 크기 검증', guardTotalInputLimit: '전체 입력 용량 제한', guardNoFileAnalytics: '파일 내용 분석 저장 안 함',
+      securityGuardrails: '보안 보호 장치', guardClientSide: '브라우저 안에서만 처리', guardFileValidation: '파일 형식과 크기 검증', guardTotalInputLimit: '전체 입력 용량 제한', guardImageMetadata: '이미지 메타데이터 제거', guardNoFileAnalytics: '파일 내용 분석 저장 안 함',
       creatingPdf: 'PDF를 만드는 중...', pdfCreated: 'PDF가 생성되었습니다.', pdfCreationFailed: 'PDF 생성에 실패했습니다.',
       encryptedPdfBlocked: '암호화된 PDF는 안전을 위해 처리하지 않습니다.', unsafePdfBlocked: '자동 실행, 스크립트, 첨부파일 등 위험 요소가 있는 PDF는 처리하지 않습니다.', unsupportedFile: '지원하지 않거나 너무 큰 파일입니다.', totalInputLimitExceeded: '전체 입력 용량은 {size}까지 허용됩니다.', textLimitExceeded: '텍스트는 최대 {count}자까지 계산합니다.', totalLimitLabel: '전체 최대', textLimitLabel: '최대 {count}자까지 브라우저에서 계산합니다.', fileReadFailed: '파일을 읽을 수 없습니다.',
       noFrames: '아직 추출된 프레임이 없습니다.', download: '다운로드', frameInterval: '추출 간격(초)', maxFrames: '최대 프레임 수', videoUnsupported: '지원하지 않거나 너무 큰 동영상입니다.'
@@ -141,7 +141,7 @@
     statsCopied: 'Stats copied.', readingSpeed: 'Reading speed', minutesShort: 'min',
     analyticsConsentTitle: 'Analytics consent', analyticsConsentDesc: 'Help improve the tools with aggregate visits and feature counts. File names and file contents are never sent.',
     acceptAnalytics: 'Allow', declineAnalytics: 'Decline', analyticsEnabled: 'Analytics consent saved.', analyticsDisabled: 'Remote analytics will stay off.',
-    securityGuardrails: 'Security guardrails', guardClientSide: 'Client-side processing only', guardFileValidation: 'File type and size validation', guardTotalInputLimit: 'Total input size limit', guardNoFileAnalytics: 'No file content analytics',
+    securityGuardrails: 'Security guardrails', guardClientSide: 'Client-side processing only', guardFileValidation: 'File type and size validation', guardTotalInputLimit: 'Total input size limit', guardImageMetadata: 'Image metadata stripping', guardNoFileAnalytics: 'No file content analytics',
     creatingPdf: 'Creating PDF...', pdfCreated: 'PDF created.', pdfCreationFailed: 'PDF creation failed.',
     encryptedPdfBlocked: 'Encrypted PDFs are blocked for safety.', unsafePdfBlocked: 'PDFs with scripts, auto actions, attachments, or rich media are blocked.', unsupportedFile: 'Unsupported or too large.', totalInputLimitExceeded: 'Total input size is limited to {size}.', textLimitExceeded: 'Text is limited to {count} characters.', totalLimitLabel: 'total max', textLimitLabel: 'Up to {count} characters are counted in the browser.', fileReadFailed: 'Could not read file.',
     noFrames: 'No frames extracted yet.', download: 'Download', frameInterval: 'Interval seconds', maxFrames: 'Max frames', videoUnsupported: 'Unsupported video or file too large.'
@@ -481,7 +481,7 @@
       statsCopied: '統計をコピーしました。', readingSpeed: '読書速度', minutesShort: '分',
       analyticsConsentTitle: '分析への同意', analyticsConsentDesc: '訪問数と機能利用回数を集計して改善に役立てます。ファイル名や内容は送信しません。',
       acceptAnalytics: '同意', declineAnalytics: '拒否', analyticsEnabled: '分析への同意を保存しました。', analyticsDisabled: 'リモート分析は使用しません。',
-      securityGuardrails: 'セキュリティ保護', guardClientSide: 'ブラウザ内のみで処理', guardFileValidation: 'ファイル形式とサイズを検証', guardTotalInputLimit: '合計入力サイズを制限', guardNoFileAnalytics: 'ファイル内容を分析保存しません',
+      securityGuardrails: 'セキュリティ保護', guardClientSide: 'ブラウザ内のみで処理', guardFileValidation: 'ファイル形式とサイズを検証', guardTotalInputLimit: '合計入力サイズを制限', guardImageMetadata: '画像メタデータを削除', guardNoFileAnalytics: 'ファイル内容を分析保存しません',
       creatingPdf: 'PDFを作成中...', pdfCreated: 'PDFを作成しました。', pdfCreationFailed: 'PDF作成に失敗しました。',
       encryptedPdfBlocked: '暗号化PDFは安全のため処理しません。', unsafePdfBlocked: 'スクリプト、自動実行、添付ファイル、リッチメディアを含むPDFは処理しません。', unsupportedFile: '未対応または大きすぎるファイルです。', totalInputLimitExceeded: '合計入力サイズは{size}までです。', textLimitExceeded: 'テキストは最大{count}文字まで計算します。', totalLimitLabel: '合計最大', textLimitLabel: 'ブラウザでは最大{count}文字まで計算します。', fileReadFailed: 'ファイルを読み込めません。',
       noFrames: '抽出されたフレームはまだありません。', download: 'ダウンロード', frameInterval: '抽出間隔(秒)', maxFrames: '最大フレーム数', videoUnsupported: '未対応または大きすぎる動画です。'
@@ -499,7 +499,7 @@
       statsCopied: '统计已复制。', readingSpeed: '阅读速度', minutesShort: '分钟',
       analyticsConsentTitle: '分析同意', analyticsConsentDesc: '通过汇总访问量和功能使用次数改进工具。不会发送文件名或文件内容。',
       acceptAnalytics: '同意', declineAnalytics: '拒绝', analyticsEnabled: '已保存分析同意。', analyticsDisabled: '远程分析将保持关闭。',
-      securityGuardrails: '安全防护', guardClientSide: '仅在浏览器内处理', guardFileValidation: '验证文件类型和大小', guardTotalInputLimit: '限制总输入大小', guardNoFileAnalytics: '不保存文件内容分析',
+      securityGuardrails: '安全防护', guardClientSide: '仅在浏览器内处理', guardFileValidation: '验证文件类型和大小', guardTotalInputLimit: '限制总输入大小', guardImageMetadata: '移除图片元数据', guardNoFileAnalytics: '不保存文件内容分析',
       creatingPdf: '正在创建 PDF...', pdfCreated: 'PDF 已创建。', pdfCreationFailed: 'PDF 创建失败。',
       encryptedPdfBlocked: '出于安全原因，不处理加密 PDF。', unsafePdfBlocked: '包含脚本、自动操作、附件或富媒体的 PDF 会被阻止。', unsupportedFile: '文件不支持或过大。', totalInputLimitExceeded: '总输入大小限制为 {size}。', textLimitExceeded: '文本最多计算 {count} 个字符。', totalLimitLabel: '总上限', textLimitLabel: '浏览器最多计算 {count} 个字符。', fileReadFailed: '无法读取文件。',
       noFrames: '尚未提取帧。', download: '下载', frameInterval: '提取间隔(秒)', maxFrames: '最大帧数', videoUnsupported: '视频不支持或过大。'
@@ -517,7 +517,7 @@
       statsCopied: 'Estadísticas copiadas.', readingSpeed: 'Velocidad de lectura', minutesShort: 'min',
       analyticsConsentTitle: 'Consentimiento de analítica', analyticsConsentDesc: 'Ayuda a mejorar las herramientas con visitas y uso de funciones agregados. No se envían nombres ni contenidos de archivos.',
       acceptAnalytics: 'Permitir', declineAnalytics: 'Rechazar', analyticsEnabled: 'Consentimiento de analítica guardado.', analyticsDisabled: 'La analítica remota seguirá desactivada.',
-      securityGuardrails: 'Protecciones de seguridad', guardClientSide: 'Procesamiento solo en el navegador', guardFileValidation: 'Validación de tipo y tamaño', guardTotalInputLimit: 'Límite total de entrada', guardNoFileAnalytics: 'Sin análisis de contenido de archivos',
+      securityGuardrails: 'Protecciones de seguridad', guardClientSide: 'Procesamiento solo en el navegador', guardFileValidation: 'Validación de tipo y tamaño', guardTotalInputLimit: 'Límite total de entrada', guardImageMetadata: 'Eliminación de metadatos de imagen', guardNoFileAnalytics: 'Sin análisis de contenido de archivos',
       creatingPdf: 'Creando PDF...', pdfCreated: 'PDF creado.', pdfCreationFailed: 'No se pudo crear el PDF.',
       encryptedPdfBlocked: 'Los PDF cifrados se bloquean por seguridad.', unsafePdfBlocked: 'Se bloquean los PDF con scripts, acciones automáticas, adjuntos o medios enriquecidos.', unsupportedFile: 'Archivo no compatible o demasiado grande.', totalInputLimitExceeded: 'El tamaño total de entrada está limitado a {size}.', textLimitExceeded: 'El texto se limita a {count} caracteres.', totalLimitLabel: 'máximo total', textLimitLabel: 'Se cuentan hasta {count} caracteres en el navegador.', fileReadFailed: 'No se pudo leer el archivo.',
       noFrames: 'Aún no se extrajeron fotogramas.', download: 'Descargar', frameInterval: 'Intervalo en segundos', maxFrames: 'Máximo de fotogramas', videoUnsupported: 'Video no compatible o demasiado grande.'
@@ -535,7 +535,7 @@
       statsCopied: 'Statistiques copiées.', readingSpeed: 'Vitesse de lecture', minutesShort: 'min',
       analyticsConsentTitle: 'Consentement aux statistiques', analyticsConsentDesc: 'Aidez à améliorer les outils avec des visites et usages agrégés. Les noms et contenus de fichiers ne sont pas envoyés.',
       acceptAnalytics: 'Accepter', declineAnalytics: 'Refuser', analyticsEnabled: 'Consentement aux statistiques enregistré.', analyticsDisabled: 'Les statistiques distantes restent désactivées.',
-      securityGuardrails: 'Protections de sécurité', guardClientSide: 'Traitement uniquement dans le navigateur', guardFileValidation: 'Validation du type et de la taille', guardTotalInputLimit: 'Limite de taille totale', guardNoFileAnalytics: 'Aucune analyse du contenu des fichiers',
+      securityGuardrails: 'Protections de sécurité', guardClientSide: 'Traitement uniquement dans le navigateur', guardFileValidation: 'Validation du type et de la taille', guardTotalInputLimit: 'Limite de taille totale', guardImageMetadata: 'Suppression des métadonnées d’image', guardNoFileAnalytics: 'Aucune analyse du contenu des fichiers',
       creatingPdf: 'Création du PDF...', pdfCreated: 'PDF créé.', pdfCreationFailed: 'Échec de la création du PDF.',
       encryptedPdfBlocked: 'Les PDF chiffrés sont bloqués par sécurité.', unsafePdfBlocked: 'Les PDF avec scripts, actions automatiques, pièces jointes ou médias enrichis sont bloqués.', unsupportedFile: 'Fichier non compatible ou trop volumineux.', totalInputLimitExceeded: 'La taille totale des entrées est limitée à {size}.', textLimitExceeded: 'Le texte est limité à {count} caractères.', totalLimitLabel: 'maximum total', textLimitLabel: 'Jusqu’à {count} caractères sont comptés dans le navigateur.', fileReadFailed: 'Impossible de lire le fichier.',
       noFrames: 'Aucune image extraite pour le moment.', download: 'Télécharger', frameInterval: 'Intervalle en secondes', maxFrames: 'Nombre maximal d’images', videoUnsupported: 'Vidéo non compatible ou trop volumineuse.'
@@ -553,7 +553,7 @@
       statsCopied: 'Statistik kopiert.', readingSpeed: 'Lesegeschwindigkeit', minutesShort: 'Min.',
       analyticsConsentTitle: 'Analytics-Einwilligung', analyticsConsentDesc: 'Helfen Sie, die Tools mit aggregierten Besuchen und Funktionsnutzung zu verbessern. Dateinamen und Inhalte werden nicht gesendet.',
       acceptAnalytics: 'Erlauben', declineAnalytics: 'Ablehnen', analyticsEnabled: 'Analytics-Einwilligung gespeichert.', analyticsDisabled: 'Remote-Analytics bleibt deaktiviert.',
-      securityGuardrails: 'Sicherheitsregeln', guardClientSide: 'Nur im Browser verarbeiten', guardFileValidation: 'Dateityp und Größe prüfen', guardTotalInputLimit: 'Gesamte Eingabegröße begrenzen', guardNoFileAnalytics: 'Keine Inhaltsanalyse speichern',
+      securityGuardrails: 'Sicherheitsregeln', guardClientSide: 'Nur im Browser verarbeiten', guardFileValidation: 'Dateityp und Größe prüfen', guardTotalInputLimit: 'Gesamte Eingabegröße begrenzen', guardImageMetadata: 'Bildmetadaten entfernen', guardNoFileAnalytics: 'Keine Inhaltsanalyse speichern',
       creatingPdf: 'PDF wird erstellt...', pdfCreated: 'PDF erstellt.', pdfCreationFailed: 'PDF-Erstellung fehlgeschlagen.',
       encryptedPdfBlocked: 'Verschlüsselte PDFs werden aus Sicherheitsgründen blockiert.', unsafePdfBlocked: 'PDFs mit Skripten, Auto-Aktionen, Anhängen oder Rich Media werden blockiert.', unsupportedFile: 'Nicht unterstützte oder zu große Datei.', totalInputLimitExceeded: 'Die gesamte Eingabegröße ist auf {size} begrenzt.', textLimitExceeded: 'Text ist auf {count} Zeichen begrenzt.', totalLimitLabel: 'gesamt max.', textLimitLabel: 'Bis zu {count} Zeichen werden im Browser gezählt.', fileReadFailed: 'Datei konnte nicht gelesen werden.',
       noFrames: 'Noch keine Frames extrahiert.', download: 'Herunterladen', frameInterval: 'Intervall in Sekunden', maxFrames: 'Maximale Frames', videoUnsupported: 'Nicht unterstütztes oder zu großes Video.'
@@ -571,7 +571,7 @@
       statsCopied: 'Estatísticas copiadas.', readingSpeed: 'Velocidade de leitura', minutesShort: 'min',
       analyticsConsentTitle: 'Consentimento de análise', analyticsConsentDesc: 'Ajude a melhorar as ferramentas com visitas e uso de recursos agregados. Nomes e conteúdos de arquivos não são enviados.',
       acceptAnalytics: 'Permitir', declineAnalytics: 'Recusar', analyticsEnabled: 'Consentimento de análise salvo.', analyticsDisabled: 'A análise remota ficará desativada.',
-      securityGuardrails: 'Proteções de segurança', guardClientSide: 'Processamento apenas no navegador', guardFileValidation: 'Validação de tipo e tamanho', guardTotalInputLimit: 'Limite total de entrada', guardNoFileAnalytics: 'Sem análise do conteúdo dos arquivos',
+      securityGuardrails: 'Proteções de segurança', guardClientSide: 'Processamento apenas no navegador', guardFileValidation: 'Validação de tipo e tamanho', guardTotalInputLimit: 'Limite total de entrada', guardImageMetadata: 'Remoção de metadados de imagem', guardNoFileAnalytics: 'Sem análise do conteúdo dos arquivos',
       creatingPdf: 'Criando PDF...', pdfCreated: 'PDF criado.', pdfCreationFailed: 'Falha ao criar PDF.',
       encryptedPdfBlocked: 'PDFs criptografados são bloqueados por segurança.', unsafePdfBlocked: 'PDFs com scripts, ações automáticas, anexos ou mídia avançada são bloqueados.', unsupportedFile: 'Arquivo não compatível ou muito grande.', totalInputLimitExceeded: 'O tamanho total de entrada é limitado a {size}.', textLimitExceeded: 'O texto é limitado a {count} caracteres.', totalLimitLabel: 'máximo total', textLimitLabel: 'Até {count} caracteres são contados no navegador.', fileReadFailed: 'Não foi possível ler o arquivo.',
       noFrames: 'Nenhum quadro extraído ainda.', download: 'Baixar', frameInterval: 'Intervalo em segundos', maxFrames: 'Máximo de quadros', videoUnsupported: 'Vídeo não compatível ou muito grande.'
@@ -589,7 +589,7 @@
       statsCopied: 'आँकड़े कॉपी हो गए।', readingSpeed: 'पढ़ने की गति', minutesShort: 'मिनट',
       analyticsConsentTitle: 'विश्लेषण सहमति', analyticsConsentDesc: 'कुल विज़िट और फ़ीचर उपयोग से टूल सुधारने में मदद करें। फ़ाइल नाम और सामग्री नहीं भेजी जाती।',
       acceptAnalytics: 'अनुमति दें', declineAnalytics: 'अस्वीकार', analyticsEnabled: 'विश्लेषण सहमति सेव हो गई।', analyticsDisabled: 'रिमोट विश्लेषण बंद रहेगा।',
-      securityGuardrails: 'सुरक्षा नियंत्रण', guardClientSide: 'केवल ब्राउज़र में प्रोसेसिंग', guardFileValidation: 'फ़ाइल प्रकार और आकार जाँच', guardTotalInputLimit: 'कुल इनपुट आकार सीमा', guardNoFileAnalytics: 'फ़ाइल सामग्री विश्लेषण सेव नहीं',
+      securityGuardrails: 'सुरक्षा नियंत्रण', guardClientSide: 'केवल ब्राउज़र में प्रोसेसिंग', guardFileValidation: 'फ़ाइल प्रकार और आकार जाँच', guardTotalInputLimit: 'कुल इनपुट आकार सीमा', guardImageMetadata: 'इमेज मेटाडेटा हटाना', guardNoFileAnalytics: 'फ़ाइल सामग्री विश्लेषण सेव नहीं',
       creatingPdf: 'PDF बनाया जा रहा है...', pdfCreated: 'PDF बन गया।', pdfCreationFailed: 'PDF बनाने में विफल।',
       encryptedPdfBlocked: 'सुरक्षा के लिए एन्क्रिप्टेड PDF रोके गए हैं।', unsafePdfBlocked: 'स्क्रिप्ट, ऑटो-एक्शन, अटैचमेंट या रिच मीडिया वाले PDF रोके जाते हैं।', unsupportedFile: 'फ़ाइल समर्थित नहीं या बहुत बड़ी है।', totalInputLimitExceeded: 'कुल इनपुट आकार {size} तक सीमित है।', textLimitExceeded: 'टेक्स्ट अधिकतम {count} अक्षरों तक सीमित है।', totalLimitLabel: 'कुल अधिकतम', textLimitLabel: 'ब्राउज़र में अधिकतम {count} अक्षर गिने जाते हैं।', fileReadFailed: 'फ़ाइल पढ़ी नहीं जा सकी।',
       noFrames: 'अभी कोई फ़्रेम नहीं निकला।', download: 'डाउनलोड', frameInterval: 'अंतराल सेकंड', maxFrames: 'अधिकतम फ़्रेम', videoUnsupported: 'वीडियो समर्थित नहीं या बहुत बड़ा है।'
@@ -607,7 +607,7 @@
       statsCopied: 'تم نسخ الإحصاءات.', readingSpeed: 'سرعة القراءة', minutesShort: 'دقيقة',
       analyticsConsentTitle: 'الموافقة على التحليلات', analyticsConsentDesc: 'ساعد في تحسين الأدوات عبر زيارات واستخدام مجمعين. لا يتم إرسال أسماء الملفات أو محتواها.',
       acceptAnalytics: 'موافقة', declineAnalytics: 'رفض', analyticsEnabled: 'تم حفظ الموافقة على التحليلات.', analyticsDisabled: 'ستبقى التحليلات عن بعد متوقفة.',
-      securityGuardrails: 'ضوابط الأمان', guardClientSide: 'المعالجة داخل المتصفح فقط', guardFileValidation: 'التحقق من النوع والحجم', guardTotalInputLimit: 'حد الحجم الإجمالي', guardNoFileAnalytics: 'لا يتم حفظ تحليل محتوى الملفات',
+      securityGuardrails: 'ضوابط الأمان', guardClientSide: 'المعالجة داخل المتصفح فقط', guardFileValidation: 'التحقق من النوع والحجم', guardTotalInputLimit: 'حد الحجم الإجمالي', guardImageMetadata: 'إزالة بيانات الصور الوصفية', guardNoFileAnalytics: 'لا يتم حفظ تحليل محتوى الملفات',
       creatingPdf: 'جار إنشاء PDF...', pdfCreated: 'تم إنشاء PDF.', pdfCreationFailed: 'فشل إنشاء PDF.',
       encryptedPdfBlocked: 'يتم حظر ملفات PDF المشفرة لأسباب أمنية.', unsafePdfBlocked: 'يتم حظر ملفات PDF التي تحتوي على نصوص أو إجراءات تلقائية أو مرفقات أو وسائط تفاعلية.', unsupportedFile: 'الملف غير مدعوم أو كبير جداً.', totalInputLimitExceeded: 'إجمالي حجم الإدخال محدود بـ {size}.', textLimitExceeded: 'النص محدود بـ {count} حرفاً.', totalLimitLabel: 'الحد الإجمالي', textLimitLabel: 'يتم عد حتى {count} حرفاً في المتصفح.', fileReadFailed: 'تعذرت قراءة الملف.',
       noFrames: 'لم يتم استخراج أي إطارات بعد.', download: 'تنزيل', frameInterval: 'الفاصل بالثواني', maxFrames: 'الحد الأقصى للإطارات', videoUnsupported: 'الفيديو غير مدعوم أو كبير جداً.'
@@ -1086,6 +1086,7 @@
         <label class="check-row"><input type="checkbox" checked disabled> ${t('guardClientSide')}</label>
         <label class="check-row"><input type="checkbox" checked disabled> ${t('guardFileValidation')}</label>
         <label class="check-row"><input type="checkbox" checked disabled> ${t('guardTotalInputLimit')} (${formatSize(MAX_TOTAL_PDF_INPUT_SIZE)})</label>
+        <label class="check-row"><input type="checkbox" checked disabled> ${t('guardImageMetadata')}</label>
         <label class="check-row"><input type="checkbox" checked disabled> ${t('guardNoFileAnalytics')}</label>
       </div>
       <div class="rail-ad"><span>${t('adLabel')}</span><small>300x250</small></div>
@@ -1189,13 +1190,11 @@
       URL.revokeObjectURL(previewUrl);
       throw new Error('Image dimensions too large');
     }
-    const isJpg = detected.kind === 'jpg';
-    const isPng = detected.kind === 'png';
-    const imageData = isJpg || isPng ? original : await imageToPngBytes(previewUrl);
+    const imageData = stripImageMetadataToPngBytes(info);
     URL.revokeObjectURL(previewUrl);
     state.pdfItems.push({
       id: uid(), kind: 'image', name: file.name, size: file.size, pages: 1,
-      imageData, imageKind: isJpg ? 'jpg' : 'png', width: info.naturalWidth, height: info.naturalHeight
+      imageData, imageKind: 'png', width: info.naturalWidth, height: info.naturalHeight
     });
   }
 
@@ -1920,14 +1919,11 @@
     });
   }
 
-  async function imageToPngBytes(src) {
-    const img = await loadImage(src);
+  function stripImageMetadataToPngBytes(img) {
     const canvas = document.createElement('canvas');
     canvas.width = img.naturalWidth;
     canvas.height = img.naturalHeight;
     const ctx = canvas.getContext('2d');
-    ctx.fillStyle = '#fff';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(img, 0, 0);
     const base64 = canvas.toDataURL('image/png').split(',')[1];
     const binary = atob(base64);
@@ -1977,7 +1973,7 @@
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js?v=20260629-limits', { updateViaCache: 'none' })
+      navigator.serviceWorker.register('./sw.js?v=20260629-stripmeta', { updateViaCache: 'none' })
         .then(registration => registration.update())
         .catch(error => console.warn('Service worker registration failed:', error));
     });
