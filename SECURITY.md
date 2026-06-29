@@ -8,6 +8,10 @@ This project is a static, client-side PWA. It is designed so user files are proc
 - No third-party runtime scripts
 - Local `pdf.js` and `pdf-lib` vendor files
 - File type and size checks before processing
+- PDF and image magic-byte checks before previewing or merging
+- SVG and other active/vector image formats are rejected for PDF merging
+- Large decoded image dimensions are rejected before canvas conversion
+- Video uploads are limited to common browser formats: MP4, MOV, WebM, and OGG
 - No file-name or file-content analytics
 - Local-only admin dashboard with a browser passcode
 

@@ -9,8 +9,13 @@
   const MAX_PDF_OR_IMAGE_SIZE = 150 * 1024 * 1024;
   const MAX_VIDEO_SIZE = 700 * 1024 * 1024;
   const MAX_FRAMES = 30;
+  const MAX_IMAGE_PIXELS = 70_000_000;
   const STORE_KEY = 'toolkitStats.v1';
   const ADMIN_KEY = 'toolkitAdmin.v1';
+  const ALLOWED_IMAGE_TYPES = new Set(['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/bmp']);
+  const ALLOWED_VIDEO_TYPES = new Set(['video/mp4', 'video/quicktime', 'video/webm', 'video/ogg', 'video/x-m4v']);
+  const IMAGE_EXT_RE = /\.(png|jpe?g|webp|gif|bmp)$/i;
+  const VIDEO_EXT_RE = /\.(mp4|m4v|mov|webm|ogv|ogg)$/i;
   const BASE_PATH = getBasePath();
   const routeMap = {
     '': 'pdf',
@@ -318,7 +323,7 @@
             </div>
           </div>
           <div class="panel-body">
-            <input class="hidden-input" id="pdfInput" type="file" accept=".pdf,image/*" multiple>
+            <input class="hidden-input" id="pdfInput" type="file" accept=".pdf,.png,.jpg,.jpeg,.webp,.gif,.bmp,application/pdf,image/png,image/jpeg,image/webp,image/gif,image/bmp" multiple>
             <div class="drop-zone" id="pdfDrop">
               <div>
                 <strong>${t('dropPdf')}</strong>
@@ -432,28 +437,52 @@
   }
 
   function isAllowedPdfFile(file) {
-    const extOk = /\.(pdf|png|jpe?g|webp|gif|bmp)$/i.test(file.name);
-    const typeOk = file.type === 'application/pdf' || file.type.startsWith('image/') || extOk;
-    return typeOk && file.size <= MAX_PDF_OR_IMAGE_SIZE;
+    const extOk = /\.pdf$/i.test(file.name) || IMAGE_EXT_RE.test(file.name);
+    const typeOk = file.type === 'application/pdf' || ALLOWED_IMAGE_TYPES.has(file.type);
+    return file.size > 0 && file.size <= MAX_PDF_OR_IMAGE_SIZE && (extOk || typeOk);
   }
 
   async function addPdfFile(file) {
     const data = new Uint8Array(await file.arrayBuffer());
+    if (!hasPdfSignature(data)) throw new Error('Invalid PDF signature');
     const pdf = await window.pdfjsLib.getDocument({ data: data.slice() }).promise;
     state.pdfItems.push({ id: uid(), kind: 'pdf', name: file.name, size: file.size, pages: pdf.numPages, data });
   }
 
   async function addImageFile(file) {
-    const previewUrl = await fileToDataUrl(file);
-    const info = await loadImage(previewUrl);
     const original = new Uint8Array(await file.arrayBuffer());
-    const isJpg = file.type === 'image/jpeg' || /\.jpe?g$/i.test(file.name);
-    const isPng = file.type === 'image/png' || /\.png$/i.test(file.name);
+    const detected = detectImageKind(file, original);
+    if (!detected) throw new Error('Unsupported image signature');
+    const previewUrl = await bytesToObjectUrl(original, detected.mime);
+    const info = await loadImage(previewUrl);
+    if (!info.naturalWidth || !info.naturalHeight || info.naturalWidth * info.naturalHeight > MAX_IMAGE_PIXELS) {
+      URL.revokeObjectURL(previewUrl);
+      throw new Error('Image dimensions too large');
+    }
+    const isJpg = detected.kind === 'jpg';
+    const isPng = detected.kind === 'png';
     const imageData = isJpg || isPng ? original : await imageToPngBytes(previewUrl);
+    URL.revokeObjectURL(previewUrl);
     state.pdfItems.push({
       id: uid(), kind: 'image', name: file.name, size: file.size, pages: 1,
       imageData, imageKind: isJpg ? 'jpg' : 'png', width: info.naturalWidth, height: info.naturalHeight
     });
+  }
+
+  function hasPdfSignature(bytes) {
+    return bytes.length >= 5 && bytes[0] === 0x25 && bytes[1] === 0x50 && bytes[2] === 0x44 && bytes[3] === 0x46 && bytes[4] === 0x2d;
+  }
+
+  function detectImageKind(file, bytes) {
+    const mime = file.type || '';
+    const name = file.name || '';
+    if (!ALLOWED_IMAGE_TYPES.has(mime) && !IMAGE_EXT_RE.test(name)) return null;
+    if (startsWithBytes(bytes, [0xff, 0xd8, 0xff])) return { kind: 'jpg', mime: 'image/jpeg' };
+    if (startsWithBytes(bytes, [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])) return { kind: 'png', mime: 'image/png' };
+    if (startsWithAscii(bytes, 'GIF87a') || startsWithAscii(bytes, 'GIF89a')) return { kind: 'gif', mime: 'image/gif' };
+    if (startsWithAscii(bytes, 'BM')) return { kind: 'bmp', mime: 'image/bmp' };
+    if (startsWithAscii(bytes, 'RIFF') && asciiAt(bytes, 8, 12) === 'WEBP') return { kind: 'webp', mime: 'image/webp' };
+    return null;
   }
 
   async function mergePdfItems() {
@@ -582,7 +611,7 @@
           <button class="button" id="videoChoose" type="button">${t('videoChoose')}</button>
         </div>
         <div class="panel-body">
-          <input class="hidden-input" id="videoInput" type="file" accept="video/*">
+          <input class="hidden-input" id="videoInput" type="file" accept=".mp4,.m4v,.mov,.webm,.ogv,.ogg,video/mp4,video/quicktime,video/webm,video/ogg">
           ${state.video.url ? `<video class="video-preview" id="videoElement" src="${state.video.url}" controls playsinline></video>` : `<div class="drop-zone" id="videoDrop"><div><strong>${t('videoChoose')}</strong><p>MP4, MOV, WebM · max ${Math.round(MAX_VIDEO_SIZE / 1024 / 1024)}MB</p></div></div>`}
         </div>
       </section>
@@ -645,7 +674,9 @@
 
   function handleVideoFile(file) {
     if (!file) return;
-    if (!file.type.startsWith('video/') || file.size > MAX_VIDEO_SIZE) {
+    const typeOk = ALLOWED_VIDEO_TYPES.has(file.type);
+    const extOk = VIDEO_EXT_RE.test(file.name);
+    if (!file.size || file.size > MAX_VIDEO_SIZE || (!typeOk && !extOk)) {
       showToast('Unsupported video or file too large', 'error');
       return;
     }
@@ -701,7 +732,7 @@
       about: ['소개', '툴킷은 PDF 관리, 글자수 세기, 동영상 프레임 추출을 제공하는 브라우저 기반 웹앱입니다. 대부분의 작업은 사용자의 기기 안에서 처리됩니다.'],
       privacy: ['개인정보처리방침', '현재 정적 버전은 파일 내용, 파일명, 원본 문서, 동영상을 서버로 업로드하지 않습니다. 로컬 통계는 이 브라우저의 localStorage에만 저장됩니다. 향후 광고 또는 서버형 분석을 붙일 때는 쿠키 동의와 별도 고지를 추가해야 합니다.'],
       terms: ['이용약관', '사용자는 본인이 처리 권한을 가진 파일만 사용해야 합니다. 이 도구는 무보증으로 제공되며, 중요한 문서는 결과물을 직접 검수해야 합니다. 불법 자료, 악성 파일, 타인의 권리를 침해하는 파일 처리는 금지됩니다.'],
-      security: ['보안', '파일 크기와 형식을 제한하고, 콘텐츠 보안 정책을 적용하며, 파일 내용 분석을 서버로 보내지 않습니다. 단, GitHub Pages 정적 배포만으로는 진짜 서버 관리자 인증이나 전체 사용자 분석을 안전하게 제공할 수 없습니다. 해당 기능은 서버리스 백엔드와 인증 계층을 연결해야 합니다.']
+      security: ['보안', '파일 크기, 확장자, MIME, 실제 파일 시그니처를 확인하고 SVG 같은 병합 대상이 아닌 형식은 거절합니다. 콘텐츠 보안 정책을 적용하며, 파일 내용 분석을 서버로 보내지 않습니다. 단, GitHub Pages 정적 배포만으로는 진짜 서버 관리자 인증이나 전체 사용자 분석을 안전하게 제공할 수 없습니다. 해당 기능은 서버리스 백엔드와 인증 계층을 연결해야 합니다.']
     }[page];
     renderHeader({ eyebrow: 'Docs', title: content[0], description: content[1] });
     workspace.innerHTML = `<section class="panel legal-page"><div class="panel-body"><h2>${content[0]}</h2><p>${content[1]}</p><ul><li>문의: apobi812@gmail.com</li><li>마지막 업데이트: 2026-06-29</li></ul></div></section>`;
@@ -817,13 +848,21 @@
     setTimeout(() => URL.revokeObjectURL(url), 800);
   }
 
-  function fileToDataUrl(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = () => reject(reader.error);
-      reader.readAsDataURL(file);
-    });
+  function bytesToObjectUrl(bytes, type) {
+    return URL.createObjectURL(new Blob([bytes], { type }));
+  }
+
+  function startsWithBytes(bytes, signature) {
+    return signature.every((value, index) => bytes[index] === value);
+  }
+
+  function startsWithAscii(bytes, text) {
+    return asciiAt(bytes, 0, text.length) === text;
+  }
+
+  function asciiAt(bytes, start, end) {
+    if (bytes.length < end) return '';
+    return String.fromCharCode(...bytes.slice(start, end));
   }
 
   function loadImage(src) {
