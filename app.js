@@ -31,8 +31,12 @@
   const IMAGE_EXT_RE = /\.(png|jpe?g|webp|gif|bmp)$/i;
   const VIDEO_EXT_RE = /\.(mp4|m4v|mov|webm|ogv|ogg)$/i;
   const PDF_RISKY_MARKERS = ['/JavaScript', '/JS', '/OpenAction', '/AA', '/Launch', '/EmbeddedFile', '/SubmitForm', '/RichMedia', '/XFA'];
-  const BASE_PATH = getBasePath();
-  const API_BASE_URL = normalizeApiBaseUrl(window.TOOLKIT_CONFIG && window.TOOLKIT_CONFIG.apiBaseUrl);
+  const CONFIG = window.TOOLKIT_CONFIG || {};
+  const CONFIG_BASE_PATH = normalizeBasePath(CONFIG.basePath);
+  const SITE_ORIGIN = normalizeSiteOrigin(CONFIG.siteOrigin) || location.origin;
+  const BASE_PATH = resolveRuntimeBasePath(CONFIG_BASE_PATH);
+  const SITE_ROOT_URL = `${SITE_ORIGIN}${CONFIG_BASE_PATH || BASE_PATH}`;
+  const API_BASE_URL = normalizeApiBaseUrl(CONFIG.apiBaseUrl);
   const routeMap = {
     '': 'home',
     '/': 'home',
@@ -638,6 +642,30 @@
     return '/';
   }
 
+  function normalizeBasePath(value) {
+    const raw = String(value || '').trim();
+    if (!raw) return '';
+    const withLeadingSlash = raw.startsWith('/') ? raw : `/${raw}`;
+    return withLeadingSlash.endsWith('/') ? withLeadingSlash : `${withLeadingSlash}/`;
+  }
+
+  function resolveRuntimeBasePath(configBasePath) {
+    if (!configBasePath || configBasePath === '/') return configBasePath || getBasePath();
+    if (location.origin === SITE_ORIGIN && location.pathname.startsWith(configBasePath)) return configBasePath;
+    return getBasePath();
+  }
+
+  function normalizeSiteOrigin(value) {
+    const raw = String(value || '').trim().replace(/\/+$/g, '');
+    if (!raw) return '';
+    try {
+      return new URL(raw).origin;
+    } catch {
+      console.warn('Invalid siteOrigin ignored');
+      return '';
+    }
+  }
+
   function normalizeApiBaseUrl(value) {
     const raw = String(value || '').trim().replace(/\/+$/g, '');
     if (!raw) return '';
@@ -701,7 +729,7 @@
 
   function absoluteRouteUrl(route, lang = state.lang) {
     const path = routePaths[route] ?? routePaths.pdf;
-    return `https://apobi812.github.io/pdf-image-merger/${path}${languageQuery(lang)}`;
+    return `${SITE_ROOT_URL}${path}${languageQuery(lang)}`;
   }
 
   function t(key) {
@@ -1974,7 +2002,7 @@
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js?v=20260629-apiguard', { updateViaCache: 'none' })
+      navigator.serviceWorker.register('./sw.js?v=20260629-domaincfg', { updateViaCache: 'none' })
         .then(registration => registration.update())
         .catch(error => console.warn('Service worker registration failed:', error));
     });

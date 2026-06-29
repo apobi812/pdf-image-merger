@@ -45,17 +45,17 @@ for (const file of htmlFiles) {
   assert(!html.includes('frame-ancestors'), `${file}: frame-ancestors must be an HTTP header, not meta CSP`);
   assert(html.includes('object-src'), `${file}: CSP missing object-src`);
   assert(html.includes('mobile-web-app-capable'), `${file}: missing mobile web app meta`);
-  assert(html.includes('app.js?v=20260629-apiguard'), `${file}: stale app.js cache version`);
-  assert(html.includes('styles.css?v=20260629-apiguard'), `${file}: stale styles.css cache version`);
+  assert(html.includes('app.js?v=20260629-domaincfg'), `${file}: stale app.js cache version`);
+  assert(html.includes('styles.css?v=20260629-domaincfg'), `${file}: stale styles.css cache version`);
 }
 
 assert(includes('admin/index.html', 'noindex,nofollow'), 'admin page must be noindex,nofollow');
 assert(!includes('index.html', 'data-route="admin"'), 'public home must not link admin route');
 assert(!sw.includes('./admin/index.html'), 'service worker must not precache admin page');
-assert(sw.includes("const CACHE_NAME = 'toolkit-v25'"), 'service worker cache name not bumped');
+assert(sw.includes("const CACHE_NAME = 'toolkit-v26'"), 'service worker cache name not bumped');
 assert(sw.includes("const OFFLINE_URL = './offline.html'"), 'service worker missing offline fallback');
-assert(sw.includes("'./app.js?v=20260629-apiguard'"), 'service worker has stale app cache version');
-assert(app.includes("./sw.js?v=20260629-apiguard"), 'app registers a stale service worker cache version');
+assert(sw.includes("'./app.js?v=20260629-domaincfg'"), 'service worker has stale app cache version');
+assert(app.includes("./sw.js?v=20260629-domaincfg"), 'app registers a stale service worker cache version');
 assert(!sitemap.includes('/admin/'), 'sitemap must not include admin page');
 assert(sitemap.includes('xmlns:xhtml="http://www.w3.org/1999/xhtml"'), 'sitemap must include xhtml namespace for hreflang');
 for (const lang of ['ko', 'en', 'ja', 'zh', 'es', 'fr', 'de', 'pt', 'hi', 'ar', 'x-default']) {
@@ -100,6 +100,11 @@ assert(app.includes("if (state.route === 'admin') return;"), 'admin page must no
 assert(app.includes('readUrlLang()'), 'URL language reader is missing');
 assert(app.includes('languageQuery()'), 'shareable language URL helper is missing');
 assert(app.includes('setLanguage(button.dataset.lang)'), 'language picker must update URL state');
+assert(app.includes('normalizeBasePath(CONFIG.basePath)'), 'runtime basePath config support is missing');
+assert(app.includes('normalizeSiteOrigin(CONFIG.siteOrigin)'), 'runtime siteOrigin config support is missing');
+assert(app.includes('resolveRuntimeBasePath(CONFIG_BASE_PATH)'), 'runtime asset base path resolver is missing');
+assert(app.includes('SITE_ROOT_URL'), 'runtime site root URL helper is missing');
+assert(!app.includes('https://apobi812.github.io/pdf-image-merger/'), 'runtime canonical URL must come from config, not a hard-coded GitHub Pages URL');
 assert(app.includes('updateAlternateLanguageLinks()'), 'runtime hreflang alternate updater is missing');
 assert(app.includes('link.hreflang = code'), 'runtime hreflang code assignment is missing');
 assert(app.includes("fallback.hreflang = 'x-default'"), 'runtime x-default hreflang link is missing');
@@ -124,6 +129,8 @@ assert(workerHashScript.includes("const KDF = 'pbkdf2-sha256'"), 'worker admin h
 assert(workerHashScript.includes('DEFAULT_ITERATIONS = 210_000'), 'worker admin hash script iterations changed or missing');
 assert(!worker.includes('session_id'), 'worker must not store session_id');
 assert(!schema.includes('session_id'), 'D1 schema must not include session_id');
+assert(config.includes("siteOrigin: 'https://apobi812.github.io'"), 'default siteOrigin config is missing');
+assert(config.includes("basePath: '/pdf-image-merger/'"), 'default basePath config is missing');
 assert(config.includes("apiBaseUrl: ''"), 'default config must keep apiBaseUrl empty for static Pages');
 
 if (errors.length) {

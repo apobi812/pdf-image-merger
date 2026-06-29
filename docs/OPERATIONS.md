@@ -26,17 +26,20 @@ After buying a domain, use one of these setups.
 
 ```js
 window.TOOLKIT_CONFIG = {
+  siteOrigin: 'https://your-domain.com',
+  basePath: '/',
   apiBaseUrl: '/api'
 };
 ```
 
 This keeps `connect-src 'self'` valid and avoids adding broad external API origins.
+The runtime canonical and `hreflang` links use `siteOrigin` and `basePath`.
 
 ### Acceptable Temporary Setup
 
 - Frontend remains at `https://apobi812.github.io/pdf-image-merger/`.
 - Worker uses its own `workers.dev` URL.
-- `config.js` uses the exact Worker `/api` URL.
+- `config.js` keeps `siteOrigin: 'https://apobi812.github.io'`, `basePath: '/pdf-image-merger/'`, and uses the exact Worker `/api` URL.
 - Every HTML CSP `connect-src` must add that exact Worker origin.
 - Worker `ALLOWED_ORIGINS` must include only the exact frontend origin.
 
@@ -90,6 +93,7 @@ Then verify the live site:
 - `manifest.webmanifest` exposes the three ready tool shortcuts.
 - Direct language URLs such as `/?lang=en` and `/pdf/?lang=ja` render the requested language and keep the route.
 - `sitemap.xml` includes `xhtml:link hreflang` alternates for all 10 supported languages.
+- Runtime canonical and `hreflang` links use `config.js` `siteOrigin` and `basePath`.
 
 ## Security Invariants
 

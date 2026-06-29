@@ -76,9 +76,13 @@ For a same-origin custom domain setup, route the Worker under `/api` and set:
 
 ```js
 window.TOOLKIT_CONFIG = {
+  siteOrigin: 'https://your-domain.com',
+  basePath: '/',
   apiBaseUrl: '/api'
 };
 ```
+
+For the current GitHub Pages deployment, keep `siteOrigin: 'https://apobi812.github.io'` and `basePath: '/pdf-image-merger/'`.
 
 For a separate Worker URL, set `apiBaseUrl` to the Worker `/api` URL and update the frontend Content Security Policy `connect-src` to include that exact origin.
 

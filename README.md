@@ -54,9 +54,13 @@ Cloudflare Worker + D1 코드가 `worker/`에 포함되어 있습니다.
 
 ```js
 window.TOOLKIT_CONFIG = {
+  siteOrigin: 'https://apobi812.github.io',
+  basePath: '/pdf-image-merger/',
   apiBaseUrl: '/api'
 };
 ```
+
+커스텀 도메인을 루트 경로로 연결하면 `siteOrigin`은 새 도메인으로, `basePath`는 `'/'`로 바꿉니다. 런타임 canonical/hreflang URL은 이 값을 사용합니다.
 
 별도 Worker 도메인을 쓰는 경우에는 `apiBaseUrl`을 해당 `/api` URL로 바꾸고, `index.html` 및 각 전용 페이지의 CSP `connect-src`에 그 정확한 origin을 추가해야 합니다. 보안상 넓은 와일드카드는 권장하지 않습니다.
 
