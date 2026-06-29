@@ -22,10 +22,12 @@
   const MAX_TEXT_CHARS = 1_000_000;
   const STORE_KEY = 'toolkitStats.v1';
   const ADMIN_KEY = 'toolkitAdmin.v1';
+  const ADMIN_UNLOCK_KEY = 'toolkitAdminUnlocked.v1';
   const ADMIN_TOKEN_KEY = 'toolkitAdminToken.v1';
   const CONSENT_KEY = 'toolkitConsent.v1';
   const DEFAULT_LANG = 'ko';
   const ADMIN_PBKDF2_ITERATIONS = 210_000;
+  const ADMIN_UNLOCK_MS = 30 * 60 * 1000;
   const ALLOWED_IMAGE_TYPES = new Set(['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/bmp']);
   const ALLOWED_VIDEO_TYPES = new Set(['video/mp4', 'video/quicktime', 'video/webm', 'video/ogg', 'video/x-m4v']);
   const IMAGE_EXT_RE = /\.(png|jpe?g|webp|gif|bmp)$/i;
@@ -1668,12 +1670,12 @@
     const admin = getAdminConfig();
     if (!admin) {
       workspace.innerHTML = renderAdminSetup();
-    } else if (!sessionStorage.getItem('toolkitAdminUnlocked')) {
+    } else if (!hasLocalAdminUnlock()) {
       workspace.innerHTML = renderAdminLogin();
     } else {
       workspace.innerHTML = renderAdminDashboard();
     }
-    settingsPanel.innerHTML = `<h2>${t('settings')}</h2><p class="file-meta">Production admin auth should move to Cloudflare Access, GitHub OAuth, or another server-side identity layer.</p>`;
+    settingsPanel.innerHTML = `<h2>${t('settings')}</h2><p class="file-meta">Local admin unlock expires after 30 minutes. Production admin auth should move to Cloudflare Access, GitHub OAuth, or another server-side identity layer.</p>`;
     bindAdminEvents();
   }
 
@@ -1743,7 +1745,7 @@
   }
 
   function renderAdminLogin() {
-    return `<section class="panel admin-lock"><div class="panel-body"><h2>Admin unlock</h2><input class="input" id="adminPass" type="password" autocomplete="current-password"><button class="button primary" id="unlockAdmin" type="button">Unlock</button></div></section>`;
+    return `<section class="panel admin-lock"><div class="panel-body"><h2>Admin unlock</h2><p class="file-meta">Unlock lasts for 30 minutes in this browser tab.</p><input class="input" id="adminPass" type="password" autocomplete="current-password"><button class="button primary" id="unlockAdmin" type="button">Unlock</button></div></section>`;
   }
 
   function renderAdminDashboard() {
@@ -1756,7 +1758,7 @@
         ${statBox('Text uses', stats.tools.word || 0)}
         ${statBox('Video uses', stats.tools.video || 0)}
       </div></div>
-      <div class="panel"><div class="panel-header"><h2 class="panel-title">Local event counters</h2><div class="button-row"><button class="button" id="exportStats">Export</button><button class="button danger" id="resetStats">Reset</button></div></div><div class="panel-body"><table class="data-table"><thead><tr><th>Event</th><th>Count</th></tr></thead><tbody>${rows || '<tr><td colspan="2">No events yet</td></tr>'}</tbody></table></div></div>
+      <div class="panel"><div class="panel-header"><h2 class="panel-title">Local event counters</h2><div class="button-row"><button class="button" id="exportStats">Export</button><button class="button" id="lockLocalAdmin">Lock</button><button class="button danger" id="resetStats">Reset</button></div></div><div class="panel-body"><table class="data-table"><thead><tr><th>Event</th><th>Count</th></tr></thead><tbody>${rows || '<tr><td colspan="2">No events yet</td></tr>'}</tbody></table></div></div>
     </section>`;
   }
 
@@ -1765,13 +1767,17 @@
     const unlockButton = $('#unlockAdmin');
     $('#exportStats')?.addEventListener('click', () => downloadBlob(new Blob([JSON.stringify(loadStats(), null, 2)], { type: 'application/json' }), 'toolkit-local-stats.json'));
     $('#resetStats')?.addEventListener('click', () => { localStorage.removeItem(STORE_KEY); renderAdminPage(); });
+    $('#lockLocalAdmin')?.addEventListener('click', () => {
+      clearLocalAdminUnlock();
+      renderAdminPage();
+    });
     setButton?.addEventListener('click', async () => {
       await setAdminPass($('#adminPass').value);
       renderAdminPage();
     });
     unlockButton?.addEventListener('click', async () => {
       if (await verifyAdminPass($('#adminPass').value)) {
-        sessionStorage.setItem('toolkitAdminUnlocked', '1');
+        setLocalAdminUnlock();
         renderAdminPage();
       } else showToast('Wrong passcode', 'error');
     });
@@ -1830,6 +1836,21 @@
   function clearAdminToken() {
     state.adminToken = '';
     sessionStorage.removeItem(ADMIN_TOKEN_KEY);
+  }
+
+  function hasLocalAdminUnlock(now = Date.now()) {
+    const unlockedAt = Number(sessionStorage.getItem(ADMIN_UNLOCK_KEY) || 0);
+    if (unlockedAt && now - unlockedAt <= ADMIN_UNLOCK_MS) return true;
+    clearLocalAdminUnlock();
+    return false;
+  }
+
+  function setLocalAdminUnlock(now = Date.now()) {
+    sessionStorage.setItem(ADMIN_UNLOCK_KEY, String(now));
+  }
+
+  function clearLocalAdminUnlock() {
+    sessionStorage.removeItem(ADMIN_UNLOCK_KEY);
   }
 
   function getAdminConfig() {
@@ -2066,7 +2087,7 @@
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js?v=20260629-adcfg', { updateViaCache: 'none' })
+      navigator.serviceWorker.register('./sw.js?v=20260629-adminlock', { updateViaCache: 'none' })
         .then(registration => registration.update())
         .catch(error => console.warn('Service worker registration failed:', error));
     });

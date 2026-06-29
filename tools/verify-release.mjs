@@ -46,8 +46,8 @@ for (const file of htmlFiles) {
   assert(!html.includes('frame-ancestors'), `${file}: frame-ancestors must be an HTTP header, not meta CSP`);
   assert(html.includes('object-src'), `${file}: CSP missing object-src`);
   assert(html.includes('mobile-web-app-capable'), `${file}: missing mobile web app meta`);
-  assert(html.includes('app.js?v=20260629-adcfg'), `${file}: stale app.js cache version`);
-  assert(html.includes('styles.css?v=20260629-adcfg'), `${file}: stale styles.css cache version`);
+  assert(html.includes('app.js?v=20260629-adminlock'), `${file}: stale app.js cache version`);
+  assert(html.includes('styles.css?v=20260629-adminlock'), `${file}: stale styles.css cache version`);
   assert(html.includes('data-ad-slot="left-rail"'), `${file}: left rail ad placeholder is missing`);
   assert(html.includes('data-ad-slot="footer"'), `${file}: footer ad placeholder is missing`);
   assert(html.includes('data-ad-provider="none"'), `${file}: ads must stay disabled by default`);
@@ -56,10 +56,10 @@ for (const file of htmlFiles) {
 assert(includes('admin/index.html', 'noindex,nofollow'), 'admin page must be noindex,nofollow');
 assert(!includes('index.html', 'data-route="admin"'), 'public home must not link admin route');
 assert(!sw.includes('./admin/index.html'), 'service worker must not precache admin page');
-assert(sw.includes("const CACHE_NAME = 'toolkit-v27'"), 'service worker cache name not bumped');
+assert(sw.includes("const CACHE_NAME = 'toolkit-v28'"), 'service worker cache name not bumped');
 assert(sw.includes("const OFFLINE_URL = './offline.html'"), 'service worker missing offline fallback');
-assert(sw.includes("'./app.js?v=20260629-adcfg'"), 'service worker has stale app cache version');
-assert(app.includes("./sw.js?v=20260629-adcfg"), 'app registers a stale service worker cache version');
+assert(sw.includes("'./app.js?v=20260629-adminlock'"), 'service worker has stale app cache version');
+assert(app.includes("./sw.js?v=20260629-adminlock"), 'app registers a stale service worker cache version');
 assert(!sitemap.includes('/admin/'), 'sitemap must not include admin page');
 assert(sitemap.includes('xmlns:xhtml="http://www.w3.org/1999/xhtml"'), 'sitemap must include xhtml namespace for hreflang');
 for (const lang of ['ko', 'en', 'ja', 'zh', 'es', 'fr', 'de', 'pt', 'hi', 'ar', 'x-default']) {
@@ -127,6 +127,12 @@ assert(!app.includes('sessionId'), 'frontend must not send sessionId to analytic
 assert(!app.includes('toolkitSession'), 'frontend session storage key must not exist');
 assert(app.includes('pbkdf2-sha256'), 'local admin lock must use PBKDF2');
 assert(app.includes('ADMIN_PBKDF2_ITERATIONS = 210_000'), 'local admin PBKDF2 iterations changed or missing');
+assert(app.includes("const ADMIN_UNLOCK_KEY = 'toolkitAdminUnlocked.v1'"), 'local admin unlock storage key is missing');
+assert(app.includes('const ADMIN_UNLOCK_MS = 30 * 60 * 1000'), 'local admin unlock timeout is missing or changed');
+assert(app.includes('hasLocalAdminUnlock()'), 'local admin unlock expiry check is missing');
+assert(app.includes('setLocalAdminUnlock()'), 'local admin unlock setter is missing');
+assert(app.includes('clearLocalAdminUnlock()'), 'local admin lock action is missing');
+assert(app.includes('id="lockLocalAdmin"'), 'local admin dashboard lock button is missing');
 
 assert(worker.includes('unsupported_media_type'), 'worker must reject non-JSON API writes');
 assert(worker.includes('analytics_consent_required'), 'worker must reject analytics writes without consent');

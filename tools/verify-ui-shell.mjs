@@ -131,6 +131,10 @@ assert(app.includes('function renderPdfTool()'), 'app.js: PDF tool renderer is m
 assert(app.includes('function renderWordTool()'), 'app.js: word-count tool renderer is missing');
 assert(app.includes('function renderVideoTool()'), 'app.js: video extractor renderer is missing');
 assert(app.includes('async function renderAdminPage()'), 'app.js: admin page renderer is missing');
+assert(app.includes("const ADMIN_UNLOCK_KEY = 'toolkitAdminUnlocked.v1'"), 'app.js: local admin unlock key is missing');
+assert(app.includes('const ADMIN_UNLOCK_MS = 30 * 60 * 1000'), 'app.js: local admin unlock timeout is missing');
+assert(app.includes('function hasLocalAdminUnlock('), 'app.js: local admin unlock expiry helper is missing');
+assert(app.includes('id="lockLocalAdmin"'), 'app.js: local admin manual lock button is missing');
 assert(app.includes('function renderLegalPage(page)'), 'app.js: legal page renderer is missing');
 assert(countMatches(app, /renderAdSlot\('settingsRail', '300x250'\)/g) >= 5, 'app.js: right rail ad/settings placeholders are missing');
 assert(app.includes("if (state.route === 'admin') return;"), 'app.js: admin route must not send analytics events');

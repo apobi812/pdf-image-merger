@@ -24,6 +24,7 @@ This project is a static, client-side PWA. It is designed so user files are proc
 - Ad slots are placeholders by default; no third-party ad script is loaded until approval, consent review, and CSP updates are completed
 - Worker analytics accepts only allowlisted event names, tools, public routes, languages, and small JSON payloads
 - Local-only admin dashboard with a browser passcode stored with PBKDF2-SHA-256
+- Local admin unlock state is stored only in the current browser tab and expires after 30 minutes
 - Admin UI is not linked from the public navigation; `/admin/` is direct-address only
 - Optional Cloudflare Worker + D1 backend for server-side admin auth and aggregate analytics
 - Worker admin password hashes use PBKDF2-SHA-256 by default
