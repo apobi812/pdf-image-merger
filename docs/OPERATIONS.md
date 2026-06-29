@@ -47,6 +47,8 @@ Avoid `*` in CORS or CSP.
 Set these with `wrangler secret put`.
 
 - `VISITOR_SALT`
+- `ADMIN_PASSWORD_KDF`
+- `ADMIN_PASSWORD_ITERATIONS`
 - `ADMIN_PASSWORD_SALT`
 - `ADMIN_PASSWORD_HASH`
 - `ADMIN_SESSION_SECRET`
@@ -58,10 +60,13 @@ openssl rand -hex 16
 openssl rand -hex 32
 ```
 
-Create the admin hash with:
+Create the admin PBKDF2 hash from the `worker/` directory with:
 
 ```bash
-printf '%s' 'YOUR_ADMIN_PASSWORD_SALT:YOUR_ADMIN_PASSWORD' | shasum -a 256
+read -s ADMIN_PASSWORD
+export ADMIN_PASSWORD
+node generate-admin-secret.mjs
+unset ADMIN_PASSWORD
 ```
 
 ## Release Checklist
@@ -94,6 +99,7 @@ Do not loosen these without a specific reason:
 - No browser session IDs in analytics.
 - No remote analytics before browser-side consent.
 - Worker rejects event writes without an explicit analytics consent marker.
+- Server admin password verification uses PBKDF2-SHA-256 by default.
 - No `ignoreEncryption` PDF loading.
 - Keep the risky PDF active-content marker guard enabled.
 - No SVG input for PDF merging.

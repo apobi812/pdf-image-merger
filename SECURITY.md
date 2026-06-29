@@ -21,6 +21,7 @@ This project is a static, client-side PWA. It is designed so user files are proc
 - Local-only admin dashboard with a browser passcode stored with PBKDF2-SHA-256
 - Admin UI is not linked from the public navigation; `/admin/` is direct-address only
 - Optional Cloudflare Worker + D1 backend for server-side admin auth and aggregate analytics
+- Worker admin password hashes use PBKDF2-SHA-256 by default
 - Server analytics stores daily visitor hashes, not raw IP addresses
 - `_headers` provides production security headers for Cloudflare Pages or compatible static hosting
 - The app includes a JavaScript frame guard for static hosts that cannot apply `frame-ancestors` headers

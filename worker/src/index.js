@@ -3,6 +3,8 @@ const MAX_EVENT_BODY_BYTES = 4096;
 const EVENT_RATE_LIMIT_PER_MINUTE = 120;
 const ADMIN_RATE_LIMIT_PER_MINUTE = 10;
 const ADMIN_SESSION_SECONDS = 8 * 60 * 60;
+const DEFAULT_ADMIN_PASSWORD_KDF = 'pbkdf2-sha256';
+const DEFAULT_ADMIN_PASSWORD_ITERATIONS = 210_000;
 
 export default {
   async fetch(request, env, ctx) {
@@ -98,8 +100,7 @@ async function adminLogin(request, env) {
 
   const body = await readJson(request);
   const password = String(body.password || '');
-  const candidate = await sha256Hex(`${env.ADMIN_PASSWORD_SALT}:${password}`);
-  if (!timingSafeEqual(candidate, String(env.ADMIN_PASSWORD_HASH || '').toLowerCase())) {
+  if (!await verifyAdminPassword(password, env)) {
     throw new HttpError(401, 'invalid_credentials');
   }
 
@@ -188,6 +189,30 @@ function requireAdminSecrets(env) {
   if (!env.ADMIN_PASSWORD_SALT || !env.ADMIN_PASSWORD_HASH || !env.ADMIN_SESSION_SECRET) {
     throw new HttpError(503, 'admin_not_configured');
   }
+}
+
+async function verifyAdminPassword(password, env) {
+  const salt = String(env.ADMIN_PASSWORD_SALT || '');
+  const expected = String(env.ADMIN_PASSWORD_HASH || '').toLowerCase();
+  const kdf = String(env.ADMIN_PASSWORD_KDF || DEFAULT_ADMIN_PASSWORD_KDF).toLowerCase();
+  let candidate = '';
+
+  if (kdf === 'pbkdf2-sha256') {
+    candidate = await pbkdf2Sha256(password, salt, adminPasswordIterations(env));
+  } else if (kdf === 'sha256-salted') {
+    candidate = await sha256Hex(`${salt}:${password}`);
+  } else {
+    throw new HttpError(503, 'admin_kdf_not_configured');
+  }
+
+  return timingSafeEqual(candidate, expected);
+}
+
+function adminPasswordIterations(env) {
+  const iterations = Number(env.ADMIN_PASSWORD_ITERATIONS || DEFAULT_ADMIN_PASSWORD_ITERATIONS);
+  return Number.isFinite(iterations) && iterations >= DEFAULT_ADMIN_PASSWORD_ITERATIONS
+    ? Math.floor(iterations)
+    : DEFAULT_ADMIN_PASSWORD_ITERATIONS;
 }
 
 function assertAllowedOrigin(request, env) {
@@ -331,6 +356,22 @@ async function sha256Hex(value) {
   return hex(new Uint8Array(digest));
 }
 
+async function pbkdf2Sha256(password, saltHex, iterations) {
+  const keyMaterial = await crypto.subtle.importKey(
+    'raw',
+    new TextEncoder().encode(password),
+    'PBKDF2',
+    false,
+    ['deriveBits']
+  );
+  const bits = await crypto.subtle.deriveBits(
+    { name: 'PBKDF2', salt: hexToBytes(saltHex), iterations, hash: 'SHA-256' },
+    keyMaterial,
+    256
+  );
+  return hex(new Uint8Array(bits));
+}
+
 async function hmacHex(secret, value) {
   const key = await crypto.subtle.importKey(
     'raw',
@@ -345,6 +386,15 @@ async function hmacHex(secret, value) {
 
 function hex(bytes) {
   return [...bytes].map(byte => byte.toString(16).padStart(2, '0')).join('');
+}
+
+function hexToBytes(value) {
+  const clean = String(value || '').replace(/[^a-f0-9]/gi, '');
+  const bytes = new Uint8Array(Math.floor(clean.length / 2));
+  for (let i = 0; i < bytes.length; i++) {
+    bytes[i] = Number.parseInt(clean.slice(i * 2, i * 2 + 2), 16);
+  }
+  return bytes;
 }
 
 function timingSafeEqual(a, b) {

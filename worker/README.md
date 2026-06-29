@@ -35,7 +35,7 @@ npx wrangler d1 create toolkit_analytics
 npx wrangler d1 execute toolkit_analytics --file=schema.sql --remote
 ```
 
-4. Generate secrets.
+4. Generate visitor/session secrets.
 
 ```bash
 openssl rand -hex 16
@@ -45,13 +45,20 @@ openssl rand -hex 32
 5. Create an admin password hash. Replace the salt and password values first.
 
 ```bash
-printf '%s' 'YOUR_ADMIN_PASSWORD_SALT:YOUR_ADMIN_PASSWORD' | shasum -a 256
+read -s ADMIN_PASSWORD
+export ADMIN_PASSWORD
+node generate-admin-secret.mjs
+unset ADMIN_PASSWORD
 ```
+
+The script prints `ADMIN_PASSWORD_KDF`, `ADMIN_PASSWORD_ITERATIONS`, `ADMIN_PASSWORD_SALT`, and `ADMIN_PASSWORD_HASH`.
 
 6. Store secrets in Cloudflare.
 
 ```bash
 npx wrangler secret put VISITOR_SALT
+npx wrangler secret put ADMIN_PASSWORD_KDF
+npx wrangler secret put ADMIN_PASSWORD_ITERATIONS
 npx wrangler secret put ADMIN_PASSWORD_SALT
 npx wrangler secret put ADMIN_PASSWORD_HASH
 npx wrangler secret put ADMIN_SESSION_SECRET
@@ -78,6 +85,7 @@ For a separate Worker URL, set `apiBaseUrl` to the Worker `/api` URL and update 
 ## Security Notes
 
 - Admin sessions are HMAC-signed and expire after 8 hours.
+- Admin password hashes use PBKDF2-SHA-256 by default.
 - Admin passwords are never stored in source code.
 - Event and admin login endpoints have D1-backed per-minute rate limits.
 - CORS allows only configured origins.
