@@ -2342,7 +2342,7 @@
   }
 
   function normalizeFileName(name) {
-    const safe = String(name || 'download.pdf').trim().replace(/[\\/:*?"<>|]+/g, '-');
+    const safe = String(name || '').trim().replace(/[\\/:*?"<>|]+/g, '-').trim() || 'download';
     return /\.pdf$/i.test(safe) ? safe : `${safe}.pdf`;
   }
 
@@ -2471,7 +2471,7 @@
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js?v=20260629-legal-i18n', { updateViaCache: 'none' })
+      navigator.serviceWorker.register('./sw.js?v=20260629-filename-guard', { updateViaCache: 'none' })
         .then(registration => registration.update())
         .catch(error => console.warn('Service worker registration failed:', error));
     });
