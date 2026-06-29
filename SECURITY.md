@@ -10,6 +10,7 @@ This project is a static, client-side PWA. It is designed so user files are proc
 - File type and size checks before processing
 - PDF and image magic-byte checks before previewing or merging
 - Encrypted PDFs are blocked instead of being loaded with encryption bypass flags
+- PDFs with JavaScript, auto actions, embedded files, rich media, or XFA markers are blocked as high-risk active content
 - SVG and other active/vector image formats are rejected for PDF merging
 - Large decoded image dimensions are rejected before canvas conversion
 - Video uploads are limited to common browser formats: MP4, MOV, WebM, and OGG
@@ -21,6 +22,7 @@ This project is a static, client-side PWA. It is designed so user files are proc
 - Optional Cloudflare Worker + D1 backend for server-side admin auth and aggregate analytics
 - Server analytics stores daily visitor hashes, not raw IP addresses
 - `_headers` provides production security headers for Cloudflare Pages or compatible static hosting
+- The app includes a JavaScript frame guard for static hosts that cannot apply `frame-ancestors` headers
 - `tools/verify-release.mjs` checks release security invariants before deployment
 
 ## Limits

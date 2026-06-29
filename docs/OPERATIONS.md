@@ -92,9 +92,12 @@ Do not loosen these without a specific reason:
 - No file names or file contents in analytics.
 - No browser session IDs in analytics.
 - No `ignoreEncryption` PDF loading.
+- Keep the risky PDF active-content marker guard enabled.
 - No SVG input for PDF merging.
 - Local admin lock uses PBKDF2-SHA-256 and remains labeled as local-only protection.
 - PWA install metadata, tool shortcuts, and offline fallback stay enabled.
+- Keep `frame-ancestors` in HTTP headers, not HTML meta CSP.
+- Keep the JavaScript frame guard enabled for static hosts without header control.
 - No wildcard CORS.
 - No wildcard CSP `connect-src`.
 

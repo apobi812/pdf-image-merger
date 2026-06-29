@@ -36,28 +36,31 @@ const sitemap = read('sitemap.xml');
 const worker = read('worker/src/index.js');
 const schema = read('worker/schema.sql');
 const config = read('config.js');
+const headers = read('_headers');
 
 for (const file of htmlFiles) {
   const html = read(file);
   assert(html.includes('Content-Security-Policy'), `${file}: missing CSP meta tag`);
-  assert(html.includes('frame-ancestors'), `${file}: CSP missing frame-ancestors`);
+  assert(!html.includes('frame-ancestors'), `${file}: frame-ancestors must be an HTTP header, not meta CSP`);
   assert(html.includes('object-src'), `${file}: CSP missing object-src`);
   assert(html.includes('mobile-web-app-capable'), `${file}: missing mobile web app meta`);
-  assert(html.includes('app.js?v=20260629-pwa1'), `${file}: stale app.js cache version`);
-  assert(html.includes('styles.css?v=20260629-pwa1'), `${file}: stale styles.css cache version`);
+  assert(html.includes('app.js?v=20260629-fileguard'), `${file}: stale app.js cache version`);
+  assert(html.includes('styles.css?v=20260629-fileguard'), `${file}: stale styles.css cache version`);
 }
 
 assert(includes('admin/index.html', 'noindex,nofollow'), 'admin page must be noindex,nofollow');
 assert(!includes('index.html', 'data-route="admin"'), 'public home must not link admin route');
 assert(!sw.includes('./admin/index.html'), 'service worker must not precache admin page');
-assert(sw.includes("const CACHE_NAME = 'toolkit-v15'"), 'service worker cache name not bumped');
+assert(sw.includes("const CACHE_NAME = 'toolkit-v18'"), 'service worker cache name not bumped');
 assert(sw.includes("const OFFLINE_URL = './offline.html'"), 'service worker missing offline fallback');
-assert(sw.includes("'./app.js?v=20260629-pwa1'"), 'service worker has stale app cache version');
-assert(app.includes("./sw.js?v=20260629-pwa1"), 'app registers a stale service worker cache version');
+assert(sw.includes("'./app.js?v=20260629-fileguard'"), 'service worker has stale app cache version');
+assert(app.includes("./sw.js?v=20260629-fileguard"), 'app registers a stale service worker cache version');
 assert(!sitemap.includes('/admin/'), 'sitemap must not include admin page');
 assert(existsSync(join(root, '.well-known/security.txt')), 'security.txt is missing');
 assert(existsSync(join(root, '_headers')), '_headers template is missing');
 assert(existsSync(join(root, 'offline.html')), 'offline fallback page is missing');
+assert(headers.includes("frame-ancestors 'none'"), '_headers must include frame-ancestors');
+assert(headers.includes('X-Frame-Options: DENY'), '_headers must include X-Frame-Options');
 
 assert(manifest.id === '/pdf-image-merger/', 'manifest id is missing or incorrect');
 assert(manifest.display === 'standalone', 'manifest display must be standalone');
@@ -68,7 +71,12 @@ assert(manifest.shortcuts.some(shortcut => shortcut.url === './video-extractor/?
 
 assert(!app.includes('ignoreEncryption'), 'PDF encryption bypass flag must not be used');
 assert(app.includes("includesAscii(data, '/Encrypt')"), 'encrypted PDF guard is missing');
+assert(app.includes('PDF_RISKY_MARKERS'), 'risky PDF marker list is missing');
+assert(app.includes('hasRiskyPdfFeatures(data)'), 'risky PDF feature guard is missing');
+assert(app.includes('unsafePdfBlocked'), 'unsafe PDF warning message is missing');
+assert(app.includes('isExpectedFileRejection(error)'), 'expected file rejections should not be logged as console errors');
 assert(app.includes('hasAllowedVideoSignature'), 'video signature guard is missing');
+assert(app.includes('window.top !== window.self'), 'JavaScript frame guard is missing');
 assert(!app.includes('sessionId'), 'frontend must not send sessionId to analytics');
 assert(!app.includes('toolkitSession'), 'frontend session storage key must not exist');
 assert(app.includes('pbkdf2-sha256'), 'local admin lock must use PBKDF2');

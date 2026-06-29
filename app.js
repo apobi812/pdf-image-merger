@@ -1,6 +1,14 @@
 (() => {
   'use strict';
 
+  if (window.top !== window.self) {
+    try {
+      window.top.location = window.location.href;
+    } catch (_) {
+      document.documentElement.style.display = 'none';
+    }
+  }
+
   if (window.pdfjsLib) {
     window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'vendor/pdf.worker.min.js';
   }
@@ -18,6 +26,7 @@
   const ALLOWED_VIDEO_TYPES = new Set(['video/mp4', 'video/quicktime', 'video/webm', 'video/ogg', 'video/x-m4v']);
   const IMAGE_EXT_RE = /\.(png|jpe?g|webp|gif|bmp)$/i;
   const VIDEO_EXT_RE = /\.(mp4|m4v|mov|webm|ogv|ogg)$/i;
+  const PDF_RISKY_MARKERS = ['/JavaScript', '/JS', '/OpenAction', '/AA', '/Launch', '/EmbeddedFile', '/SubmitForm', '/RichMedia', '/XFA'];
   const BASE_PATH = getBasePath();
   const API_BASE_URL = normalizeApiBaseUrl(window.TOOLKIT_CONFIG && window.TOOLKIT_CONFIG.apiBaseUrl);
   const routeMap = {
@@ -99,7 +108,7 @@
       statsCopied: '통계를 복사했습니다.', readingSpeed: '읽기 속도', minutesShort: '분',
       securityGuardrails: '보안 보호 장치', guardClientSide: '브라우저 안에서만 처리', guardFileValidation: '파일 형식과 크기 검증', guardNoFileAnalytics: '파일 내용 분석 저장 안 함',
       creatingPdf: 'PDF를 만드는 중...', pdfCreated: 'PDF가 생성되었습니다.', pdfCreationFailed: 'PDF 생성에 실패했습니다.',
-      encryptedPdfBlocked: '암호화된 PDF는 안전을 위해 처리하지 않습니다.', unsupportedFile: '지원하지 않거나 너무 큰 파일입니다.', fileReadFailed: '파일을 읽을 수 없습니다.',
+      encryptedPdfBlocked: '암호화된 PDF는 안전을 위해 처리하지 않습니다.', unsafePdfBlocked: '자동 실행, 스크립트, 첨부파일 등 위험 요소가 있는 PDF는 처리하지 않습니다.', unsupportedFile: '지원하지 않거나 너무 큰 파일입니다.', fileReadFailed: '파일을 읽을 수 없습니다.',
       noFrames: '아직 추출된 프레임이 없습니다.', download: '다운로드', frameInterval: '추출 간격(초)', maxFrames: '최대 프레임 수', videoUnsupported: '지원하지 않거나 너무 큰 동영상입니다.'
     }
   };
@@ -125,7 +134,7 @@
     statsCopied: 'Stats copied.', readingSpeed: 'Reading speed', minutesShort: 'min',
     securityGuardrails: 'Security guardrails', guardClientSide: 'Client-side processing only', guardFileValidation: 'File type and size validation', guardNoFileAnalytics: 'No file content analytics',
     creatingPdf: 'Creating PDF...', pdfCreated: 'PDF created.', pdfCreationFailed: 'PDF creation failed.',
-    encryptedPdfBlocked: 'Encrypted PDFs are blocked for safety.', unsupportedFile: 'Unsupported or too large.', fileReadFailed: 'Could not read file.',
+    encryptedPdfBlocked: 'Encrypted PDFs are blocked for safety.', unsafePdfBlocked: 'PDFs with scripts, auto actions, attachments, or rich media are blocked.', unsupportedFile: 'Unsupported or too large.', fileReadFailed: 'Could not read file.',
     noFrames: 'No frames extracted yet.', download: 'Download', frameInterval: 'Interval seconds', maxFrames: 'Max frames', videoUnsupported: 'Unsupported video or file too large.'
   };
 
@@ -463,7 +472,7 @@
       statsCopied: '統計をコピーしました。', readingSpeed: '読書速度', minutesShort: '分',
       securityGuardrails: 'セキュリティ保護', guardClientSide: 'ブラウザ内のみで処理', guardFileValidation: 'ファイル形式とサイズを検証', guardNoFileAnalytics: 'ファイル内容を分析保存しません',
       creatingPdf: 'PDFを作成中...', pdfCreated: 'PDFを作成しました。', pdfCreationFailed: 'PDF作成に失敗しました。',
-      encryptedPdfBlocked: '暗号化PDFは安全のため処理しません。', unsupportedFile: '未対応または大きすぎるファイルです。', fileReadFailed: 'ファイルを読み込めません。',
+      encryptedPdfBlocked: '暗号化PDFは安全のため処理しません。', unsafePdfBlocked: 'スクリプト、自動実行、添付ファイル、リッチメディアを含むPDFは処理しません。', unsupportedFile: '未対応または大きすぎるファイルです。', fileReadFailed: 'ファイルを読み込めません。',
       noFrames: '抽出されたフレームはまだありません。', download: 'ダウンロード', frameInterval: '抽出間隔(秒)', maxFrames: '最大フレーム数', videoUnsupported: '未対応または大きすぎる動画です。'
     },
     zh: {
@@ -479,7 +488,7 @@
       statsCopied: '统计已复制。', readingSpeed: '阅读速度', minutesShort: '分钟',
       securityGuardrails: '安全防护', guardClientSide: '仅在浏览器内处理', guardFileValidation: '验证文件类型和大小', guardNoFileAnalytics: '不保存文件内容分析',
       creatingPdf: '正在创建 PDF...', pdfCreated: 'PDF 已创建。', pdfCreationFailed: 'PDF 创建失败。',
-      encryptedPdfBlocked: '出于安全原因，不处理加密 PDF。', unsupportedFile: '文件不支持或过大。', fileReadFailed: '无法读取文件。',
+      encryptedPdfBlocked: '出于安全原因，不处理加密 PDF。', unsafePdfBlocked: '包含脚本、自动操作、附件或富媒体的 PDF 会被阻止。', unsupportedFile: '文件不支持或过大。', fileReadFailed: '无法读取文件。',
       noFrames: '尚未提取帧。', download: '下载', frameInterval: '提取间隔(秒)', maxFrames: '最大帧数', videoUnsupported: '视频不支持或过大。'
     },
     es: {
@@ -495,7 +504,7 @@
       statsCopied: 'Estadísticas copiadas.', readingSpeed: 'Velocidad de lectura', minutesShort: 'min',
       securityGuardrails: 'Protecciones de seguridad', guardClientSide: 'Procesamiento solo en el navegador', guardFileValidation: 'Validación de tipo y tamaño', guardNoFileAnalytics: 'Sin análisis de contenido de archivos',
       creatingPdf: 'Creando PDF...', pdfCreated: 'PDF creado.', pdfCreationFailed: 'No se pudo crear el PDF.',
-      encryptedPdfBlocked: 'Los PDF cifrados se bloquean por seguridad.', unsupportedFile: 'Archivo no compatible o demasiado grande.', fileReadFailed: 'No se pudo leer el archivo.',
+      encryptedPdfBlocked: 'Los PDF cifrados se bloquean por seguridad.', unsafePdfBlocked: 'Se bloquean los PDF con scripts, acciones automáticas, adjuntos o medios enriquecidos.', unsupportedFile: 'Archivo no compatible o demasiado grande.', fileReadFailed: 'No se pudo leer el archivo.',
       noFrames: 'Aún no se extrajeron fotogramas.', download: 'Descargar', frameInterval: 'Intervalo en segundos', maxFrames: 'Máximo de fotogramas', videoUnsupported: 'Video no compatible o demasiado grande.'
     },
     fr: {
@@ -511,7 +520,7 @@
       statsCopied: 'Statistiques copiées.', readingSpeed: 'Vitesse de lecture', minutesShort: 'min',
       securityGuardrails: 'Protections de sécurité', guardClientSide: 'Traitement uniquement dans le navigateur', guardFileValidation: 'Validation du type et de la taille', guardNoFileAnalytics: 'Aucune analyse du contenu des fichiers',
       creatingPdf: 'Création du PDF...', pdfCreated: 'PDF créé.', pdfCreationFailed: 'Échec de la création du PDF.',
-      encryptedPdfBlocked: 'Les PDF chiffrés sont bloqués par sécurité.', unsupportedFile: 'Fichier non compatible ou trop volumineux.', fileReadFailed: 'Impossible de lire le fichier.',
+      encryptedPdfBlocked: 'Les PDF chiffrés sont bloqués par sécurité.', unsafePdfBlocked: 'Les PDF avec scripts, actions automatiques, pièces jointes ou médias enrichis sont bloqués.', unsupportedFile: 'Fichier non compatible ou trop volumineux.', fileReadFailed: 'Impossible de lire le fichier.',
       noFrames: 'Aucune image extraite pour le moment.', download: 'Télécharger', frameInterval: 'Intervalle en secondes', maxFrames: 'Nombre maximal d’images', videoUnsupported: 'Vidéo non compatible ou trop volumineuse.'
     },
     de: {
@@ -527,7 +536,7 @@
       statsCopied: 'Statistik kopiert.', readingSpeed: 'Lesegeschwindigkeit', minutesShort: 'Min.',
       securityGuardrails: 'Sicherheitsregeln', guardClientSide: 'Nur im Browser verarbeiten', guardFileValidation: 'Dateityp und Größe prüfen', guardNoFileAnalytics: 'Keine Inhaltsanalyse speichern',
       creatingPdf: 'PDF wird erstellt...', pdfCreated: 'PDF erstellt.', pdfCreationFailed: 'PDF-Erstellung fehlgeschlagen.',
-      encryptedPdfBlocked: 'Verschlüsselte PDFs werden aus Sicherheitsgründen blockiert.', unsupportedFile: 'Nicht unterstützte oder zu große Datei.', fileReadFailed: 'Datei konnte nicht gelesen werden.',
+      encryptedPdfBlocked: 'Verschlüsselte PDFs werden aus Sicherheitsgründen blockiert.', unsafePdfBlocked: 'PDFs mit Skripten, Auto-Aktionen, Anhängen oder Rich Media werden blockiert.', unsupportedFile: 'Nicht unterstützte oder zu große Datei.', fileReadFailed: 'Datei konnte nicht gelesen werden.',
       noFrames: 'Noch keine Frames extrahiert.', download: 'Herunterladen', frameInterval: 'Intervall in Sekunden', maxFrames: 'Maximale Frames', videoUnsupported: 'Nicht unterstütztes oder zu großes Video.'
     },
     pt: {
@@ -543,7 +552,7 @@
       statsCopied: 'Estatísticas copiadas.', readingSpeed: 'Velocidade de leitura', minutesShort: 'min',
       securityGuardrails: 'Proteções de segurança', guardClientSide: 'Processamento apenas no navegador', guardFileValidation: 'Validação de tipo e tamanho', guardNoFileAnalytics: 'Sem análise do conteúdo dos arquivos',
       creatingPdf: 'Criando PDF...', pdfCreated: 'PDF criado.', pdfCreationFailed: 'Falha ao criar PDF.',
-      encryptedPdfBlocked: 'PDFs criptografados são bloqueados por segurança.', unsupportedFile: 'Arquivo não compatível ou muito grande.', fileReadFailed: 'Não foi possível ler o arquivo.',
+      encryptedPdfBlocked: 'PDFs criptografados são bloqueados por segurança.', unsafePdfBlocked: 'PDFs com scripts, ações automáticas, anexos ou mídia avançada são bloqueados.', unsupportedFile: 'Arquivo não compatível ou muito grande.', fileReadFailed: 'Não foi possível ler o arquivo.',
       noFrames: 'Nenhum quadro extraído ainda.', download: 'Baixar', frameInterval: 'Intervalo em segundos', maxFrames: 'Máximo de quadros', videoUnsupported: 'Vídeo não compatível ou muito grande.'
     },
     hi: {
@@ -559,7 +568,7 @@
       statsCopied: 'आँकड़े कॉपी हो गए।', readingSpeed: 'पढ़ने की गति', minutesShort: 'मिनट',
       securityGuardrails: 'सुरक्षा नियंत्रण', guardClientSide: 'केवल ब्राउज़र में प्रोसेसिंग', guardFileValidation: 'फ़ाइल प्रकार और आकार जाँच', guardNoFileAnalytics: 'फ़ाइल सामग्री विश्लेषण सेव नहीं',
       creatingPdf: 'PDF बनाया जा रहा है...', pdfCreated: 'PDF बन गया।', pdfCreationFailed: 'PDF बनाने में विफल।',
-      encryptedPdfBlocked: 'सुरक्षा के लिए एन्क्रिप्टेड PDF रोके गए हैं।', unsupportedFile: 'फ़ाइल समर्थित नहीं या बहुत बड़ी है।', fileReadFailed: 'फ़ाइल पढ़ी नहीं जा सकी।',
+      encryptedPdfBlocked: 'सुरक्षा के लिए एन्क्रिप्टेड PDF रोके गए हैं।', unsafePdfBlocked: 'स्क्रिप्ट, ऑटो-एक्शन, अटैचमेंट या रिच मीडिया वाले PDF रोके जाते हैं।', unsupportedFile: 'फ़ाइल समर्थित नहीं या बहुत बड़ी है।', fileReadFailed: 'फ़ाइल पढ़ी नहीं जा सकी।',
       noFrames: 'अभी कोई फ़्रेम नहीं निकला।', download: 'डाउनलोड', frameInterval: 'अंतराल सेकंड', maxFrames: 'अधिकतम फ़्रेम', videoUnsupported: 'वीडियो समर्थित नहीं या बहुत बड़ा है।'
     },
     ar: {
@@ -575,7 +584,7 @@
       statsCopied: 'تم نسخ الإحصاءات.', readingSpeed: 'سرعة القراءة', minutesShort: 'دقيقة',
       securityGuardrails: 'ضوابط الأمان', guardClientSide: 'المعالجة داخل المتصفح فقط', guardFileValidation: 'التحقق من النوع والحجم', guardNoFileAnalytics: 'لا يتم حفظ تحليل محتوى الملفات',
       creatingPdf: 'جار إنشاء PDF...', pdfCreated: 'تم إنشاء PDF.', pdfCreationFailed: 'فشل إنشاء PDF.',
-      encryptedPdfBlocked: 'يتم حظر ملفات PDF المشفرة لأسباب أمنية.', unsupportedFile: 'الملف غير مدعوم أو كبير جداً.', fileReadFailed: 'تعذرت قراءة الملف.',
+      encryptedPdfBlocked: 'يتم حظر ملفات PDF المشفرة لأسباب أمنية.', unsafePdfBlocked: 'يتم حظر ملفات PDF التي تحتوي على نصوص أو إجراءات تلقائية أو مرفقات أو وسائط تفاعلية.', unsupportedFile: 'الملف غير مدعوم أو كبير جداً.', fileReadFailed: 'تعذرت قراءة الملف.',
       noFrames: 'لم يتم استخراج أي إطارات بعد.', download: 'تنزيل', frameInterval: 'الفاصل بالثواني', maxFrames: 'الحد الأقصى للإطارات', videoUnsupported: 'الفيديو غير مدعوم أو كبير جداً.'
     }
   };
@@ -973,8 +982,8 @@
         if (isPdf(file)) await addPdfFile(file);
         else await addImageFile(file);
       } catch (error) {
-        console.error(error);
-        const message = error.message === 'encrypted_pdf' ? t('encryptedPdfBlocked') : t('fileReadFailed');
+        if (!isExpectedFileRejection(error)) console.error(error);
+        const message = pdfErrorMessage(error) || t('fileReadFailed');
         showToast(`${file.name}: ${message}`, 'error');
       }
     }
@@ -996,6 +1005,7 @@
     const data = new Uint8Array(await file.arrayBuffer());
     if (!hasPdfSignature(data)) throw new Error('Invalid PDF signature');
     if (includesAscii(data, '/Encrypt')) throw new Error('encrypted_pdf');
+    if (hasRiskyPdfFeatures(data)) throw new Error('unsafe_pdf');
     let pdf;
     try {
       pdf = await window.pdfjsLib.getDocument({ data: data.slice() }).promise;
@@ -1030,6 +1040,21 @@
 
   function hasPdfSignature(bytes) {
     return bytes.length >= 5 && bytes[0] === 0x25 && bytes[1] === 0x50 && bytes[2] === 0x44 && bytes[3] === 0x46 && bytes[4] === 0x2d;
+  }
+
+  function hasRiskyPdfFeatures(bytes) {
+    return PDF_RISKY_MARKERS.some(marker => includesAsciiInsensitive(bytes, marker));
+  }
+
+  function pdfErrorMessage(error) {
+    const message = String(error?.message || '').toLowerCase();
+    if (message.includes('encrypted_pdf') || message.includes('encrypt') || message.includes('password')) return t('encryptedPdfBlocked');
+    if (message.includes('unsafe_pdf')) return t('unsafePdfBlocked');
+    return '';
+  }
+
+  function isExpectedFileRejection(error) {
+    return Boolean(pdfErrorMessage(error));
   }
 
   function detectImageKind(file, bytes) {
@@ -1078,7 +1103,7 @@
       showToast(t('pdfCreated'));
     } catch (error) {
       console.error(error);
-      const message = String(error?.message || '').toLowerCase().includes('encrypt') ? t('encryptedPdfBlocked') : t('pdfCreationFailed');
+      const message = pdfErrorMessage(error) || t('pdfCreationFailed');
       showToast(message, 'error');
     }
   }
@@ -1358,8 +1383,8 @@
         description: '툴킷은 파일 처리 도구에서 가장 중요한 원칙을 원본 파일 최소 수집과 입력 검증으로 둡니다.',
         sections: [
           { title: '클라이언트 처리', items: ['PDF, 이미지, 텍스트, 동영상 처리는 가능한 한 브라우저 안에서 실행합니다.', '정적 배포 상태에서는 원본 파일을 받는 서버 업로드 엔드포인트가 없습니다.', '다운로드 결과물은 사용자의 브라우저에서 생성됩니다.'] },
-          { title: '파일 입력 방어', items: ['PDF는 실제 PDF 시그니처를 확인한 뒤 처리합니다.', '이미지는 PNG, JPG, WebP, GIF, BMP 등 허용 형식만 받고 SVG 같은 능동 콘텐츠 가능성이 있는 형식은 병합 대상에서 제외합니다.', '이미지는 디코딩 후 픽셀 수 제한을 적용해 과도한 메모리 사용을 줄입니다.', '동영상은 MP4, MOV, WebM, OGG 계열의 일반 브라우저 지원 형식으로 제한합니다.'] },
-          { title: '브라우저 보안 정책', items: ['Content Security Policy를 적용해 외부 스크립트와 임의 네트워크 연결을 기본 차단합니다.', 'object-src와 frame-ancestors를 차단해 임베드와 클릭재킹 위험을 줄입니다.', '서비스워커는 앱 셸 캐시를 관리하되 설정 파일과 내비게이션은 새 버전을 우선 확인하도록 설계했습니다.'] },
+          { title: '파일 입력 방어', items: ['PDF는 실제 PDF 시그니처를 확인한 뒤 처리합니다.', '암호화된 PDF와 JavaScript, 자동 실행, 첨부파일, 리치 미디어 같은 위험 구조가 보이는 PDF는 처리하지 않습니다.', '이미지는 PNG, JPG, WebP, GIF, BMP 등 허용 형식만 받고 SVG 같은 능동 콘텐츠 가능성이 있는 형식은 병합 대상에서 제외합니다.', '이미지는 디코딩 후 픽셀 수 제한을 적용해 과도한 메모리 사용을 줄입니다.', '동영상은 MP4, MOV, WebM, OGG 계열의 일반 브라우저 지원 형식으로 제한합니다.'] },
+          { title: '브라우저 보안 정책', items: ['Content Security Policy를 적용해 외부 스크립트와 임의 네트워크 연결을 기본 차단합니다.', 'object-src를 차단하고, 지원 호스팅에서는 HTTP 보안 헤더로 frame-ancestors와 X-Frame-Options를 적용합니다.', 'GitHub Pages처럼 보안 헤더를 직접 적용하기 어려운 환경에서는 앱 시작 시 프레임 안 실행을 감지해 탈출하거나 화면을 숨깁니다.', '서비스워커는 앱 셸 캐시를 관리하되 설정 파일과 내비게이션은 새 버전을 우선 확인하도록 설계했습니다.'] },
           { title: '관리자와 분석 보안', items: ['화면에서 관리자 링크를 노출하지 않고, 관리자는 직접 주소를 알고 접근하는 방식으로 분리합니다.', '정적 배포의 로컬 관리자 잠금은 운영 보안 경계가 아니며, 실제 운영용 관리는 Worker 백엔드의 서버 인증을 연결해야 합니다.', '서버형 분석은 파일명과 파일 내용을 저장하지 않고, 집계 통계와 일별 방문자 해시만 저장하도록 설계했습니다.'] },
           { title: '남은 운영 과제', items: ['도메인 연결 후에는 HTTPS, 보안 헤더, 관리자 비밀번호 정책, 백업, 로그 보관 기간을 운영 정책으로 확정해야 합니다.', '광고와 쿠키 기반 분석을 붙이면 동의 배너와 개인정보 고지를 보강해야 합니다.', '법적 문서는 실제 운영 주체, 국가, 수익 귀속 구조에 맞춰 법무·세무 검토가 필요합니다.'] }
         ]
@@ -1691,6 +1716,24 @@
     return false;
   }
 
+  function includesAsciiInsensitive(bytes, text) {
+    const needle = [...text].map(char => char.toLowerCase().charCodeAt(0));
+    if (!needle.length || bytes.length < needle.length) return false;
+    for (let i = 0; i <= bytes.length - needle.length; i++) {
+      let matched = true;
+      for (let j = 0; j < needle.length; j++) {
+        const code = bytes[i + j];
+        const normalized = code >= 0x41 && code <= 0x5a ? code + 0x20 : code;
+        if (normalized !== needle[j]) {
+          matched = false;
+          break;
+        }
+      }
+      if (matched) return true;
+    }
+    return false;
+  }
+
   function asciiAt(bytes, start, end) {
     if (bytes.length < end) return '';
     return String.fromCharCode(...bytes.slice(start, end));
@@ -1758,7 +1801,7 @@
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js?v=20260629-pwa1', { updateViaCache: 'none' })
+      navigator.serviceWorker.register('./sw.js?v=20260629-fileguard', { updateViaCache: 'none' })
         .then(registration => registration.update())
         .catch(error => console.warn('Service worker registration failed:', error));
     });
