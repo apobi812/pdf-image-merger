@@ -927,7 +927,9 @@
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js').catch(error => console.warn('Service worker registration failed:', error));
+      navigator.serviceWorker.register('./sw.js?v=20260629-cache-reload', { updateViaCache: 'none' })
+        .then(registration => registration.update())
+        .catch(error => console.warn('Service worker registration failed:', error));
     });
   }
 })();

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'toolkit-v4';
+const CACHE_NAME = 'toolkit-v5';
 const APP_SHELL = [
   './',
   './index.html',
@@ -10,8 +10,8 @@ const APP_SHELL = [
   './terms/index.html',
   './security/index.html',
   './admin/index.html',
-  './styles.css?v=20260629-security',
-  './app.js?v=20260629-security',
+  './styles.css?v=20260629-cache-reload',
+  './app.js?v=20260629-cache-reload',
   './manifest.webmanifest',
   './robots.txt',
   './sitemap.xml',
@@ -43,7 +43,7 @@ self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
   if (event.request.mode === 'navigate') {
     event.respondWith(
-      fetch(event.request)
+      fetch(event.request, { cache: 'reload' })
         .then(response => {
           const copy = response.clone();
           caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
