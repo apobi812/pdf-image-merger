@@ -1,7 +1,9 @@
-const CACHE_NAME = 'toolkit-v14';
+const CACHE_NAME = 'toolkit-v15';
+const OFFLINE_URL = './offline.html';
 const APP_SHELL = [
   './',
   './index.html',
+  OFFLINE_URL,
   './pdf/index.html',
   './word-count/index.html',
   './video-extractor/index.html',
@@ -9,8 +11,8 @@ const APP_SHELL = [
   './privacy/index.html',
   './terms/index.html',
   './security/index.html',
-  './styles.css?v=20260629-admin-kdf',
-  './app.js?v=20260629-admin-kdf',
+  './styles.css?v=20260629-pwa1',
+  './app.js?v=20260629-pwa1',
   './manifest.webmanifest',
   './robots.txt',
   './sitemap.xml',
@@ -63,7 +65,10 @@ self.addEventListener('fetch', event => {
           caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
           return response;
         })
-        .catch(() => caches.match(event.request).then(cached => cached || caches.match('./index.html')))
+        .catch(async () => {
+          const cached = await caches.match(event.request);
+          return cached || await caches.match('./index.html') || await caches.match(OFFLINE_URL);
+        })
     );
     return;
   }

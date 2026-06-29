@@ -487,6 +487,33 @@ h1 { margin: 0; font-size: clamp(1.35rem, 2.6vw, 2.2rem); letter-spacing: 0; }
   padding: 18px;
 }
 
+.offline-shell {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+.offline-panel {
+  width: min(520px, 100%);
+  display: grid;
+  gap: 14px;
+  justify-items: start;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 22px;
+  box-shadow: 0 20px 48px #1e293b14;
+}
+.offline-panel h1 {
+  margin: 0;
+  font-size: 1.35rem;
+}
+.offline-panel p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;

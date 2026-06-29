@@ -31,6 +31,7 @@ function includes(path, needle) {
 
 const app = read('app.js');
 const sw = read('sw.js');
+const manifest = JSON.parse(read('manifest.webmanifest'));
 const sitemap = read('sitemap.xml');
 const worker = read('worker/src/index.js');
 const schema = read('worker/schema.sql');
@@ -41,17 +42,28 @@ for (const file of htmlFiles) {
   assert(html.includes('Content-Security-Policy'), `${file}: missing CSP meta tag`);
   assert(html.includes('frame-ancestors'), `${file}: CSP missing frame-ancestors`);
   assert(html.includes('object-src'), `${file}: CSP missing object-src`);
-  assert(html.includes('app.js?v=20260629-admin-kdf'), `${file}: stale app.js cache version`);
-  assert(html.includes('styles.css?v=20260629-admin-kdf'), `${file}: stale styles.css cache version`);
+  assert(html.includes('mobile-web-app-capable'), `${file}: missing mobile web app meta`);
+  assert(html.includes('app.js?v=20260629-pwa1'), `${file}: stale app.js cache version`);
+  assert(html.includes('styles.css?v=20260629-pwa1'), `${file}: stale styles.css cache version`);
 }
 
 assert(includes('admin/index.html', 'noindex,nofollow'), 'admin page must be noindex,nofollow');
 assert(!includes('index.html', 'data-route="admin"'), 'public home must not link admin route');
 assert(!sw.includes('./admin/index.html'), 'service worker must not precache admin page');
-assert(sw.includes("const CACHE_NAME = 'toolkit-v14'"), 'service worker cache name not bumped');
+assert(sw.includes("const CACHE_NAME = 'toolkit-v15'"), 'service worker cache name not bumped');
+assert(sw.includes("const OFFLINE_URL = './offline.html'"), 'service worker missing offline fallback');
+assert(sw.includes("'./app.js?v=20260629-pwa1'"), 'service worker has stale app cache version');
 assert(!sitemap.includes('/admin/'), 'sitemap must not include admin page');
 assert(existsSync(join(root, '.well-known/security.txt')), 'security.txt is missing');
 assert(existsSync(join(root, '_headers')), '_headers template is missing');
+assert(existsSync(join(root, 'offline.html')), 'offline fallback page is missing');
+
+assert(manifest.id === '/pdf-image-merger/', 'manifest id is missing or incorrect');
+assert(manifest.display === 'standalone', 'manifest display must be standalone');
+assert(Array.isArray(manifest.shortcuts) && manifest.shortcuts.length === 3, 'manifest must expose 3 tool shortcuts');
+assert(manifest.shortcuts.some(shortcut => shortcut.url === './pdf/?source=shortcut'), 'manifest missing PDF shortcut');
+assert(manifest.shortcuts.some(shortcut => shortcut.url === './word-count/?source=shortcut'), 'manifest missing word-count shortcut');
+assert(manifest.shortcuts.some(shortcut => shortcut.url === './video-extractor/?source=shortcut'), 'manifest missing video shortcut');
 
 assert(!app.includes('ignoreEncryption'), 'PDF encryption bypass flag must not be used');
 assert(app.includes("includesAscii(data, '/Encrypt')"), 'encrypted PDF guard is missing');

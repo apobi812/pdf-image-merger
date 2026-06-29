@@ -80,6 +80,8 @@ Then verify the live site:
 - `/admin/` has `noindex,nofollow`.
 - `/sitemap.xml` does not include `/admin/`.
 - `/.well-known/security.txt` is reachable.
+- `/offline.html` is reachable.
+- `manifest.webmanifest` exposes the three ready tool shortcuts.
 
 ## Security Invariants
 
@@ -92,6 +94,7 @@ Do not loosen these without a specific reason:
 - No `ignoreEncryption` PDF loading.
 - No SVG input for PDF merging.
 - Local admin lock uses PBKDF2-SHA-256 and remains labeled as local-only protection.
+- PWA install metadata, tool shortcuts, and offline fallback stay enabled.
 - No wildcard CORS.
 - No wildcard CSP `connect-src`.
 
