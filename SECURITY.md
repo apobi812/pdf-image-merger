@@ -9,10 +9,13 @@ This project is a static, client-side PWA. It is designed so user files are proc
 - Local `pdf.js` and `pdf-lib` vendor files
 - File type and size checks before processing
 - PDF and image magic-byte checks before previewing or merging
+- Encrypted PDFs are blocked instead of being loaded with encryption bypass flags
 - SVG and other active/vector image formats are rejected for PDF merging
 - Large decoded image dimensions are rejected before canvas conversion
 - Video uploads are limited to common browser formats: MP4, MOV, WebM, and OGG
+- Video files are checked against expected container headers before browser decoding
 - No file-name or file-content analytics
+- No browser session IDs are sent to the optional analytics backend
 - Local-only admin dashboard with a browser passcode
 - Admin UI is not linked from the public navigation; `/admin/` is direct-address only
 - Optional Cloudflare Worker + D1 backend for server-side admin auth and aggregate analytics

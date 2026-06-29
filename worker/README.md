@@ -4,7 +4,7 @@ Cloudflare Worker + D1 backend for production admin login and privacy-safe aggre
 
 The frontend still processes PDFs, images, text, and videos locally in the browser. This Worker only receives small event counters such as `route_open`, `pdf_download`, tool name, route, language, approximate screen size, browser family, country from Cloudflare metadata, and a daily rotating visitor hash.
 
-It does not receive or store file names, file contents, raw IP addresses, raw user-agent strings, PDFs, images, or videos.
+It does not receive or store file names, file contents, browser session IDs, raw IP addresses, raw user-agent strings, PDFs, images, or videos.
 
 ## Endpoints
 

@@ -54,6 +54,7 @@ async function handleRequest(request, env, ctx) {
 async function recordEvent(request, env, ctx) {
   requireDb(env);
   assertAllowedOrigin(request, env);
+  assertJsonRequest(request);
   assertJsonSize(request);
 
   const body = await readJson(request);
@@ -67,16 +68,15 @@ async function recordEvent(request, env, ctx) {
   const route = cleanToken(body.route, 'unknown', 48);
   const lang = cleanToken(body.lang, 'unknown', 12);
   const screen = cleanScreen(body.screen);
-  const sessionId = cleanToken(body.sessionId, '', 80);
   const referrerHost = hostOnly(request.headers.get('Referer'));
   const browser = browserFamily(request.headers.get('User-Agent') || '');
   const country = cleanCountry(request.cf?.country);
 
   await env.DB.prepare(`
     INSERT INTO events (
-      day, ts, event, tool, route, lang, country, visitor_hash, session_id, browser, screen, referrer_host
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `).bind(day, now, eventName, tool, route, lang, country, visitorHash, sessionId, browser, screen, referrerHost).run();
+      day, ts, event, tool, route, lang, country, visitor_hash, browser, screen, referrer_host
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `).bind(day, now, eventName, tool, route, lang, country, visitorHash, browser, screen, referrerHost).run();
 
   ctx.waitUntil(cleanExpiredRateLimits(env, now));
   return json(request, env, { ok: true }, 202);
@@ -85,6 +85,7 @@ async function recordEvent(request, env, ctx) {
 async function adminLogin(request, env) {
   requireDb(env);
   assertAllowedOrigin(request, env);
+  assertJsonRequest(request);
   assertJsonSize(request);
   requireAdminSecrets(env);
 
@@ -195,6 +196,13 @@ function assertAllowedOrigin(request, env) {
 function assertJsonSize(request) {
   const length = Number(request.headers.get('Content-Length') || 0);
   if (length > MAX_EVENT_BODY_BYTES) throw new HttpError(413, 'payload_too_large');
+}
+
+function assertJsonRequest(request) {
+  const contentType = request.headers.get('Content-Type') || '';
+  if (!contentType.toLowerCase().includes('application/json')) {
+    throw new HttpError(415, 'unsupported_media_type');
+  }
 }
 
 async function readJson(request) {

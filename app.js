@@ -12,7 +12,6 @@
   const MAX_IMAGE_PIXELS = 70_000_000;
   const STORE_KEY = 'toolkitStats.v1';
   const ADMIN_KEY = 'toolkitAdmin.v1';
-  const SESSION_KEY = 'toolkitSession.v1';
   const ADMIN_TOKEN_KEY = 'toolkitAdminToken.v1';
   const ALLOWED_IMAGE_TYPES = new Set(['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/bmp']);
   const ALLOWED_VIDEO_TYPES = new Set(['video/mp4', 'video/quicktime', 'video/webm', 'video/ogg', 'video/x-m4v']);
@@ -94,7 +93,13 @@
       textInput: '텍스트 입력', pasteText: '여기에 텍스트를 붙여넣으세요.', chars: '글자수', charsNoSpace: '공백 제외', words: '단어수',
       sentences: '문장', paragraphs: '문단', reading: '읽기 시간', keywords: '주요 단어',
       videoChoose: '동영상 선택', extractCurrent: '현재 프레임 추출', extractInterval: '간격 추출', frames: '추출 프레임',
-      adminTitle: '관리 페이지', adminDesc: '이 정적 버전은 개인정보를 수집하지 않는 로컬 집계만 제공합니다. 서버형 분석은 Worker/D1 연결이 필요합니다.'
+      adminTitle: '관리 페이지', adminDesc: '이 정적 버전은 개인정보를 수집하지 않는 로컬 집계만 제공합니다. 서버형 분석은 Worker/D1 연결이 필요합니다.',
+      fileCount: '파일', pageUnit: '페이지', copyStats: '통계 복사', noKeywords: '아직 주요 단어가 없습니다.',
+      statsCopied: '통계를 복사했습니다.', readingSpeed: '읽기 속도', minutesShort: '분',
+      securityGuardrails: '보안 보호 장치', guardClientSide: '브라우저 안에서만 처리', guardFileValidation: '파일 형식과 크기 검증', guardNoFileAnalytics: '파일 내용 분석 저장 안 함',
+      creatingPdf: 'PDF를 만드는 중...', pdfCreated: 'PDF가 생성되었습니다.', pdfCreationFailed: 'PDF 생성에 실패했습니다.',
+      encryptedPdfBlocked: '암호화된 PDF는 안전을 위해 처리하지 않습니다.', unsupportedFile: '지원하지 않거나 너무 큰 파일입니다.', fileReadFailed: '파일을 읽을 수 없습니다.',
+      noFrames: '아직 추출된 프레임이 없습니다.', download: '다운로드', frameInterval: '추출 간격(초)', maxFrames: '최대 프레임 수', videoUnsupported: '지원하지 않거나 너무 큰 동영상입니다.'
     }
   };
 
@@ -114,7 +119,13 @@
     textInput: 'Text input', pasteText: 'Paste text here.', chars: 'Characters', charsNoSpace: 'No spaces', words: 'Words',
     sentences: 'Sentences', paragraphs: 'Paragraphs', reading: 'Reading time', keywords: 'Top words',
     videoChoose: 'Choose video', extractCurrent: 'Extract current frame', extractInterval: 'Extract by interval', frames: 'Extracted frames',
-    adminTitle: 'Admin', adminDesc: 'This static version provides privacy-safe local aggregates only. Server analytics requires Worker/D1 integration.'
+    adminTitle: 'Admin', adminDesc: 'This static version provides privacy-safe local aggregates only. Server analytics requires Worker/D1 integration.',
+    fileCount: 'files', pageUnit: 'page', copyStats: 'Copy stats', noKeywords: 'No keywords yet.',
+    statsCopied: 'Stats copied.', readingSpeed: 'Reading speed', minutesShort: 'min',
+    securityGuardrails: 'Security guardrails', guardClientSide: 'Client-side processing only', guardFileValidation: 'File type and size validation', guardNoFileAnalytics: 'No file content analytics',
+    creatingPdf: 'Creating PDF...', pdfCreated: 'PDF created.', pdfCreationFailed: 'PDF creation failed.',
+    encryptedPdfBlocked: 'Encrypted PDFs are blocked for safety.', unsupportedFile: 'Unsupported or too large.', fileReadFailed: 'Could not read file.',
+    noFrames: 'No frames extracted yet.', download: 'Download', frameInterval: 'Interval seconds', maxFrames: 'Max frames', videoUnsupported: 'Unsupported video or file too large.'
   };
 
   const localized = {
@@ -446,7 +457,13 @@
       textInput: 'テキスト入力', pasteText: 'ここにテキストを貼り付けてください。', chars: '文字数', charsNoSpace: '空白を除く',
       words: '単語数', sentences: '文', paragraphs: '段落', reading: '読了時間', keywords: '主要単語',
       videoChoose: '動画を選択', extractCurrent: '現在のフレームを抽出', extractInterval: '間隔で抽出', frames: '抽出フレーム',
-      adminTitle: '管理ページ', adminDesc: 'この静的版ではプライバシーに配慮したローカル集計のみ提供します。サーバー分析にはWorker/D1接続が必要です。'
+      adminTitle: '管理ページ', adminDesc: 'この静的版ではプライバシーに配慮したローカル集計のみ提供します。サーバー分析にはWorker/D1接続が必要です。',
+      fileCount: 'ファイル', pageUnit: 'ページ', copyStats: '統計をコピー', noKeywords: '主要単語はまだありません。',
+      statsCopied: '統計をコピーしました。', readingSpeed: '読書速度', minutesShort: '分',
+      securityGuardrails: 'セキュリティ保護', guardClientSide: 'ブラウザ内のみで処理', guardFileValidation: 'ファイル形式とサイズを検証', guardNoFileAnalytics: 'ファイル内容を分析保存しません',
+      creatingPdf: 'PDFを作成中...', pdfCreated: 'PDFを作成しました。', pdfCreationFailed: 'PDF作成に失敗しました。',
+      encryptedPdfBlocked: '暗号化PDFは安全のため処理しません。', unsupportedFile: '未対応または大きすぎるファイルです。', fileReadFailed: 'ファイルを読み込めません。',
+      noFrames: '抽出されたフレームはまだありません。', download: 'ダウンロード', frameInterval: '抽出間隔(秒)', maxFrames: '最大フレーム数', videoUnsupported: '未対応または大きすぎる動画です。'
     },
     zh: {
       homeTitle: '工具箱', homeDesc: '选择需要的浏览器工具。文件会尽可能在你的设备内处理。',
@@ -456,7 +473,13 @@
       textInput: '文本输入', pasteText: '在这里粘贴文本。', chars: '字符数', charsNoSpace: '不含空格',
       words: '词数', sentences: '句子', paragraphs: '段落', reading: '阅读时间', keywords: '关键词',
       videoChoose: '选择视频', extractCurrent: '提取当前帧', extractInterval: '按间隔提取', frames: '提取的帧',
-      adminTitle: '管理页面', adminDesc: '此静态版本仅提供注重隐私的本地统计。服务器分析需要连接 Worker/D1。'
+      adminTitle: '管理页面', adminDesc: '此静态版本仅提供注重隐私的本地统计。服务器分析需要连接 Worker/D1。',
+      fileCount: '个文件', pageUnit: '页', copyStats: '复制统计', noKeywords: '暂无关键词。',
+      statsCopied: '统计已复制。', readingSpeed: '阅读速度', minutesShort: '分钟',
+      securityGuardrails: '安全防护', guardClientSide: '仅在浏览器内处理', guardFileValidation: '验证文件类型和大小', guardNoFileAnalytics: '不保存文件内容分析',
+      creatingPdf: '正在创建 PDF...', pdfCreated: 'PDF 已创建。', pdfCreationFailed: 'PDF 创建失败。',
+      encryptedPdfBlocked: '出于安全原因，不处理加密 PDF。', unsupportedFile: '文件不支持或过大。', fileReadFailed: '无法读取文件。',
+      noFrames: '尚未提取帧。', download: '下载', frameInterval: '提取间隔(秒)', maxFrames: '最大帧数', videoUnsupported: '视频不支持或过大。'
     },
     es: {
       homeTitle: 'Kit de herramientas', homeDesc: 'Elige una herramienta del navegador. Los archivos se procesan localmente siempre que sea posible.',
@@ -466,7 +489,13 @@
       textInput: 'Entrada de texto', pasteText: 'Pega el texto aquí.', chars: 'Caracteres', charsNoSpace: 'Sin espacios',
       words: 'Palabras', sentences: 'Frases', paragraphs: 'Párrafos', reading: 'Tiempo de lectura', keywords: 'Palabras clave',
       videoChoose: 'Elegir video', extractCurrent: 'Extraer fotograma actual', extractInterval: 'Extraer por intervalo', frames: 'Fotogramas extraídos',
-      adminTitle: 'Administración', adminDesc: 'Esta versión estática solo ofrece métricas locales con privacidad. La analítica de servidor requiere Worker/D1.'
+      adminTitle: 'Administración', adminDesc: 'Esta versión estática solo ofrece métricas locales con privacidad. La analítica de servidor requiere Worker/D1.',
+      fileCount: 'archivos', pageUnit: 'página', copyStats: 'Copiar estadísticas', noKeywords: 'Aún no hay palabras clave.',
+      statsCopied: 'Estadísticas copiadas.', readingSpeed: 'Velocidad de lectura', minutesShort: 'min',
+      securityGuardrails: 'Protecciones de seguridad', guardClientSide: 'Procesamiento solo en el navegador', guardFileValidation: 'Validación de tipo y tamaño', guardNoFileAnalytics: 'Sin análisis de contenido de archivos',
+      creatingPdf: 'Creando PDF...', pdfCreated: 'PDF creado.', pdfCreationFailed: 'No se pudo crear el PDF.',
+      encryptedPdfBlocked: 'Los PDF cifrados se bloquean por seguridad.', unsupportedFile: 'Archivo no compatible o demasiado grande.', fileReadFailed: 'No se pudo leer el archivo.',
+      noFrames: 'Aún no se extrajeron fotogramas.', download: 'Descargar', frameInterval: 'Intervalo en segundos', maxFrames: 'Máximo de fotogramas', videoUnsupported: 'Video no compatible o demasiado grande.'
     },
     fr: {
       homeTitle: 'Boîte à outils', homeDesc: 'Choisissez un outil du navigateur. Les fichiers sont traités localement autant que possible.',
@@ -476,7 +505,13 @@
       textInput: 'Saisie de texte', pasteText: 'Collez le texte ici.', chars: 'Caractères', charsNoSpace: 'Sans espaces',
       words: 'Mots', sentences: 'Phrases', paragraphs: 'Paragraphes', reading: 'Temps de lecture', keywords: 'Mots clés',
       videoChoose: 'Choisir une vidéo', extractCurrent: 'Extraire l’image actuelle', extractInterval: 'Extraire par intervalle', frames: 'Images extraites',
-      adminTitle: 'Administration', adminDesc: 'Cette version statique fournit uniquement des métriques locales respectueuses de la vie privée. L’analytique serveur nécessite Worker/D1.'
+      adminTitle: 'Administration', adminDesc: 'Cette version statique fournit uniquement des métriques locales respectueuses de la vie privée. L’analytique serveur nécessite Worker/D1.',
+      fileCount: 'fichiers', pageUnit: 'page', copyStats: 'Copier les statistiques', noKeywords: 'Aucun mot clé pour le moment.',
+      statsCopied: 'Statistiques copiées.', readingSpeed: 'Vitesse de lecture', minutesShort: 'min',
+      securityGuardrails: 'Protections de sécurité', guardClientSide: 'Traitement uniquement dans le navigateur', guardFileValidation: 'Validation du type et de la taille', guardNoFileAnalytics: 'Aucune analyse du contenu des fichiers',
+      creatingPdf: 'Création du PDF...', pdfCreated: 'PDF créé.', pdfCreationFailed: 'Échec de la création du PDF.',
+      encryptedPdfBlocked: 'Les PDF chiffrés sont bloqués par sécurité.', unsupportedFile: 'Fichier non compatible ou trop volumineux.', fileReadFailed: 'Impossible de lire le fichier.',
+      noFrames: 'Aucune image extraite pour le moment.', download: 'Télécharger', frameInterval: 'Intervalle en secondes', maxFrames: 'Nombre maximal d’images', videoUnsupported: 'Vidéo non compatible ou trop volumineuse.'
     },
     de: {
       homeTitle: 'Werkzeugkasten', homeDesc: 'Wählen Sie ein Browser-Tool. Dateien werden möglichst lokal auf Ihrem Gerät verarbeitet.',
@@ -486,7 +521,13 @@
       textInput: 'Texteingabe', pasteText: 'Text hier einfügen.', chars: 'Zeichen', charsNoSpace: 'Ohne Leerzeichen',
       words: 'Wörter', sentences: 'Sätze', paragraphs: 'Absätze', reading: 'Lesezeit', keywords: 'Wichtige Wörter',
       videoChoose: 'Video wählen', extractCurrent: 'Aktuellen Frame extrahieren', extractInterval: 'Nach Intervall extrahieren', frames: 'Extrahierte Frames',
-      adminTitle: 'Administration', adminDesc: 'Diese statische Version bietet nur datenschutzfreundliche lokale Auswertungen. Server-Analytik benötigt Worker/D1.'
+      adminTitle: 'Administration', adminDesc: 'Diese statische Version bietet nur datenschutzfreundliche lokale Auswertungen. Server-Analytik benötigt Worker/D1.',
+      fileCount: 'Dateien', pageUnit: 'Seite', copyStats: 'Statistik kopieren', noKeywords: 'Noch keine Keywords.',
+      statsCopied: 'Statistik kopiert.', readingSpeed: 'Lesegeschwindigkeit', minutesShort: 'Min.',
+      securityGuardrails: 'Sicherheitsregeln', guardClientSide: 'Nur im Browser verarbeiten', guardFileValidation: 'Dateityp und Größe prüfen', guardNoFileAnalytics: 'Keine Inhaltsanalyse speichern',
+      creatingPdf: 'PDF wird erstellt...', pdfCreated: 'PDF erstellt.', pdfCreationFailed: 'PDF-Erstellung fehlgeschlagen.',
+      encryptedPdfBlocked: 'Verschlüsselte PDFs werden aus Sicherheitsgründen blockiert.', unsupportedFile: 'Nicht unterstützte oder zu große Datei.', fileReadFailed: 'Datei konnte nicht gelesen werden.',
+      noFrames: 'Noch keine Frames extrahiert.', download: 'Herunterladen', frameInterval: 'Intervall in Sekunden', maxFrames: 'Maximale Frames', videoUnsupported: 'Nicht unterstütztes oder zu großes Video.'
     },
     pt: {
       homeTitle: 'Kit de ferramentas', homeDesc: 'Escolha uma ferramenta do navegador. Sempre que possível, os arquivos são processados no seu dispositivo.',
@@ -496,7 +537,13 @@
       textInput: 'Entrada de texto', pasteText: 'Cole o texto aqui.', chars: 'Caracteres', charsNoSpace: 'Sem espaços',
       words: 'Palavras', sentences: 'Frases', paragraphs: 'Parágrafos', reading: 'Tempo de leitura', keywords: 'Palavras principais',
       videoChoose: 'Escolher vídeo', extractCurrent: 'Extrair quadro atual', extractInterval: 'Extrair por intervalo', frames: 'Quadros extraídos',
-      adminTitle: 'Administração', adminDesc: 'Esta versão estática fornece apenas métricas locais com privacidade. A análise no servidor exige Worker/D1.'
+      adminTitle: 'Administração', adminDesc: 'Esta versão estática fornece apenas métricas locais com privacidade. A análise no servidor exige Worker/D1.',
+      fileCount: 'arquivos', pageUnit: 'página', copyStats: 'Copiar estatísticas', noKeywords: 'Ainda não há palavras principais.',
+      statsCopied: 'Estatísticas copiadas.', readingSpeed: 'Velocidade de leitura', minutesShort: 'min',
+      securityGuardrails: 'Proteções de segurança', guardClientSide: 'Processamento apenas no navegador', guardFileValidation: 'Validação de tipo e tamanho', guardNoFileAnalytics: 'Sem análise do conteúdo dos arquivos',
+      creatingPdf: 'Criando PDF...', pdfCreated: 'PDF criado.', pdfCreationFailed: 'Falha ao criar PDF.',
+      encryptedPdfBlocked: 'PDFs criptografados são bloqueados por segurança.', unsupportedFile: 'Arquivo não compatível ou muito grande.', fileReadFailed: 'Não foi possível ler o arquivo.',
+      noFrames: 'Nenhum quadro extraído ainda.', download: 'Baixar', frameInterval: 'Intervalo em segundos', maxFrames: 'Máximo de quadros', videoUnsupported: 'Vídeo não compatível ou muito grande.'
     },
     hi: {
       homeTitle: 'टूलकिट', homeDesc: 'ज़रूरी ब्राउज़र टूल चुनें। जहाँ संभव हो, फ़ाइलें आपके डिवाइस पर ही प्रोसेस होती हैं।',
@@ -506,7 +553,13 @@
       textInput: 'टेक्स्ट इनपुट', pasteText: 'टेक्स्ट यहाँ पेस्ट करें।', chars: 'अक्षर', charsNoSpace: 'स्पेस हटाकर',
       words: 'शब्द', sentences: 'वाक्य', paragraphs: 'पैराग्राफ', reading: 'पढ़ने का समय', keywords: 'मुख्य शब्द',
       videoChoose: 'वीडियो चुनें', extractCurrent: 'मौजूदा फ़्रेम निकालें', extractInterval: 'अंतराल से निकालें', frames: 'निकाले गए फ़्रेम',
-      adminTitle: 'एडमिन पेज', adminDesc: 'यह स्थिर संस्करण गोपनीयता-सुरक्षित स्थानीय आँकड़े ही देता है। सर्वर विश्लेषण के लिए Worker/D1 कनेक्शन चाहिए।'
+      adminTitle: 'एडमिन पेज', adminDesc: 'यह स्थिर संस्करण गोपनीयता-सुरक्षित स्थानीय आँकड़े ही देता है। सर्वर विश्लेषण के लिए Worker/D1 कनेक्शन चाहिए।',
+      fileCount: 'फ़ाइलें', pageUnit: 'पेज', copyStats: 'आँकड़े कॉपी करें', noKeywords: 'अभी कोई मुख्य शब्द नहीं।',
+      statsCopied: 'आँकड़े कॉपी हो गए।', readingSpeed: 'पढ़ने की गति', minutesShort: 'मिनट',
+      securityGuardrails: 'सुरक्षा नियंत्रण', guardClientSide: 'केवल ब्राउज़र में प्रोसेसिंग', guardFileValidation: 'फ़ाइल प्रकार और आकार जाँच', guardNoFileAnalytics: 'फ़ाइल सामग्री विश्लेषण सेव नहीं',
+      creatingPdf: 'PDF बनाया जा रहा है...', pdfCreated: 'PDF बन गया।', pdfCreationFailed: 'PDF बनाने में विफल।',
+      encryptedPdfBlocked: 'सुरक्षा के लिए एन्क्रिप्टेड PDF रोके गए हैं।', unsupportedFile: 'फ़ाइल समर्थित नहीं या बहुत बड़ी है।', fileReadFailed: 'फ़ाइल पढ़ी नहीं जा सकी।',
+      noFrames: 'अभी कोई फ़्रेम नहीं निकला।', download: 'डाउनलोड', frameInterval: 'अंतराल सेकंड', maxFrames: 'अधिकतम फ़्रेम', videoUnsupported: 'वीडियो समर्थित नहीं या बहुत बड़ा है।'
     },
     ar: {
       homeTitle: 'مجموعة أدوات', homeDesc: 'اختر أداة المتصفح التي تحتاجها. تتم معالجة الملفات على جهازك كلما أمكن.',
@@ -516,7 +569,13 @@
       textInput: 'إدخال النص', pasteText: 'الصق النص هنا.', chars: 'الأحرف', charsNoSpace: 'بدون مسافات',
       words: 'الكلمات', sentences: 'الجمل', paragraphs: 'الفقرات', reading: 'وقت القراءة', keywords: 'الكلمات المهمة',
       videoChoose: 'اختيار فيديو', extractCurrent: 'استخراج الإطار الحالي', extractInterval: 'استخراج حسب الفاصل', frames: 'الإطارات المستخرجة',
-      adminTitle: 'صفحة الإدارة', adminDesc: 'توفر هذه النسخة الثابتة إحصاءات محلية تحافظ على الخصوصية فقط. يتطلب تحليل الخادم ربط Worker/D1.'
+      adminTitle: 'صفحة الإدارة', adminDesc: 'توفر هذه النسخة الثابتة إحصاءات محلية تحافظ على الخصوصية فقط. يتطلب تحليل الخادم ربط Worker/D1.',
+      fileCount: 'ملفات', pageUnit: 'صفحة', copyStats: 'نسخ الإحصاءات', noKeywords: 'لا توجد كلمات مهمة بعد.',
+      statsCopied: 'تم نسخ الإحصاءات.', readingSpeed: 'سرعة القراءة', minutesShort: 'دقيقة',
+      securityGuardrails: 'ضوابط الأمان', guardClientSide: 'المعالجة داخل المتصفح فقط', guardFileValidation: 'التحقق من النوع والحجم', guardNoFileAnalytics: 'لا يتم حفظ تحليل محتوى الملفات',
+      creatingPdf: 'جار إنشاء PDF...', pdfCreated: 'تم إنشاء PDF.', pdfCreationFailed: 'فشل إنشاء PDF.',
+      encryptedPdfBlocked: 'يتم حظر ملفات PDF المشفرة لأسباب أمنية.', unsupportedFile: 'الملف غير مدعوم أو كبير جداً.', fileReadFailed: 'تعذرت قراءة الملف.',
+      noFrames: 'لم يتم استخراج أي إطارات بعد.', download: 'تنزيل', frameInterval: 'الفاصل بالثواني', maxFrames: 'الحد الأقصى للإطارات', videoUnsupported: 'الفيديو غير مدعوم أو كبير جداً.'
     }
   };
 
@@ -530,7 +589,6 @@
     video: { file: null, url: '', duration: 0, interval: 5, maxFrames: 12, frames: [] },
     homeCategory: 'all',
     filenameResolver: null,
-    sessionId: getSessionId(),
     adminToken: sessionStorage.getItem(ADMIN_TOKEN_KEY) || ''
   };
 
@@ -555,15 +613,6 @@
       console.warn('Invalid apiBaseUrl ignored');
       return '';
     }
-  }
-
-  function getSessionId() {
-    let id = sessionStorage.getItem(SESSION_KEY);
-    if (!id) {
-      id = uid();
-      sessionStorage.setItem(SESSION_KEY, id);
-    }
-    return id;
   }
 
   function hasAnalyticsBackend() {
@@ -673,7 +722,6 @@
       tool,
       route: state.route,
       lang: state.lang,
-      sessionId: state.sessionId,
       screen: `${Math.round(window.innerWidth)}x${Math.round(window.innerHeight)}`
     });
     fetch(apiUrl('/events'), {
@@ -834,7 +882,7 @@
         </section>
         <section class="panel">
           <div class="panel-header">
-            <h2 class="panel-title">${state.pdfItems.length} files</h2>
+            <h2 class="panel-title">${state.pdfItems.length} ${t('fileCount')}</h2>
             <button class="button primary" id="pdfMerge" type="button" ${state.pdfItems.length ? '' : 'disabled'}>${t('mergeDownload')}</button>
           </div>
           <div class="panel-body">
@@ -853,7 +901,7 @@
       <article class="file-row">
         <div>
           <div class="file-name">${escapeHtml(item.name)}</div>
-          <div class="file-meta">${item.kind.toUpperCase()} · ${item.pages} page${item.pages === 1 ? '' : 's'} · ${formatSize(item.size)}</div>
+          <div class="file-meta">${item.kind.toUpperCase()} · ${item.pages} ${t('pageUnit')} · ${formatSize(item.size)}</div>
         </div>
         <div class="row-actions">
           <button class="mini-button" data-pdf-action="up" data-index="${index}" title="up">↑</button>
@@ -872,10 +920,10 @@
         <input class="input" id="pdfOutputName" value="${escapeHtml(state.pdfOutputName)}">
       </div>
       <div class="setting-group">
-        <div class="setting-label">Security guardrails</div>
-        <label class="check-row"><input type="checkbox" checked disabled> Client-side processing only</label>
-        <label class="check-row"><input type="checkbox" checked disabled> File type and size validation</label>
-        <label class="check-row"><input type="checkbox" checked disabled> No file content analytics</label>
+        <div class="setting-label">${t('securityGuardrails')}</div>
+        <label class="check-row"><input type="checkbox" checked disabled> ${t('guardClientSide')}</label>
+        <label class="check-row"><input type="checkbox" checked disabled> ${t('guardFileValidation')}</label>
+        <label class="check-row"><input type="checkbox" checked disabled> ${t('guardNoFileAnalytics')}</label>
       </div>
       <div class="rail-ad"><span>${t('adLabel')}</span><small>300x250</small></div>
     `;
@@ -917,7 +965,7 @@
     if (!files.length) return;
     for (const file of files) {
       if (!isAllowedPdfFile(file)) {
-        showToast(`${file.name}: unsupported or too large`, 'error');
+        showToast(`${file.name}: ${t('unsupportedFile')}`, 'error');
         continue;
       }
       try {
@@ -925,7 +973,8 @@
         else await addImageFile(file);
       } catch (error) {
         console.error(error);
-        showToast(`${file.name}: could not read file`, 'error');
+        const message = error.message === 'encrypted_pdf' ? t('encryptedPdfBlocked') : t('fileReadFailed');
+        showToast(`${file.name}: ${message}`, 'error');
       }
     }
     renderPdfTool();
@@ -945,7 +994,16 @@
   async function addPdfFile(file) {
     const data = new Uint8Array(await file.arrayBuffer());
     if (!hasPdfSignature(data)) throw new Error('Invalid PDF signature');
-    const pdf = await window.pdfjsLib.getDocument({ data: data.slice() }).promise;
+    if (includesAscii(data, '/Encrypt')) throw new Error('encrypted_pdf');
+    let pdf;
+    try {
+      pdf = await window.pdfjsLib.getDocument({ data: data.slice() }).promise;
+    } catch (error) {
+      if (String(error?.name || '').includes('Password') || String(error?.message || '').toLowerCase().includes('password')) {
+        throw new Error('encrypted_pdf');
+      }
+      throw error;
+    }
     state.pdfItems.push({ id: uid(), kind: 'pdf', name: file.name, size: file.size, pages: pdf.numPages, data });
   }
 
@@ -985,16 +1043,28 @@
     return null;
   }
 
+  async function hasAllowedVideoSignature(file) {
+    const head = new Uint8Array(await file.slice(0, 16).arrayBuffer());
+    return Boolean(detectVideoKind(head));
+  }
+
+  function detectVideoKind(bytes) {
+    if (startsWithAscii(bytes, 'OggS')) return 'ogg';
+    if (startsWithBytes(bytes, [0x1a, 0x45, 0xdf, 0xa3])) return 'webm';
+    if (asciiAt(bytes, 4, 8) === 'ftyp') return 'mp4';
+    return '';
+  }
+
   async function mergePdfItems() {
     if (!state.pdfItems.length) return;
     const name = await requestFileName(state.pdfOutputName || 'merged.pdf');
     if (!name) return;
     try {
-      showToast('Creating PDF...');
+      showToast(t('creatingPdf'));
       const merged = await window.PDFLib.PDFDocument.create();
       for (const item of state.pdfItems) {
         if (item.kind === 'pdf') {
-          const src = await window.PDFLib.PDFDocument.load(item.data, { ignoreEncryption: true });
+          const src = await window.PDFLib.PDFDocument.load(item.data);
           const copied = await merged.copyPages(src, src.getPageIndices());
           copied.forEach(page => merged.addPage(page));
         } else {
@@ -1004,10 +1074,11 @@
       const bytes = await merged.save();
       downloadBlob(new Blob([bytes], { type: 'application/pdf' }), normalizeFileName(name));
       track('pdf_download', 'pdf');
-      showToast('PDF created');
+      showToast(t('pdfCreated'));
     } catch (error) {
       console.error(error);
-      showToast('PDF creation failed', 'error');
+      const message = String(error?.message || '').toLowerCase().includes('encrypt') ? t('encryptedPdfBlocked') : t('pdfCreationFailed');
+      showToast(message, 'error');
     }
   }
 
@@ -1032,7 +1103,7 @@
         <div class="panel-header">
           <h2 class="panel-title">${t('textInput')}</h2>
           <div class="button-row">
-            <button class="button" id="copyTextStats" type="button">Copy stats</button>
+            <button class="button" id="copyTextStats" type="button">${t('copyStats')}</button>
             <button class="button ghost" id="clearText" type="button">${t('clear')}</button>
           </div>
         </div>
@@ -1047,12 +1118,12 @@
           ${statBox(t('words'), metrics.words)}
           ${statBox(t('sentences'), metrics.sentences)}
           ${statBox(t('paragraphs'), metrics.paragraphs)}
-          ${statBox(t('reading'), `${metrics.readingMinutes} min`)}
+          ${statBox(t('reading'), `${metrics.readingMinutes} ${t('minutesShort')}`)}
         </div>
       </section>
       <section class="panel">
         <div class="panel-header"><h2 class="panel-title">${t('keywords')}</h2></div>
-        <div class="panel-body">${metrics.keywords.length ? metrics.keywords.map(([word, count]) => `<span class="button ghost">${escapeHtml(word)} · ${count}</span>`).join(' ') : '<p class="file-meta">No keywords yet.</p>'}</div>
+        <div class="panel-body">${metrics.keywords.length ? metrics.keywords.map(([word, count]) => `<span class="button ghost">${escapeHtml(word)} · ${count}</span>`).join(' ') : `<p class="file-meta">${t('noKeywords')}</p>`}</div>
       </section>
     `;
     renderWordSettings();
@@ -1065,7 +1136,7 @@
     $('#copyTextStats').addEventListener('click', () => {
       navigator.clipboard?.writeText(JSON.stringify(metrics, null, 2));
       track('word_copy_stats', 'word');
-      showToast('Stats copied');
+      showToast(t('statsCopied'));
     });
   }
 
@@ -1091,7 +1162,7 @@
     settingsPanel.innerHTML = `
       <h2>${t('settings')}</h2>
       <div class="setting-group">
-        <label class="setting-label" for="readingWpm">Reading speed</label>
+        <label class="setting-label" for="readingWpm">${t('readingSpeed')}</label>
         <input class="input" id="readingWpm" type="number" min="120" max="800" value="${state.wordSettings.readingWpm}">
       </div>
       <div class="rail-ad"><span>${t('adLabel')}</span><small>300x250</small></div>
@@ -1133,11 +1204,11 @@
   }
 
   function renderFrames() {
-    if (!state.video.frames.length) return '<p class="file-meta">No frames extracted yet.</p>';
+    if (!state.video.frames.length) return `<p class="file-meta">${t('noFrames')}</p>`;
     return state.video.frames.map((frame, index) => `
       <article class="frame-card">
         <img src="${frame.url}" alt="frame ${index + 1}">
-        <footer><span>${frame.time.toFixed(2)}s</span><a class="button" href="${frame.url}" download="frame-${index + 1}.png">Download</a></footer>
+        <footer><span>${frame.time.toFixed(2)}s</span><a class="button" href="${frame.url}" download="frame-${index + 1}.png">${t('download')}</a></footer>
       </article>
     `).join('');
   }
@@ -1146,11 +1217,11 @@
     settingsPanel.innerHTML = `
       <h2>${t('settings')}</h2>
       <div class="setting-group">
-        <label class="setting-label" for="frameInterval">Interval seconds</label>
+        <label class="setting-label" for="frameInterval">${t('frameInterval')}</label>
         <input class="input" id="frameInterval" type="number" min="1" max="60" value="${state.video.interval}">
       </div>
       <div class="setting-group">
-        <label class="setting-label" for="maxFrames">Max frames</label>
+        <label class="setting-label" for="maxFrames">${t('maxFrames')}</label>
         <input class="input" id="maxFrames" type="number" min="1" max="${MAX_FRAMES}" value="${state.video.maxFrames}">
       </div>
       <div class="rail-ad"><span>${t('adLabel')}</span><small>300x250</small></div>
@@ -1172,12 +1243,21 @@
     $('#extractInterval').addEventListener('click', extractIntervalFrames);
   }
 
-  function handleVideoFile(file) {
+  async function handleVideoFile(file) {
     if (!file) return;
     const typeOk = ALLOWED_VIDEO_TYPES.has(file.type);
     const extOk = VIDEO_EXT_RE.test(file.name);
     if (!file.size || file.size > MAX_VIDEO_SIZE || (!typeOk && !extOk)) {
-      showToast('Unsupported video or file too large', 'error');
+      showToast(t('videoUnsupported'), 'error');
+      return;
+    }
+    try {
+      if (!await hasAllowedVideoSignature(file)) {
+        showToast(t('videoUnsupported'), 'error');
+        return;
+      }
+    } catch {
+      showToast(t('fileReadFailed'), 'error');
       return;
     }
     if (state.video.url) URL.revokeObjectURL(state.video.url);
@@ -1530,6 +1610,22 @@
     return asciiAt(bytes, 0, text.length) === text;
   }
 
+  function includesAscii(bytes, text) {
+    const needle = [...text].map(char => char.charCodeAt(0));
+    if (!needle.length || bytes.length < needle.length) return false;
+    for (let i = 0; i <= bytes.length - needle.length; i++) {
+      let matched = true;
+      for (let j = 0; j < needle.length; j++) {
+        if (bytes[i + j] !== needle[j]) {
+          matched = false;
+          break;
+        }
+      }
+      if (matched) return true;
+    }
+    return false;
+  }
+
   function asciiAt(bytes, start, end) {
     if (bytes.length < end) return '';
     return String.fromCharCode(...bytes.slice(start, end));
@@ -1597,7 +1693,7 @@
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js?v=20260629-i18n-home2', { updateViaCache: 'none' })
+      navigator.serviceWorker.register('./sw.js?v=20260629-security1', { updateViaCache: 'none' })
         .then(registration => registration.update())
         .catch(error => console.warn('Service worker registration failed:', error));
     });

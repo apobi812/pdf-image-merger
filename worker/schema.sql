@@ -8,7 +8,6 @@ CREATE TABLE IF NOT EXISTS events (
   lang TEXT NOT NULL,
   country TEXT NOT NULL DEFAULT 'XX',
   visitor_hash TEXT NOT NULL,
-  session_id TEXT NOT NULL DEFAULT '',
   browser TEXT NOT NULL DEFAULT 'other',
   screen TEXT NOT NULL DEFAULT '',
   referrer_host TEXT NOT NULL DEFAULT ''
