@@ -209,6 +209,7 @@
     wordText: '',
     wordSettings: { includeSpaces: true, readingWpm: 250 },
     video: { file: null, url: '', duration: 0, interval: 5, maxFrames: 12, frames: [] },
+    homeCategory: 'all',
     filenameResolver: null,
     sessionId: getSessionId(),
     adminToken: sessionStorage.getItem(ADMIN_TOKEN_KEY) || ''
@@ -399,6 +400,10 @@
     renderHeader({ eyebrow: 'Toolkit', title: t('homeTitle'), description: t('homeDesc') });
     const readyCount = toolCatalog.filter(tool => tool.status === 'ready').length;
     const plannedCount = toolCatalog.length - readyCount;
+    const categories = ['all', ...new Set(toolCatalog.map(tool => tool.category))];
+    const visibleTools = state.homeCategory === 'all'
+      ? toolCatalog
+      : toolCatalog.filter(tool => tool.category === state.homeCategory);
     workspace.innerHTML = `
       <section class="home-tools">
         <div class="home-tools-head">
@@ -406,17 +411,28 @@
             <h2>${t('allTools')}</h2>
             <p>${readyCount} ${t('availableNow')} · ${plannedCount} ${t('plannedTools')}</p>
           </div>
+          <div class="category-tabs" id="categoryTabs" aria-label="도구 카테고리">
+            ${categories.map(category => `<button class="category-tab ${state.homeCategory === category ? 'active' : ''}" type="button" data-category="${escapeHtml(category)}">${escapeHtml(category === 'all' ? '전체' : category)}</button>`).join('')}
+          </div>
         </div>
         <div class="tool-grid">
-          ${toolCatalog.map(renderToolCard).join('')}
+          ${visibleTools.map(renderToolCard).join('')}
         </div>
       </section>
     `;
+    const categoryCounts = categories.filter(category => category !== 'all').map(category => {
+      const total = toolCatalog.filter(tool => tool.category === category).length;
+      const ready = toolCatalog.filter(tool => tool.category === category && tool.status === 'ready').length;
+      return `<div class="mini-stat"><span>${escapeHtml(category)}</span><strong>${ready}/${total}</strong></div>`;
+    }).join('');
     settingsPanel.innerHTML = `
       <h2>${t('settings')}</h2>
       <div class="setting-group">
         <div class="setting-label">${t('availableNow')}</div>
-        <p class="file-meta">${readyCount} tools can be opened now. Planned tools stay visible so the layout can scale to about 20 tools.</p>
+        <div class="mini-stat-grid">
+          <div class="mini-stat"><span>전체</span><strong>${readyCount}/${toolCatalog.length}</strong></div>
+          ${categoryCounts}
+        </div>
       </div>
       <div class="rail-ad"><span>${t('adLabel')}</span><small>300x250</small></div>
     `;
@@ -436,6 +452,12 @@
   }
 
   function bindHomeEvents() {
+    workspace.querySelectorAll('[data-category]').forEach(button => {
+      button.addEventListener('click', () => {
+        state.homeCategory = button.dataset.category;
+        renderHomePage();
+      });
+    });
     workspace.querySelectorAll('.tool-card[data-route]').forEach(button => {
       button.addEventListener('click', () => setRoute(button.dataset.route));
     });
@@ -1228,7 +1250,7 @@
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js?v=20260629-home-nav', { updateViaCache: 'none' })
+      navigator.serviceWorker.register('./sw.js?v=20260629-home-nav2', { updateViaCache: 'none' })
         .then(registration => registration.update())
         .catch(error => console.warn('Service worker registration failed:', error));
     });

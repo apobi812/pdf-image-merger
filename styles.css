@@ -165,6 +165,7 @@ h1 { margin: 0; font-size: clamp(1.35rem, 2.6vw, 2.2rem); letter-spacing: 0; }
   justify-content: space-between;
   align-items: flex-end;
   gap: 14px;
+  flex-wrap: wrap;
 }
 .home-tools-head h2 {
   margin: 0;
@@ -174,6 +175,27 @@ h1 { margin: 0; font-size: clamp(1.35rem, 2.6vw, 2.2rem); letter-spacing: 0; }
   margin: 4px 0 0;
   color: var(--muted);
   font-size: .88rem;
+}
+.category-tabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.category-tab {
+  min-height: 32px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--soft);
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: .8rem;
+}
+.category-tab.active,
+.category-tab:hover {
+  border-color: #93c5fd;
+  background: #eaf3ff;
+  color: #1d4ed8;
 }
 .tool-grid {
   display: grid;
@@ -239,6 +261,23 @@ h1 { margin: 0; font-size: clamp(1.35rem, 2.6vw, 2.2rem); letter-spacing: 0; }
   font-size: .75rem;
 }
 .tool-card.is-planned .tool-card-meta { color: #94a3b8; }
+.mini-stat-grid {
+  display: grid;
+  gap: 8px;
+}
+.mini-stat {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  border: 1px solid var(--line);
+  background: #f8fafc;
+  border-radius: var(--radius);
+  padding: 8px 10px;
+  color: var(--muted);
+  font-size: .82rem;
+}
+.mini-stat strong { color: var(--text); }
 .panel {
   background: var(--panel);
   border: 1px solid var(--line);
