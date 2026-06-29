@@ -89,6 +89,7 @@ Then verify the live site:
 - `/offline.html` is reachable.
 - `manifest.webmanifest` exposes the three ready tool shortcuts.
 - Direct language URLs such as `/?lang=en` and `/pdf/?lang=ja` render the requested language and keep the route.
+- `sitemap.xml` includes `xhtml:link hreflang` alternates for all 10 supported languages.
 
 ## Security Invariants
 
@@ -107,6 +108,7 @@ Do not loosen these without a specific reason:
 - Local admin lock uses PBKDF2-SHA-256 and remains labeled as local-only protection.
 - PWA install metadata, tool shortcuts, and offline fallback stay enabled.
 - Language switching keeps a shareable `?lang=` URL and does not create separate language HTML files.
+- Runtime head metadata keeps canonical and `hreflang` alternate links in sync with the current route.
 - Keep `frame-ancestors` in HTTP headers, not HTML meta CSP.
 - Keep the JavaScript frame guard enabled for static hosts without header control.
 - No wildcard CORS.

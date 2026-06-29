@@ -697,9 +697,9 @@
     return `${BASE_PATH}${path}${languageQuery()}`;
   }
 
-  function absoluteRouteUrl(route) {
+  function absoluteRouteUrl(route, lang = state.lang) {
     const path = routePaths[route] ?? routePaths.pdf;
-    return `https://apobi812.github.io/pdf-image-merger/${path}`;
+    return `https://apobi812.github.io/pdf-image-merger/${path}${languageQuery(lang)}`;
   }
 
   function t(key) {
@@ -847,10 +847,34 @@
     const canonical = document.querySelector('link[rel="canonical"]');
     if (description) description.setAttribute('content', meta.description);
     if (canonical) canonical.setAttribute('href', absoluteRouteUrl(state.route));
+    updateAlternateLanguageLinks();
     $('#toolEyebrow').textContent = meta.eyebrow;
     $('#toolTitle').textContent = meta.title;
     $('#toolDescription').textContent = meta.description;
     $('#noticeBand').textContent = t('localNotice');
+  }
+
+  function updateAlternateLanguageLinks() {
+    document.querySelectorAll('link[data-language-alternate]').forEach(link => link.remove());
+    const canonical = document.querySelector('link[rel="canonical"]');
+    const target = canonical || document.querySelector('link[rel="manifest"]');
+    const fragment = document.createDocumentFragment();
+    for (const [code] of languages) {
+      const link = document.createElement('link');
+      link.rel = 'alternate';
+      link.hreflang = code;
+      link.href = absoluteRouteUrl(state.route, code);
+      link.dataset.languageAlternate = 'true';
+      fragment.append(link);
+    }
+    const fallback = document.createElement('link');
+    fallback.rel = 'alternate';
+    fallback.hreflang = 'x-default';
+    fallback.href = absoluteRouteUrl(state.route, DEFAULT_LANG);
+    fallback.dataset.languageAlternate = 'true';
+    fragment.append(fallback);
+    if (target) target.after(fragment);
+    else document.head.append(fragment);
   }
 
   function render() {
@@ -1920,7 +1944,7 @@
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js?v=20260629-langurl', { updateViaCache: 'none' })
+      navigator.serviceWorker.register('./sw.js?v=20260629-seoalt', { updateViaCache: 'none' })
         .then(registration => registration.update())
         .catch(error => console.warn('Service worker registration failed:', error));
     });

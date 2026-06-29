@@ -1,31 +1,132 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://apobi812.github.io/pdf-image-merger/</loc>
+    <lastmod>2026-06-29</lastmod>
     <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://apobi812.github.io/pdf-image-merger/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://apobi812.github.io/pdf-image-merger/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://apobi812.github.io/pdf-image-merger/?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://apobi812.github.io/pdf-image-merger/?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://apobi812.github.io/pdf-image-merger/?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://apobi812.github.io/pdf-image-merger/?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://apobi812.github.io/pdf-image-merger/?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://apobi812.github.io/pdf-image-merger/?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="hi" href="https://apobi812.github.io/pdf-image-merger/?lang=hi"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://apobi812.github.io/pdf-image-merger/?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://apobi812.github.io/pdf-image-merger/"/>
   </url>
   <url>
     <loc>https://apobi812.github.io/pdf-image-merger/pdf/</loc>
+    <lastmod>2026-06-29</lastmod>
     <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://apobi812.github.io/pdf-image-merger/pdf/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://apobi812.github.io/pdf-image-merger/pdf/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://apobi812.github.io/pdf-image-merger/pdf/?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://apobi812.github.io/pdf-image-merger/pdf/?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://apobi812.github.io/pdf-image-merger/pdf/?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://apobi812.github.io/pdf-image-merger/pdf/?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://apobi812.github.io/pdf-image-merger/pdf/?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://apobi812.github.io/pdf-image-merger/pdf/?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="hi" href="https://apobi812.github.io/pdf-image-merger/pdf/?lang=hi"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://apobi812.github.io/pdf-image-merger/pdf/?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://apobi812.github.io/pdf-image-merger/pdf/"/>
   </url>
   <url>
     <loc>https://apobi812.github.io/pdf-image-merger/word-count/</loc>
+    <lastmod>2026-06-29</lastmod>
     <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://apobi812.github.io/pdf-image-merger/word-count/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://apobi812.github.io/pdf-image-merger/word-count/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://apobi812.github.io/pdf-image-merger/word-count/?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://apobi812.github.io/pdf-image-merger/word-count/?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://apobi812.github.io/pdf-image-merger/word-count/?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://apobi812.github.io/pdf-image-merger/word-count/?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://apobi812.github.io/pdf-image-merger/word-count/?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://apobi812.github.io/pdf-image-merger/word-count/?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="hi" href="https://apobi812.github.io/pdf-image-merger/word-count/?lang=hi"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://apobi812.github.io/pdf-image-merger/word-count/?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://apobi812.github.io/pdf-image-merger/word-count/"/>
   </url>
   <url>
     <loc>https://apobi812.github.io/pdf-image-merger/video-extractor/</loc>
+    <lastmod>2026-06-29</lastmod>
     <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://apobi812.github.io/pdf-image-merger/video-extractor/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://apobi812.github.io/pdf-image-merger/video-extractor/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://apobi812.github.io/pdf-image-merger/video-extractor/?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://apobi812.github.io/pdf-image-merger/video-extractor/?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://apobi812.github.io/pdf-image-merger/video-extractor/?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://apobi812.github.io/pdf-image-merger/video-extractor/?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://apobi812.github.io/pdf-image-merger/video-extractor/?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://apobi812.github.io/pdf-image-merger/video-extractor/?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="hi" href="https://apobi812.github.io/pdf-image-merger/video-extractor/?lang=hi"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://apobi812.github.io/pdf-image-merger/video-extractor/?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://apobi812.github.io/pdf-image-merger/video-extractor/"/>
+  </url>
+  <url>
+    <loc>https://apobi812.github.io/pdf-image-merger/about/</loc>
+    <lastmod>2026-06-29</lastmod>
+    <priority>0.4</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://apobi812.github.io/pdf-image-merger/about/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://apobi812.github.io/pdf-image-merger/about/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://apobi812.github.io/pdf-image-merger/about/?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://apobi812.github.io/pdf-image-merger/about/?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://apobi812.github.io/pdf-image-merger/about/?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://apobi812.github.io/pdf-image-merger/about/?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://apobi812.github.io/pdf-image-merger/about/?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://apobi812.github.io/pdf-image-merger/about/?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="hi" href="https://apobi812.github.io/pdf-image-merger/about/?lang=hi"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://apobi812.github.io/pdf-image-merger/about/?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://apobi812.github.io/pdf-image-merger/about/"/>
   </url>
   <url>
     <loc>https://apobi812.github.io/pdf-image-merger/privacy/</loc>
+    <lastmod>2026-06-29</lastmod>
     <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://apobi812.github.io/pdf-image-merger/privacy/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://apobi812.github.io/pdf-image-merger/privacy/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://apobi812.github.io/pdf-image-merger/privacy/?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://apobi812.github.io/pdf-image-merger/privacy/?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://apobi812.github.io/pdf-image-merger/privacy/?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://apobi812.github.io/pdf-image-merger/privacy/?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://apobi812.github.io/pdf-image-merger/privacy/?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://apobi812.github.io/pdf-image-merger/privacy/?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="hi" href="https://apobi812.github.io/pdf-image-merger/privacy/?lang=hi"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://apobi812.github.io/pdf-image-merger/privacy/?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://apobi812.github.io/pdf-image-merger/privacy/"/>
   </url>
   <url>
     <loc>https://apobi812.github.io/pdf-image-merger/terms/</loc>
+    <lastmod>2026-06-29</lastmod>
     <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://apobi812.github.io/pdf-image-merger/terms/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://apobi812.github.io/pdf-image-merger/terms/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://apobi812.github.io/pdf-image-merger/terms/?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://apobi812.github.io/pdf-image-merger/terms/?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://apobi812.github.io/pdf-image-merger/terms/?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://apobi812.github.io/pdf-image-merger/terms/?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://apobi812.github.io/pdf-image-merger/terms/?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://apobi812.github.io/pdf-image-merger/terms/?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="hi" href="https://apobi812.github.io/pdf-image-merger/terms/?lang=hi"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://apobi812.github.io/pdf-image-merger/terms/?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://apobi812.github.io/pdf-image-merger/terms/"/>
   </url>
   <url>
     <loc>https://apobi812.github.io/pdf-image-merger/security/</loc>
+    <lastmod>2026-06-29</lastmod>
     <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://apobi812.github.io/pdf-image-merger/security/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://apobi812.github.io/pdf-image-merger/security/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://apobi812.github.io/pdf-image-merger/security/?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://apobi812.github.io/pdf-image-merger/security/?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://apobi812.github.io/pdf-image-merger/security/?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://apobi812.github.io/pdf-image-merger/security/?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://apobi812.github.io/pdf-image-merger/security/?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://apobi812.github.io/pdf-image-merger/security/?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="hi" href="https://apobi812.github.io/pdf-image-merger/security/?lang=hi"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://apobi812.github.io/pdf-image-merger/security/?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://apobi812.github.io/pdf-image-merger/security/"/>
   </url>
 </urlset>

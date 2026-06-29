@@ -45,18 +45,24 @@ for (const file of htmlFiles) {
   assert(!html.includes('frame-ancestors'), `${file}: frame-ancestors must be an HTTP header, not meta CSP`);
   assert(html.includes('object-src'), `${file}: CSP missing object-src`);
   assert(html.includes('mobile-web-app-capable'), `${file}: missing mobile web app meta`);
-  assert(html.includes('app.js?v=20260629-langurl'), `${file}: stale app.js cache version`);
-  assert(html.includes('styles.css?v=20260629-langurl'), `${file}: stale styles.css cache version`);
+  assert(html.includes('app.js?v=20260629-seoalt'), `${file}: stale app.js cache version`);
+  assert(html.includes('styles.css?v=20260629-seoalt'), `${file}: stale styles.css cache version`);
 }
 
 assert(includes('admin/index.html', 'noindex,nofollow'), 'admin page must be noindex,nofollow');
 assert(!includes('index.html', 'data-route="admin"'), 'public home must not link admin route');
 assert(!sw.includes('./admin/index.html'), 'service worker must not precache admin page');
-assert(sw.includes("const CACHE_NAME = 'toolkit-v21'"), 'service worker cache name not bumped');
+assert(sw.includes("const CACHE_NAME = 'toolkit-v22'"), 'service worker cache name not bumped');
 assert(sw.includes("const OFFLINE_URL = './offline.html'"), 'service worker missing offline fallback');
-assert(sw.includes("'./app.js?v=20260629-langurl'"), 'service worker has stale app cache version');
-assert(app.includes("./sw.js?v=20260629-langurl"), 'app registers a stale service worker cache version');
+assert(sw.includes("'./app.js?v=20260629-seoalt'"), 'service worker has stale app cache version');
+assert(app.includes("./sw.js?v=20260629-seoalt"), 'app registers a stale service worker cache version');
 assert(!sitemap.includes('/admin/'), 'sitemap must not include admin page');
+assert(sitemap.includes('xmlns:xhtml="http://www.w3.org/1999/xhtml"'), 'sitemap must include xhtml namespace for hreflang');
+for (const lang of ['ko', 'en', 'ja', 'zh', 'es', 'fr', 'de', 'pt', 'hi', 'ar', 'x-default']) {
+  assert(sitemap.includes(`hreflang="${lang}"`), `sitemap missing hreflang=${lang}`);
+}
+assert(sitemap.includes('/pdf/?lang=en'), 'sitemap missing PDF English alternate');
+assert(sitemap.includes('/video-extractor/?lang=ar'), 'sitemap missing video Arabic alternate');
 assert(existsSync(join(root, '.well-known/security.txt')), 'security.txt is missing');
 assert(existsSync(join(root, '_headers')), '_headers template is missing');
 assert(existsSync(join(root, 'offline.html')), 'offline fallback page is missing');
@@ -86,6 +92,9 @@ assert(app.includes('privacyControlsHtml()'), 'privacy page consent controls are
 assert(app.includes('readUrlLang()'), 'URL language reader is missing');
 assert(app.includes('languageQuery()'), 'shareable language URL helper is missing');
 assert(app.includes('setLanguage(button.dataset.lang)'), 'language picker must update URL state');
+assert(app.includes('updateAlternateLanguageLinks()'), 'runtime hreflang alternate updater is missing');
+assert(app.includes('link.hreflang = code'), 'runtime hreflang code assignment is missing');
+assert(app.includes("fallback.hreflang = 'x-default'"), 'runtime x-default hreflang link is missing');
 assert(!app.includes('sessionId'), 'frontend must not send sessionId to analytics');
 assert(!app.includes('toolkitSession'), 'frontend session storage key must not exist');
 assert(app.includes('pbkdf2-sha256'), 'local admin lock must use PBKDF2');
