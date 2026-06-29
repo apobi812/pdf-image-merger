@@ -621,6 +621,382 @@
     }
   };
 
+  const legalMetaTranslations = {
+    ko: { title: '문의 및 업데이트', contact: '문의', updated: '마지막 업데이트' },
+    en: { title: 'Contact And Updates', contact: 'Contact', updated: 'Last updated' },
+    ja: { title: '連絡先と更新', contact: '連絡先', updated: '最終更新' },
+    zh: { title: '联系与更新', contact: '联系', updated: '最后更新' },
+    es: { title: 'Contacto y actualizaciones', contact: 'Contacto', updated: 'Última actualización' },
+    fr: { title: 'Contact et mises à jour', contact: 'Contact', updated: 'Dernière mise à jour' },
+    de: { title: 'Kontakt und Aktualisierungen', contact: 'Kontakt', updated: 'Zuletzt aktualisiert' },
+    pt: { title: 'Contato e atualizações', contact: 'Contato', updated: 'Última atualização' },
+    hi: { title: 'संपर्क और अपडेट', contact: 'संपर्क', updated: 'अंतिम अपडेट' },
+    ar: { title: 'التواصل والتحديثات', contact: 'التواصل', updated: 'آخر تحديث' }
+  };
+
+  const legalTranslations = {
+    en: {
+      about: {
+        title: 'About',
+        description: 'Toolkit is a browser-based collection of PDF, text, and media tools.',
+        sections: [
+          { title: 'Purpose', items: ['The service helps with repeat document, text, and media tasks without installing an app.', 'Ready tools include PDF and image merging, word counting, and video frame extraction.', 'The home screen is structured for about 20 tool slots so more utilities can be added later.'] },
+          { title: 'Processing Model', items: ['Supported file work runs in the user browser whenever possible.', 'The static deployment does not upload original files, file names, document contents, text, or video frames to a server.', 'Remote analytics, when connected, is sent only after consent and contains aggregate usage events.'] },
+          { title: 'Operating Principles', items: ['The workflow should stay simple, direct, and easy to inspect.', 'Risky file structures and unsupported active formats are blocked before processing.', 'Important documents should be reviewed by the user after download.'] }
+        ]
+      },
+      privacy: {
+        title: 'Privacy Policy',
+        description: 'Toolkit is designed around not collecting original files or file names.',
+        sections: [
+          { title: 'Data We Do Not Collect', items: ['PDFs, images, text, and videos are not uploaded to an operator server in the static version.', 'File names, file contents, document personal data, and video frame contents are not stored for analytics.', 'The default GitHub Pages deployment has no central user analytics database.'] },
+          { title: 'Browser Storage', items: ['Language preference, local usage counters, analytics consent, and local admin lock data may be stored in localStorage or sessionStorage.', 'This data is used for the current browser experience and can be deleted through browser site data settings.', 'Local admin unlock state stays in the current tab and expires after 30 minutes.'] },
+          { title: 'Optional Analytics And Ads', items: ['If Worker/D1 analytics is connected, only consented aggregate events are sent.', 'Daily visitor hashes, route, language, screen size, browser family, and country code may be stored for service improvement.', 'If AdSense or another ad provider is enabled, that provider may use cookies or similar technologies under its own policies.'] },
+          { title: 'Rights And Retention', items: ['Local browser data remains until the user deletes site data or the browser removes it.', 'Server aggregate retention should be limited by the operator policy once the backend is enabled.', 'Privacy questions or deletion requests can be sent to the contact email.'] }
+        ]
+      },
+      terms: {
+        title: 'Terms Of Use',
+        description: 'These terms describe the basic conditions for using Toolkit web tools.',
+        sections: [
+          { title: 'Service Scope', items: ['Toolkit provides browser-based tools for PDF, text, and media tasks.', 'The service may be free and may later include ads, paid features, or affiliate features.', 'Features, supported formats, limits, and screens may change for security or operational reasons.'] },
+          { title: 'User Responsibility', items: ['Users should process only files and text they have the right to use.', 'Users remain responsible for managing sensitive data, trade secrets, personal information, and copyrighted material.', 'Important, legal, contract, or submission files should be reviewed by the user before use.'] },
+          { title: 'Prohibited Use', items: ['Do not use the service to process or distribute malware, illegal content, or materials that violate another person’s rights.', 'Do not attempt to bypass security controls, overload the service, or automate abusive traffic.', 'Do not attempt unauthorized access to admin pages, APIs, analytics, or authentication systems.'] },
+          { title: 'Results And Liability', items: ['Toolkit creates output from user input but cannot guarantee perfect compatibility in every browser and file format.', 'Encrypted, damaged, special-format, or very large files may fail.', 'Except where prohibited by law, the operator is not responsible for indirect losses from use of downloaded results.'] }
+        ]
+      },
+      security: {
+        title: 'Security',
+        description: 'Toolkit treats file minimization and input validation as core security principles.',
+        sections: [
+          { title: 'Client-Side Processing', items: ['PDF, image, text, and video work runs in the browser whenever possible.', 'The static deployment has no endpoint that receives original files.', 'Downloaded results are generated by the user browser.'] },
+          { title: 'Input Defenses', items: ['PDF signatures are checked before processing.', 'Encrypted PDFs and PDFs with scripts, auto actions, attachments, rich media, or XFA markers are blocked.', 'SVG and other active image formats are excluded from PDF merging.', 'Images are decoded, size-checked, and re-encoded to strip source metadata.'] },
+          { title: 'Browser And Admin Protections', items: ['Content Security Policy blocks external scripts and arbitrary network connections by default.', 'Admin links are not shown in public navigation; direct address access is required.', 'The local admin lock is not a production security boundary; production admin should use the Worker backend or another server-side identity layer.'] }
+        ]
+      }
+    },
+    ja: {
+      about: {
+        title: '概要',
+        description: 'ToolkitはPDF、テキスト、メディア作業を行うブラウザベースのツール集です。',
+        sections: [
+          { title: '目的', items: ['インストールなしで反復的な文書・テキスト・メディア作業を素早く処理できます。', '現在はPDFと画像の結合、文字数カウント、動画フレーム抽出を提供します。', 'ホーム画面は約20個のツール枠を想定しており、後から拡張できます。'] },
+          { title: '処理方式', items: ['対応するファイル処理は可能な限り利用者のブラウザ内で実行されます。', '静的配信版では元ファイル、ファイル名、文書内容、動画フレームをサーバーへ送信しません。', 'リモート分析を接続しても、同意後の集計イベントだけを送信します。'] },
+          { title: '運営方針', items: ['操作は単純で確認しやすい流れを優先します。', '危険なファイル構造や能動的な形式は処理前にブロックします。', '重要な文書はダウンロード後に利用者が確認してください。'] }
+        ]
+      },
+      privacy: {
+        title: 'プライバシーポリシー',
+        description: 'Toolkitは元ファイルとファイル名を収集しない設計を基本にしています。',
+        sections: [
+          { title: '収集しない情報', items: ['静的版ではPDF、画像、テキスト、動画を運営者サーバーへアップロードしません。', 'ファイル名、ファイル内容、文書内の個人情報、動画フレーム内容を分析目的で保存しません。', '標準のGitHub Pages配信では中央の利用者分析データベースはありません。'] },
+          { title: 'ブラウザ保存', items: ['言語設定、ローカル利用回数、分析同意、ローカル管理ロック情報がブラウザに保存される場合があります。', 'この情報は同じブラウザでの利用体験のために使われ、サイトデータ削除で消せます。', 'ローカル管理の解除状態は現在のタブだけに保存され、30分で期限切れになります。'] },
+          { title: '任意の分析と広告', items: ['Worker/D1分析を接続した場合も、同意した集計イベントだけを送信します。', '日次の訪問者ハッシュ、経路、言語、画面サイズ、ブラウザ種別、国コードが保存される場合があります。', 'AdSenseなどの広告を有効にすると、広告提供者のポリシーに基づきCookie等が使われる場合があります。'] },
+          { title: '権利と保存期間', items: ['ブラウザ内データは利用者がサイトデータを削除するまで残る場合があります。', 'サーバー集計データの保存期間はバックエンド有効化時の運営方針で制限すべきです。', '問い合わせや削除依頼は連絡先メールへ送れます。'] }
+        ]
+      },
+      terms: {
+        title: '利用規約',
+        description: 'この規約はToolkitのウェブツール利用時の基本条件を示します。',
+        sections: [
+          { title: 'サービス範囲', items: ['ToolkitはPDF、テキスト、メディア作業のためのブラウザツールを提供します。', 'サービスは無料で提供される場合があり、広告、有料機能、提携機能が後から追加される場合があります。', '機能、対応形式、制限、画面は安全性や運営上の理由で変更される場合があります。'] },
+          { title: '利用者の責任', items: ['利用者は使用権限のあるファイルとテキストだけを処理してください。', '個人情報、営業秘密、著作物などの管理責任は利用者にあります。', '重要書類、法的文書、契約書、提出用ファイルは利用前に確認してください。'] },
+          { title: '禁止行為', items: ['マルウェア、違法コンテンツ、他者の権利を侵害する資料の処理や配布は禁止です。', '安全制御の回避、過剰な自動化、異常なトラフィックは禁止です。', '管理画面、API、分析、認証システムへの無断アクセスは禁止です。'] },
+          { title: '結果と責任制限', items: ['Toolkitは入力に基づいて結果を作成しますが、すべての環境で完全な互換性を保証しません。', '暗号化、破損、特殊形式、非常に大きいファイルでは失敗する場合があります。', '法律で禁止される場合を除き、結果利用による間接損害について運営者は責任を負いません。'] }
+        ]
+      },
+      security: {
+        title: 'セキュリティ',
+        description: 'Toolkitはファイル最小化と入力検証を重要な安全原則としています。',
+        sections: [
+          { title: 'クライアント処理', items: ['PDF、画像、テキスト、動画処理は可能な限りブラウザ内で実行します。', '静的版には元ファイルを受け取るエンドポイントがありません。', 'ダウンロード結果は利用者のブラウザで生成されます。'] },
+          { title: '入力防御', items: ['PDFは署名を確認してから処理します。', '暗号化PDFやスクリプト、自動実行、添付、リッチメディア、XFA標識のあるPDFはブロックします。', 'SVGなど能動的な画像形式はPDF結合対象から除外します。', '画像はデコード、サイズ確認、再エンコードを行い元メタデータを削除します。'] },
+          { title: 'ブラウザと管理保護', items: ['CSPにより外部スクリプトと任意のネットワーク接続を既定でブロックします。', '管理リンクは公開ナビゲーションに表示せず、直接URLでのみアクセスします。', 'ローカル管理ロックは本番認証境界ではなく、本番管理にはWorkerなどのサーバー認証が必要です。'] }
+        ]
+      }
+    },
+    zh: {
+      about: {
+        title: '介绍',
+        description: 'Toolkit 是一组在浏览器中运行的 PDF、文本和媒体工具。',
+        sections: [
+          { title: '服务目的', items: ['无需安装即可处理重复的文档、文本和媒体任务。', '当前工具包括 PDF 与图片合并、字数统计、视频帧提取。', '首页按约 20 个工具位设计，后续可以继续扩展。'] },
+          { title: '处理方式', items: ['支持的文件处理会尽可能在用户浏览器中完成。', '静态版本不会把原始文件、文件名、文档内容、文本或视频帧上传到服务器。', '连接远程分析后，也只会在用户同意后发送汇总使用事件。'] },
+          { title: '运营原则', items: ['流程应保持简单、直接、便于检查。', '危险文件结构和不支持的主动内容格式会在处理前被阻止。', '重要文档下载后应由用户自行复核。'] }
+        ]
+      },
+      privacy: {
+        title: '隐私政策',
+        description: 'Toolkit 的设计原则是不收集原始文件和文件名。',
+        sections: [
+          { title: '不收集的信息', items: ['静态版本不会将 PDF、图片、文本或视频上传到运营者服务器。', '不会为了分析而保存文件名、文件内容、文档内个人信息或视频帧内容。', '默认 GitHub Pages 部署没有集中式用户分析数据库。'] },
+          { title: '浏览器存储', items: ['语言偏好、本地使用次数、分析同意和本地管理锁信息可能保存在浏览器中。', '这些数据用于当前浏览器体验，可通过浏览器网站数据设置删除。', '本地管理解锁状态只保存在当前标签页，并在 30 分钟后过期。'] },
+          { title: '可选分析与广告', items: ['连接 Worker/D1 分析后，只会发送用户同意的汇总事件。', '可能保存每日访客哈希、路径、语言、屏幕尺寸、浏览器类别和国家代码。', '启用 AdSense 等广告后，广告提供商可能按其政策使用 Cookie 或类似技术。'] },
+          { title: '权利和保留', items: ['浏览器内数据会保留到用户删除网站数据或浏览器清理为止。', '启用后端后，服务器汇总数据保留期应由运营政策限制。', '隐私问题或删除请求可发送到联系邮箱。'] }
+        ]
+      },
+      terms: {
+        title: '服务条款',
+        description: '这些条款说明使用 Toolkit 网页工具的基本条件。',
+        sections: [
+          { title: '服务范围', items: ['Toolkit 提供用于 PDF、文本和媒体任务的浏览器工具。', '服务可以免费提供，之后可能加入广告、付费功能或合作功能。', '功能、支持格式、限制和界面可能因安全或运营原因而变化。'] },
+          { title: '用户责任', items: ['用户只应处理自己有权使用的文件和文本。', '个人信息、商业秘密和受版权保护材料的管理责任仍由用户承担。', '重要、法律、合同或提交用文件在使用前应由用户复核。'] },
+          { title: '禁止行为', items: ['不得用本服务处理或传播恶意软件、违法内容或侵犯他人权利的材料。', '不得绕过安全控制、过度自动化或制造异常流量。', '不得未经授权访问管理页面、API、分析或认证系统。'] },
+          { title: '结果和责任限制', items: ['Toolkit 根据用户输入生成结果，但不保证所有浏览器和文件格式都完全兼容。', '加密、损坏、特殊格式或超大文件可能处理失败。', '除法律禁止限制的情况外，运营者不对下载结果使用造成的间接损失负责。'] }
+        ]
+      },
+      security: {
+        title: '安全',
+        description: 'Toolkit 将文件最小化和输入验证作为核心安全原则。',
+        sections: [
+          { title: '客户端处理', items: ['PDF、图片、文本和视频任务尽可能在浏览器中运行。', '静态版本没有接收原始文件的端点。', '下载结果由用户浏览器生成。'] },
+          { title: '输入防护', items: ['处理前会检查 PDF 签名。', '加密 PDF 以及含脚本、自动动作、附件、富媒体或 XFA 标记的 PDF 会被阻止。', 'SVG 等主动图片格式不参与 PDF 合并。', '图片会经过解码、尺寸检查和重新编码，以去除源元数据。'] },
+          { title: '浏览器和管理保护', items: ['内容安全策略默认阻止外部脚本和任意网络连接。', '管理链接不会出现在公开导航中，需要直接地址访问。', '本地管理锁不是生产级安全边界；生产管理应使用 Worker 后端或其他服务器身份系统。'] }
+        ]
+      }
+    },
+    es: {
+      about: {
+        title: 'Acerca de',
+        description: 'Toolkit es un conjunto de herramientas de PDF, texto y medios que funciona en el navegador.',
+        sections: [
+          { title: 'Propósito', items: ['Ayuda a resolver tareas repetidas de documentos, texto y medios sin instalar una app.', 'Las herramientas disponibles unen PDF e imágenes, cuentan palabras y extraen fotogramas de video.', 'La pantalla inicial está preparada para unos 20 espacios de herramientas y futuras ampliaciones.'] },
+          { title: 'Modelo de procesamiento', items: ['El trabajo con archivos se ejecuta en el navegador siempre que sea posible.', 'La versión estática no sube archivos originales, nombres de archivo, contenido de documentos, texto ni fotogramas a un servidor.', 'La analítica remota, si se conecta, solo envía eventos agregados después del consentimiento.'] },
+          { title: 'Principios de operación', items: ['El flujo debe ser simple, directo y fácil de revisar.', 'Las estructuras de archivo riesgosas y los formatos activos no admitidos se bloquean antes del procesamiento.', 'Los documentos importantes deben revisarse después de la descarga.'] }
+        ]
+      },
+      privacy: {
+        title: 'Política de privacidad',
+        description: 'Toolkit está diseñado para no recopilar archivos originales ni nombres de archivo.',
+        sections: [
+          { title: 'Datos que no recopilamos', items: ['La versión estática no sube PDF, imágenes, texto ni videos al servidor del operador.', 'No se guardan nombres de archivo, contenido, datos personales de documentos ni fotogramas para analítica.', 'La implementación predeterminada en GitHub Pages no tiene una base de datos central de analítica de usuarios.'] },
+          { title: 'Almacenamiento del navegador', items: ['La preferencia de idioma, contadores locales, consentimiento de analítica y bloqueo local de administración pueden guardarse en el navegador.', 'Estos datos se usan para la experiencia en ese navegador y se pueden borrar desde los datos del sitio.', 'El desbloqueo local de administración permanece solo en la pestaña actual y expira a los 30 minutos.'] },
+          { title: 'Analítica y anuncios opcionales', items: ['Si se conecta Worker/D1, solo se envían eventos agregados con consentimiento.', 'Pueden guardarse hashes diarios de visitantes, ruta, idioma, tamaño de pantalla, familia de navegador y país.', 'Si se habilita AdSense u otro proveedor, ese proveedor puede usar cookies o tecnologías similares según sus políticas.'] },
+          { title: 'Derechos y retención', items: ['Los datos locales permanecen hasta que el usuario borra los datos del sitio o el navegador los elimina.', 'La retención de datos agregados del servidor debe limitarse por la política del operador cuando se active el backend.', 'Las consultas de privacidad o solicitudes de eliminación pueden enviarse al correo de contacto.'] }
+        ]
+      },
+      terms: {
+        title: 'Términos de uso',
+        description: 'Estos términos describen las condiciones básicas para usar las herramientas web de Toolkit.',
+        sections: [
+          { title: 'Alcance del servicio', items: ['Toolkit ofrece herramientas de navegador para tareas de PDF, texto y medios.', 'El servicio puede ser gratuito y más adelante incluir anuncios, funciones pagas o funciones de afiliación.', 'Las funciones, formatos admitidos, límites y pantallas pueden cambiar por seguridad u operación.'] },
+          { title: 'Responsabilidad del usuario', items: ['Los usuarios solo deben procesar archivos y textos que tengan derecho a usar.', 'El usuario sigue siendo responsable de datos sensibles, secretos comerciales, información personal y material protegido.', 'Los archivos importantes, legales, contractuales o de entrega deben revisarse antes de usarse.'] },
+          { title: 'Uso prohibido', items: ['No use el servicio para procesar o distribuir malware, contenido ilegal o materiales que vulneren derechos de terceros.', 'No intente evadir controles de seguridad, sobrecargar el servicio ni automatizar tráfico abusivo.', 'No intente acceder sin autorización a páginas de administración, API, analítica o autenticación.'] },
+          { title: 'Resultados y responsabilidad', items: ['Toolkit crea resultados a partir de la entrada del usuario, pero no garantiza compatibilidad perfecta en todos los navegadores y formatos.', 'Los archivos cifrados, dañados, especiales o muy grandes pueden fallar.', 'Salvo donde la ley lo prohíba, el operador no responde por pérdidas indirectas derivadas del uso de resultados descargados.'] }
+        ]
+      },
+      security: {
+        title: 'Seguridad',
+        description: 'Toolkit trata la minimización de archivos y la validación de entrada como principios centrales de seguridad.',
+        sections: [
+          { title: 'Procesamiento en el cliente', items: ['PDF, imágenes, texto y video se procesan en el navegador siempre que sea posible.', 'La versión estática no tiene un endpoint que reciba archivos originales.', 'Los resultados descargados se generan en el navegador del usuario.'] },
+          { title: 'Defensas de entrada', items: ['Se comprueba la firma del PDF antes de procesarlo.', 'Se bloquean PDF cifrados y PDF con scripts, acciones automáticas, adjuntos, medios enriquecidos o XFA.', 'SVG y otros formatos activos de imagen se excluyen de la unión de PDF.', 'Las imágenes se decodifican, se revisa su tamaño y se re-codifican para quitar metadatos de origen.'] },
+          { title: 'Protección del navegador y administración', items: ['La política CSP bloquea scripts externos y conexiones arbitrarias por defecto.', 'Los enlaces de administración no aparecen en la navegación pública; se requiere acceso por dirección directa.', 'El bloqueo local de administración no es una frontera de seguridad de producción; la administración real debe usar Worker u otra identidad de servidor.'] }
+        ]
+      }
+    },
+    fr: {
+      about: {
+        title: 'À propos',
+        description: 'Toolkit est un ensemble d’outils PDF, texte et média exécutés dans le navigateur.',
+        sections: [
+          { title: 'Objectif', items: ['Le service aide à traiter des tâches répétitives de documents, textes et médias sans installation.', 'Les outils disponibles fusionnent PDF et images, comptent les mots et extraient des images vidéo.', 'L’accueil est prévu pour environ 20 emplacements d’outils afin de permettre des extensions.'] },
+          { title: 'Mode de traitement', items: ['Le travail sur fichiers s’exécute dans le navigateur quand c’est possible.', 'La version statique n’envoie pas les fichiers originaux, noms de fichier, contenus, textes ou images vidéo à un serveur.', 'L’analytique distante, si elle est connectée, envoie seulement des événements agrégés après consentement.'] },
+          { title: 'Principes', items: ['Le flux doit rester simple, direct et vérifiable.', 'Les structures risquées et formats actifs non pris en charge sont bloqués avant traitement.', 'Les documents importants doivent être vérifiés après téléchargement.'] }
+        ]
+      },
+      privacy: {
+        title: 'Politique de confidentialité',
+        description: 'Toolkit est conçu pour ne pas collecter les fichiers originaux ni les noms de fichiers.',
+        sections: [
+          { title: 'Données non collectées', items: ['La version statique n’envoie pas PDF, images, textes ou vidéos au serveur de l’opérateur.', 'Les noms et contenus de fichiers, données personnelles des documents et images vidéo ne sont pas stockés pour l’analytique.', 'Le déploiement GitHub Pages par défaut n’a pas de base centrale d’analytique utilisateurs.'] },
+          { title: 'Stockage du navigateur', items: ['La langue, les compteurs locaux, le consentement analytique et le verrou local d’administration peuvent être stockés dans le navigateur.', 'Ces données servent à l’expérience dans ce navigateur et peuvent être supprimées via les données de site.', 'Le déverrouillage local d’administration reste dans l’onglet courant et expire après 30 minutes.'] },
+          { title: 'Analytique et publicités optionnelles', items: ['Si Worker/D1 est connecté, seuls des événements agrégés avec consentement sont envoyés.', 'Des hachages visiteurs quotidiens, route, langue, taille d’écran, famille de navigateur et pays peuvent être stockés.', 'Si AdSense ou un autre fournisseur est activé, ce fournisseur peut utiliser des cookies ou technologies similaires selon ses politiques.'] },
+          { title: 'Droits et conservation', items: ['Les données locales restent jusqu’à suppression des données de site ou nettoyage par le navigateur.', 'La conservation des agrégats serveur doit être limitée par la politique de l’opérateur après activation du backend.', 'Les questions de confidentialité ou demandes de suppression peuvent être envoyées à l’adresse de contact.'] }
+        ]
+      },
+      terms: {
+        title: 'Conditions d’utilisation',
+        description: 'Ces conditions décrivent les règles de base d’utilisation des outils web Toolkit.',
+        sections: [
+          { title: 'Portée du service', items: ['Toolkit fournit des outils de navigateur pour PDF, texte et médias.', 'Le service peut être gratuit et inclure plus tard publicités, options payantes ou partenariats.', 'Les fonctions, formats, limites et écrans peuvent changer pour des raisons de sécurité ou d’exploitation.'] },
+          { title: 'Responsabilité de l’utilisateur', items: ['Les utilisateurs doivent traiter uniquement les fichiers et textes qu’ils ont le droit d’utiliser.', 'La gestion des données sensibles, secrets commerciaux, informations personnelles et contenus protégés reste à leur charge.', 'Les fichiers importants, juridiques, contractuels ou à soumettre doivent être vérifiés avant usage.'] },
+          { title: 'Usages interdits', items: ['N’utilisez pas le service pour traiter ou distribuer logiciels malveillants, contenu illégal ou éléments portant atteinte aux droits d’autrui.', 'Ne contournez pas les protections, ne surchargez pas le service et n’automatisez pas de trafic abusif.', 'N’accédez pas sans autorisation aux pages d’administration, API, analytique ou authentification.'] },
+          { title: 'Résultats et responsabilité', items: ['Toolkit crée des résultats depuis les entrées utilisateur mais ne garantit pas une compatibilité parfaite partout.', 'Les fichiers chiffrés, endommagés, spéciaux ou très volumineux peuvent échouer.', 'Sauf interdiction légale, l’opérateur n’est pas responsable des pertes indirectes liées aux résultats téléchargés.'] }
+        ]
+      },
+      security: {
+        title: 'Sécurité',
+        description: 'Toolkit place la minimisation des fichiers et la validation des entrées au cœur de sa sécurité.',
+        sections: [
+          { title: 'Traitement côté client', items: ['Les PDF, images, textes et vidéos sont traités dans le navigateur quand c’est possible.', 'La version statique ne possède aucun endpoint recevant les fichiers originaux.', 'Les résultats téléchargés sont générés par le navigateur utilisateur.'] },
+          { title: 'Défenses d’entrée', items: ['La signature PDF est vérifiée avant traitement.', 'Les PDF chiffrés ou contenant scripts, actions automatiques, pièces jointes, médias enrichis ou XFA sont bloqués.', 'SVG et autres formats actifs sont exclus de la fusion PDF.', 'Les images sont décodées, limitées en taille et ré-encodées pour retirer les métadonnées source.'] },
+          { title: 'Protection navigateur et administration', items: ['La CSP bloque par défaut scripts externes et connexions arbitraires.', 'Les liens d’administration ne sont pas affichés dans la navigation publique; l’accès se fait par adresse directe.', 'Le verrou local n’est pas une frontière de sécurité de production; l’administration réelle doit utiliser Worker ou une identité serveur.'] }
+        ]
+      }
+    },
+    de: {
+      about: {
+        title: 'Über',
+        description: 'Toolkit ist eine browserbasierte Sammlung für PDF-, Text- und Medienaufgaben.',
+        sections: [
+          { title: 'Zweck', items: ['Der Dienst hilft bei wiederkehrenden Dokument-, Text- und Medienaufgaben ohne Installation.', 'Verfügbare Werkzeuge führen PDF und Bilder zusammen, zählen Wörter und extrahieren Videoframes.', 'Die Startseite ist für etwa 20 Werkzeugplätze vorbereitet und kann erweitert werden.'] },
+          { title: 'Verarbeitung', items: ['Dateiarbeiten laufen möglichst im Browser des Nutzers.', 'Die statische Version lädt Originaldateien, Dateinamen, Dokumentinhalte, Texte oder Videoframes nicht auf einen Server.', 'Remote-Analytics sendet, falls verbunden, nur aggregierte Ereignisse nach Zustimmung.'] },
+          { title: 'Betriebsprinzipien', items: ['Der Ablauf soll einfach, direkt und prüfbar bleiben.', 'Risikoreiche Dateistrukturen und nicht unterstützte aktive Formate werden vor der Verarbeitung blockiert.', 'Wichtige Dokumente sollten nach dem Download geprüft werden.'] }
+        ]
+      },
+      privacy: {
+        title: 'Datenschutz',
+        description: 'Toolkit ist darauf ausgelegt, Originaldateien und Dateinamen nicht zu sammeln.',
+        sections: [
+          { title: 'Nicht gesammelte Daten', items: ['Die statische Version lädt PDF, Bilder, Texte oder Videos nicht auf den Server des Betreibers.', 'Dateinamen, Inhalte, personenbezogene Dokumentdaten und Videoframes werden nicht für Analytics gespeichert.', 'Die Standardbereitstellung auf GitHub Pages hat keine zentrale Nutzeranalyse-Datenbank.'] },
+          { title: 'Browserspeicher', items: ['Spracheinstellung, lokale Zähler, Analytics-Zustimmung und lokale Admin-Sperre können im Browser gespeichert werden.', 'Diese Daten dienen der Erfahrung in diesem Browser und können über Website-Daten gelöscht werden.', 'Die lokale Admin-Entsperrung bleibt nur im aktuellen Tab und läuft nach 30 Minuten ab.'] },
+          { title: 'Optionale Analytics und Werbung', items: ['Bei Worker/D1 werden nur zugestimmte aggregierte Ereignisse gesendet.', 'Tägliche Besucher-Hashes, Route, Sprache, Bildschirmgröße, Browserfamilie und Land können gespeichert werden.', 'Bei AdSense oder anderen Anzeigenanbietern können diese Anbieter Cookies oder ähnliche Technologien nach eigenen Richtlinien nutzen.'] },
+          { title: 'Rechte und Aufbewahrung', items: ['Lokale Daten bleiben bis zur Löschung der Website-Daten oder Browserbereinigung bestehen.', 'Die Aufbewahrung serverseitiger Aggregate sollte nach Aktivierung des Backends durch Betreiberregeln begrenzt werden.', 'Datenschutzfragen oder Löschanfragen können an die Kontaktadresse gesendet werden.'] }
+        ]
+      },
+      terms: {
+        title: 'Nutzungsbedingungen',
+        description: 'Diese Bedingungen beschreiben die Grundregeln für die Nutzung der Toolkit-Webwerkzeuge.',
+        sections: [
+          { title: 'Leistungsumfang', items: ['Toolkit stellt Browserwerkzeuge für PDF-, Text- und Medienaufgaben bereit.', 'Der Dienst kann kostenlos sein und später Werbung, kostenpflichtige Funktionen oder Partnerfunktionen enthalten.', 'Funktionen, Formate, Grenzen und Oberflächen können sich aus Sicherheits- oder Betriebsgründen ändern.'] },
+          { title: 'Verantwortung der Nutzer', items: ['Nutzer sollten nur Dateien und Texte verarbeiten, zu deren Nutzung sie berechtigt sind.', 'Die Verantwortung für sensible Daten, Geschäftsgeheimnisse, personenbezogene Daten und urheberrechtliche Inhalte bleibt beim Nutzer.', 'Wichtige, rechtliche, vertragliche oder einzureichende Dateien sollten vor Nutzung geprüft werden.'] },
+          { title: 'Verbotene Nutzung', items: ['Der Dienst darf nicht zur Verarbeitung oder Verbreitung von Malware, illegalen Inhalten oder rechtsverletzendem Material genutzt werden.', 'Sicherheitskontrollen dürfen nicht umgangen, der Dienst nicht überlastet und kein missbräuchlicher Traffic automatisiert werden.', 'Unbefugter Zugriff auf Adminseiten, APIs, Analytics oder Authentifizierung ist untersagt.'] },
+          { title: 'Ergebnisse und Haftung', items: ['Toolkit erstellt Ergebnisse aus Nutzereingaben, garantiert aber keine perfekte Kompatibilität in allen Umgebungen.', 'Verschlüsselte, beschädigte, spezielle oder sehr große Dateien können fehlschlagen.', 'Soweit gesetzlich zulässig, haftet der Betreiber nicht für indirekte Schäden aus heruntergeladenen Ergebnissen.'] }
+        ]
+      },
+      security: {
+        title: 'Sicherheit',
+        description: 'Toolkit behandelt Dateiminimierung und Eingabeprüfung als zentrale Sicherheitsprinzipien.',
+        sections: [
+          { title: 'Clientseitige Verarbeitung', items: ['PDF, Bilder, Text und Video werden möglichst im Browser verarbeitet.', 'Die statische Version hat keinen Endpoint für Originaldateien.', 'Downloads werden im Browser des Nutzers erzeugt.'] },
+          { title: 'Eingabeschutz', items: ['PDF-Signaturen werden vor der Verarbeitung geprüft.', 'Verschlüsselte PDFs und PDFs mit Skripten, Auto-Aktionen, Anhängen, Rich Media oder XFA werden blockiert.', 'SVG und andere aktive Bildformate sind von der PDF-Zusammenführung ausgeschlossen.', 'Bilder werden decodiert, größenbegrenzt und neu codiert, um Quellmetadaten zu entfernen.'] },
+          { title: 'Browser- und Adminschutz', items: ['CSP blockiert standardmäßig externe Skripte und beliebige Netzwerkverbindungen.', 'Adminlinks erscheinen nicht in der öffentlichen Navigation; Zugriff erfolgt über direkte Adresse.', 'Die lokale Admin-Sperre ist keine Produktions-Sicherheitsgrenze; echte Administration sollte Worker oder serverseitige Identität nutzen.'] }
+        ]
+      }
+    },
+    pt: {
+      about: {
+        title: 'Sobre',
+        description: 'Toolkit é um conjunto de ferramentas de PDF, texto e mídia executadas no navegador.',
+        sections: [
+          { title: 'Objetivo', items: ['O serviço ajuda em tarefas repetidas de documentos, texto e mídia sem instalação.', 'As ferramentas disponíveis unem PDF e imagens, contam palavras e extraem quadros de vídeo.', 'A tela inicial foi preparada para cerca de 20 espaços de ferramentas e expansão futura.'] },
+          { title: 'Modelo de processamento', items: ['O trabalho com arquivos roda no navegador sempre que possível.', 'A versão estática não envia arquivos originais, nomes, conteúdos, textos ou quadros de vídeo ao servidor.', 'A análise remota, se conectada, envia apenas eventos agregados após consentimento.'] },
+          { title: 'Princípios de operação', items: ['O fluxo deve permanecer simples, direto e verificável.', 'Estruturas arriscadas e formatos ativos não suportados são bloqueados antes do processamento.', 'Documentos importantes devem ser revisados após o download.'] }
+        ]
+      },
+      privacy: {
+        title: 'Política de privacidade',
+        description: 'Toolkit foi desenhado para não coletar arquivos originais nem nomes de arquivo.',
+        sections: [
+          { title: 'Dados não coletados', items: ['A versão estática não envia PDF, imagens, textos ou vídeos ao servidor do operador.', 'Nomes, conteúdos, dados pessoais em documentos e quadros de vídeo não são salvos para análise.', 'A implantação padrão no GitHub Pages não possui banco central de análise de usuários.'] },
+          { title: 'Armazenamento no navegador', items: ['Idioma, contadores locais, consentimento de análise e bloqueio local de administração podem ser salvos no navegador.', 'Esses dados servem à experiência nesse navegador e podem ser apagados nos dados do site.', 'O desbloqueio local de administração fica apenas na aba atual e expira em 30 minutos.'] },
+          { title: 'Análise e anúncios opcionais', items: ['Com Worker/D1, apenas eventos agregados com consentimento são enviados.', 'Hashes diários de visitantes, rota, idioma, tela, família do navegador e país podem ser armazenados.', 'Com AdSense ou outro provedor, cookies ou tecnologias semelhantes podem ser usados segundo as políticas desse provedor.'] },
+          { title: 'Direitos e retenção', items: ['Dados locais permanecem até o usuário apagar os dados do site ou o navegador removê-los.', 'A retenção de agregados do servidor deve ser limitada pela política do operador após ativar o backend.', 'Perguntas de privacidade ou pedidos de exclusão podem ser enviados ao e-mail de contato.'] }
+        ]
+      },
+      terms: {
+        title: 'Termos de uso',
+        description: 'Estes termos descrevem as condições básicas para usar as ferramentas web do Toolkit.',
+        sections: [
+          { title: 'Escopo do serviço', items: ['Toolkit fornece ferramentas de navegador para PDF, texto e mídia.', 'O serviço pode ser gratuito e futuramente incluir anúncios, recursos pagos ou parcerias.', 'Recursos, formatos, limites e telas podem mudar por segurança ou operação.'] },
+          { title: 'Responsabilidade do usuário', items: ['Usuários devem processar apenas arquivos e textos que têm direito de usar.', 'Dados sensíveis, segredos comerciais, informações pessoais e materiais protegidos continuam sob responsabilidade do usuário.', 'Arquivos importantes, legais, contratuais ou de envio devem ser revisados antes do uso.'] },
+          { title: 'Uso proibido', items: ['Não use o serviço para processar ou distribuir malware, conteúdo ilegal ou material que viole direitos de terceiros.', 'Não tente contornar controles de segurança, sobrecarregar o serviço ou automatizar tráfego abusivo.', 'Não tente acesso não autorizado a páginas de administração, APIs, análise ou autenticação.'] },
+          { title: 'Resultados e responsabilidade', items: ['Toolkit gera resultados a partir da entrada do usuário, mas não garante compatibilidade perfeita em todos os ambientes.', 'Arquivos criptografados, danificados, especiais ou muito grandes podem falhar.', 'Exceto quando a lei proibir, o operador não responde por perdas indiretas do uso de resultados baixados.'] }
+        ]
+      },
+      security: {
+        title: 'Segurança',
+        description: 'Toolkit trata minimização de arquivos e validação de entrada como princípios centrais de segurança.',
+        sections: [
+          { title: 'Processamento no cliente', items: ['PDF, imagens, texto e vídeo rodam no navegador sempre que possível.', 'A versão estática não possui endpoint que receba arquivos originais.', 'Os resultados baixados são gerados pelo navegador do usuário.'] },
+          { title: 'Defesas de entrada', items: ['Assinaturas de PDF são verificadas antes do processamento.', 'PDFs criptografados ou com scripts, ações automáticas, anexos, mídia rica ou XFA são bloqueados.', 'SVG e outros formatos ativos são excluídos da união de PDF.', 'Imagens são decodificadas, limitadas por tamanho e recodificadas para remover metadados de origem.'] },
+          { title: 'Proteções do navegador e administração', items: ['A CSP bloqueia scripts externos e conexões arbitrárias por padrão.', 'Links de administração não aparecem na navegação pública; é necessário acesso por endereço direto.', 'O bloqueio local de administração não é uma fronteira de segurança de produção; a administração real deve usar Worker ou identidade de servidor.'] }
+        ]
+      }
+    },
+    hi: {
+      about: {
+        title: 'परिचय',
+        description: 'Toolkit ब्राउज़र में चलने वाले PDF, टेक्स्ट और मीडिया टूल्स का संग्रह है।',
+        sections: [
+          { title: 'उद्देश्य', items: ['यह सेवा बिना इंस्टॉल किए दस्तावेज़, टेक्स्ट और मीडिया के दोहराए कामों में मदद करती है।', 'उपलब्ध टूल PDF और इमेज मिलाते हैं, शब्द गिनते हैं और वीडियो फ़्रेम निकालते हैं।', 'होम स्क्रीन लगभग 20 टूल स्लॉट और आगे विस्तार के लिए बनाई गई है।'] },
+          { title: 'प्रोसेसिंग मॉडल', items: ['समर्थित फ़ाइल कार्य जहाँ संभव हो ब्राउज़र में चलते हैं।', 'स्थिर संस्करण मूल फ़ाइल, फ़ाइल नाम, दस्तावेज़ सामग्री, टेक्स्ट या वीडियो फ़्रेम सर्वर पर अपलोड नहीं करता।', 'रिमोट विश्लेषण जुड़ने पर भी सहमति के बाद केवल समेकित इवेंट भेजे जाते हैं।'] },
+          { title: 'संचालन सिद्धांत', items: ['प्रवाह सरल, सीधा और जांचने योग्य रहना चाहिए।', 'जोखिम वाली फ़ाइल संरचनाएँ और असमर्थित सक्रिय फ़ॉर्मैट प्रोसेसिंग से पहले रोके जाते हैं।', 'महत्वपूर्ण दस्तावेज़ डाउनलोड के बाद उपयोगकर्ता को स्वयं जांचने चाहिए।'] }
+        ]
+      },
+      privacy: {
+        title: 'गोपनीयता नीति',
+        description: 'Toolkit मूल फ़ाइल और फ़ाइल नाम इकट्ठा न करने के सिद्धांत पर बनाया गया है।',
+        sections: [
+          { title: 'जो डेटा हम नहीं लेते', items: ['स्थिर संस्करण PDF, इमेज, टेक्स्ट या वीडियो ऑपरेटर सर्वर पर अपलोड नहीं करता।', 'फ़ाइल नाम, फ़ाइल सामग्री, दस्तावेज़ का निजी डेटा और वीडियो फ़्रेम विश्लेषण के लिए सेव नहीं होते।', 'डिफ़ॉल्ट GitHub Pages तैनाती में केंद्रीय उपयोगकर्ता विश्लेषण डेटाबेस नहीं है।'] },
+          { title: 'ब्राउज़र संग्रह', items: ['भाषा पसंद, स्थानीय उपयोग गिनती, विश्लेषण सहमति और स्थानीय एडमिन लॉक डेटा ब्राउज़र में सेव हो सकते हैं।', 'यह डेटा उसी ब्राउज़र अनुभव के लिए है और साइट डेटा हटाकर मिटाया जा सकता है।', 'स्थानीय एडमिन अनलॉक केवल वर्तमान टैब में रहता है और 30 मिनट बाद समाप्त हो जाता है।'] },
+          { title: 'वैकल्पिक विश्लेषण और विज्ञापन', items: ['Worker/D1 जुड़ने पर केवल सहमति वाले समेकित इवेंट भेजे जाते हैं।', 'दैनिक विज़िटर हैश, रूट, भाषा, स्क्रीन आकार, ब्राउज़र परिवार और देश कोड सेव हो सकते हैं।', 'AdSense या अन्य विज्ञापन प्रदाता सक्षम होने पर वे अपनी नीतियों के अनुसार कुकी आदि इस्तेमाल कर सकते हैं।'] },
+          { title: 'अधिकार और अवधि', items: ['स्थानीय डेटा तब तक रह सकता है जब तक उपयोगकर्ता साइट डेटा न हटाए या ब्राउज़र उसे साफ न करे।', 'बैकएंड सक्रिय होने पर सर्वर समेकित डेटा की अवधि ऑपरेटर नीति से सीमित होनी चाहिए।', 'गोपनीयता प्रश्न या हटाने के अनुरोध संपर्क ईमेल पर भेजे जा सकते हैं।'] }
+        ]
+      },
+      terms: {
+        title: 'उपयोग की शर्तें',
+        description: 'ये शर्तें Toolkit वेब टूल्स के उपयोग की मूल शर्तें बताती हैं।',
+        sections: [
+          { title: 'सेवा का दायरा', items: ['Toolkit PDF, टेक्स्ट और मीडिया कार्यों के लिए ब्राउज़र टूल देता है।', 'सेवा मुफ्त हो सकती है और आगे विज्ञापन, भुगतान सुविधाएँ या साझेदारी सुविधाएँ जोड़ सकती है।', 'सुरक्षा या संचालन कारणों से सुविधाएँ, फ़ॉर्मैट, सीमाएँ और स्क्रीन बदल सकते हैं।'] },
+          { title: 'उपयोगकर्ता की जिम्मेदारी', items: ['उपयोगकर्ता केवल वही फ़ाइलें और टेक्स्ट प्रोसेस करें जिनका उपयोग करने का अधिकार है।', 'संवेदनशील डेटा, व्यापार रहस्य, निजी जानकारी और कॉपीराइट सामग्री की जिम्मेदारी उपयोगकर्ता की रहती है।', 'महत्वपूर्ण, कानूनी, अनुबंध या जमा करने वाली फ़ाइलें उपयोग से पहले जांचें।'] },
+          { title: 'निषिद्ध उपयोग', items: ['मैलवेयर, अवैध सामग्री या दूसरों के अधिकार तोड़ने वाली सामग्री प्रोसेस या वितरित न करें।', 'सुरक्षा नियंत्रणों को बायपास, सेवा पर अत्यधिक भार या दुरुपयोगी ऑटोमेशन न करें।', 'एडमिन पेज, API, विश्लेषण या प्रमाणीकरण में अनधिकृत प्रवेश न करें।'] },
+          { title: 'परिणाम और जिम्मेदारी', items: ['Toolkit उपयोगकर्ता इनपुट से परिणाम बनाता है, पर हर ब्राउज़र और फ़ॉर्मैट में पूर्ण संगतता की गारंटी नहीं देता।', 'एन्क्रिप्टेड, खराब, विशेष या बहुत बड़ी फ़ाइलें विफल हो सकती हैं।', 'कानून जहाँ न रोके, डाउनलोड किए गए परिणामों के अप्रत्यक्ष नुकसान के लिए ऑपरेटर जिम्मेदार नहीं है।'] }
+        ]
+      },
+      security: {
+        title: 'सुरक्षा',
+        description: 'Toolkit फ़ाइल न्यूनतमकरण और इनपुट सत्यापन को मुख्य सुरक्षा सिद्धांत मानता है।',
+        sections: [
+          { title: 'क्लाइंट-साइड प्रोसेसिंग', items: ['PDF, इमेज, टेक्स्ट और वीडियो जहाँ संभव हो ब्राउज़र में चलते हैं।', 'स्थिर संस्करण में मूल फ़ाइल लेने वाला endpoint नहीं है।', 'डाउनलोड परिणाम उपयोगकर्ता के ब्राउज़र में बनते हैं।'] },
+          { title: 'इनपुट सुरक्षा', items: ['प्रोसेसिंग से पहले PDF signature जांची जाती है।', 'एन्क्रिप्टेड PDF और scripts, auto actions, attachments, rich media या XFA वाले PDF रोके जाते हैं।', 'SVG और अन्य active image formats PDF merging से बाहर हैं।', 'इमेज decode, size-check और re-encode होकर source metadata हटाती हैं।'] },
+          { title: 'ब्राउज़र और एडमिन सुरक्षा', items: ['CSP default रूप से external scripts और arbitrary network connections रोकता है।', 'एडमिन links public navigation में नहीं दिखते; direct address access चाहिए।', 'स्थानीय एडमिन lock production security boundary नहीं है; वास्तविक प्रशासन Worker या server identity से होना चाहिए।'] }
+        ]
+      }
+    },
+    ar: {
+      about: {
+        title: 'حول',
+        description: 'Toolkit مجموعة أدوات PDF ونصوص ووسائط تعمل داخل المتصفح.',
+        sections: [
+          { title: 'الغرض', items: ['تساعد الخدمة في مهام المستندات والنصوص والوسائط المتكررة دون تثبيت تطبيق.', 'الأدوات الجاهزة تدمج PDF والصور، وتحسب الكلمات، وتستخرج إطارات الفيديو.', 'صممت الصفحة الرئيسية لحوالي 20 مكاناً للأدوات مع إمكانية التوسع لاحقاً.'] },
+          { title: 'نموذج المعالجة', items: ['تعمل معالجة الملفات المدعومة داخل متصفح المستخدم كلما أمكن.', 'النسخة الثابتة لا ترفع الملفات الأصلية أو أسماء الملفات أو محتوى المستندات أو النصوص أو إطارات الفيديو إلى الخادم.', 'عند ربط التحليلات البعيدة، ترسل فقط أحداثاً مجمعة بعد الموافقة.'] },
+          { title: 'مبادئ التشغيل', items: ['يجب أن يبقى التدفق بسيطاً ومباشراً وقابلاً للفحص.', 'يتم حظر تراكيب الملفات الخطرة والصيغ النشطة غير المدعومة قبل المعالجة.', 'ينبغي للمستخدم مراجعة المستندات المهمة بعد التنزيل.'] }
+        ]
+      },
+      privacy: {
+        title: 'سياسة الخصوصية',
+        description: 'صمم Toolkit حول مبدأ عدم جمع الملفات الأصلية أو أسماء الملفات.',
+        sections: [
+          { title: 'بيانات لا نجمعها', items: ['النسخة الثابتة لا ترفع PDF أو الصور أو النصوص أو الفيديو إلى خادم المشغل.', 'لا يتم حفظ أسماء الملفات أو محتواها أو البيانات الشخصية داخل المستندات أو إطارات الفيديو لأغراض التحليل.', 'نشر GitHub Pages الافتراضي لا يحتوي على قاعدة بيانات مركزية لتحليلات المستخدمين.'] },
+          { title: 'تخزين المتصفح', items: ['قد تحفظ تفضيلات اللغة والعدادات المحلية وموافقة التحليلات وبيانات قفل الإدارة المحلي في المتصفح.', 'تستخدم هذه البيانات لتجربة هذا المتصفح ويمكن حذفها من إعدادات بيانات الموقع.', 'تبقى حالة فتح الإدارة المحلية في التبويب الحالي فقط وتنتهي بعد 30 دقيقة.'] },
+          { title: 'التحليلات والإعلانات الاختيارية', items: ['عند ربط Worker/D1، ترسل فقط الأحداث المجمعة التي وافق عليها المستخدم.', 'قد تحفظ تجزئات زائر يومية والمسار واللغة وحجم الشاشة ونوع المتصفح ورمز البلد.', 'عند تفعيل AdSense أو مزود إعلانات آخر، قد يستخدم ذلك المزود ملفات تعريف ارتباط أو تقنيات مشابهة وفق سياساته.'] },
+          { title: 'الحقوق والاحتفاظ', items: ['تبقى البيانات المحلية حتى يحذف المستخدم بيانات الموقع أو يزيلها المتصفح.', 'يجب أن تحدد سياسة المشغل مدة الاحتفاظ بالبيانات المجمعة عند تفعيل الخلفية.', 'يمكن إرسال أسئلة الخصوصية أو طلبات الحذف إلى بريد التواصل.'] }
+        ]
+      },
+      terms: {
+        title: 'شروط الاستخدام',
+        description: 'تصف هذه الشروط القواعد الأساسية لاستخدام أدوات Toolkit على الويب.',
+        sections: [
+          { title: 'نطاق الخدمة', items: ['يوفر Toolkit أدوات متصفح لمهام PDF والنصوص والوسائط.', 'قد تكون الخدمة مجانية وقد تتضمن لاحقاً إعلانات أو ميزات مدفوعة أو شراكات.', 'قد تتغير الميزات والصيغ المدعومة والحدود والواجهات لأسباب أمنية أو تشغيلية.'] },
+          { title: 'مسؤولية المستخدم', items: ['يجب على المستخدم معالجة الملفات والنصوص التي يملك حق استخدامها فقط.', 'تبقى مسؤولية البيانات الحساسة والأسرار التجارية والمعلومات الشخصية والمواد المحمية على المستخدم.', 'ينبغي مراجعة الملفات المهمة أو القانونية أو التعاقدية أو ملفات التقديم قبل استخدامها.'] },
+          { title: 'الاستخدام المحظور', items: ['لا تستخدم الخدمة لمعالجة أو توزيع برمجيات خبيثة أو محتوى غير قانوني أو مواد تنتهك حقوق الآخرين.', 'لا تحاول تجاوز ضوابط الأمان أو تحميل الخدمة بشكل مفرط أو أتمتة حركة مسيئة.', 'لا تحاول الوصول غير المصرح به إلى صفحات الإدارة أو API أو التحليلات أو أنظمة المصادقة.'] },
+          { title: 'النتائج والمسؤولية', items: ['ينشئ Toolkit النتائج من مدخلات المستخدم لكنه لا يضمن توافقاً كاملاً في كل المتصفحات والصيغ.', 'قد تفشل الملفات المشفرة أو التالفة أو الخاصة أو الكبيرة جداً.', 'ما لم يمنع القانون ذلك، لا يتحمل المشغل مسؤولية الخسائر غير المباشرة من استخدام النتائج المنزلة.'] }
+        ]
+      },
+      security: {
+        title: 'الأمان',
+        description: 'يعامل Toolkit تقليل الملفات والتحقق من المدخلات كمبادئ أمان أساسية.',
+        sections: [
+          { title: 'المعالجة في المتصفح', items: ['تعمل مهام PDF والصور والنصوص والفيديو في المتصفح كلما أمكن.', 'النسخة الثابتة لا تحتوي على نقطة استقبال للملفات الأصلية.', 'يتم إنشاء نتائج التنزيل داخل متصفح المستخدم.'] },
+          { title: 'دفاعات الإدخال', items: ['يتم فحص توقيع PDF قبل المعالجة.', 'يتم حظر ملفات PDF المشفرة أو التي تحتوي على scripts أو auto actions أو attachments أو rich media أو XFA.', 'يتم استبعاد SVG والصيغ النشطة الأخرى من دمج PDF.', 'يتم فك ترميز الصور وفحص حجمها وإعادة ترميزها لإزالة بيانات المصدر الوصفية.'] },
+          { title: 'حماية المتصفح والإدارة', items: ['تحظر CSP افتراضياً السكربتات الخارجية والاتصالات الشبكية غير المحددة.', 'لا تظهر روابط الإدارة في التنقل العام؛ يلزم الوصول بالعنوان المباشر.', 'قفل الإدارة المحلي ليس حاجز أمان إنتاجي؛ يجب أن تستخدم الإدارة الفعلية Worker أو هوية خادم.'] }
+        ]
+      }
+    }
+  };
+
   const state = {
     lang: readInitialLang(),
     route: readRoute(),
@@ -774,12 +1150,14 @@
   }
 
   function t(key) {
-    return (i18n[state.lang] && i18n[state.lang][key])
-      || (localized[state.lang] && localized[state.lang][key])
-      || (uiTranslations[state.lang] && uiTranslations[state.lang][key])
-      || fallback[key]
-      || i18n.ko[key]
-      || key;
+    const candidates = [
+      i18n[state.lang] && i18n[state.lang][key],
+      localized[state.lang] && localized[state.lang][key],
+      uiTranslations[state.lang] && uiTranslations[state.lang][key],
+      fallback[key],
+      i18n.ko[key]
+    ];
+    return candidates.find(value => typeof value === 'string' && value) || key;
   }
 
   function categoryLabel(category) {
@@ -1601,17 +1979,19 @@
 
   function renderLegalPage(page) {
     const content = legalContent()[page] || legalContent().about;
+    const meta = legalMetaContent();
     renderHeader({ eyebrow: 'Docs', title: content.title, description: content.description });
     workspace.innerHTML = `<section class="panel legal-page"><div class="panel-body">
       <h2>${escapeHtml(content.title)}</h2>
       <p class="legal-lead">${escapeHtml(content.description)}</p>
       ${content.sections.map(section => `<section class="legal-section"><h3>${escapeHtml(section.title)}</h3><ul>${section.items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul></section>`).join('')}
-      <section class="legal-section"><h3>문의 및 업데이트</h3><ul><li>문의: apobi812@gmail.com</li><li>마지막 업데이트: 2026-06-29</li></ul></section>
+      <section class="legal-section"><h3>${escapeHtml(meta.title)}</h3><ul><li>${escapeHtml(meta.contact)}: apobi812@gmail.com</li><li>${escapeHtml(meta.updated)}: 2026-06-29</li></ul></section>
     </div></section>`;
     settingsPanel.innerHTML = `<h2>${t('settings')}</h2>${privacyControlsHtml()}${renderAdSlot('settingsRail', '300x250')}`;
   }
 
   function legalContent() {
+    if (state.lang !== DEFAULT_LANG && legalTranslations[state.lang]) return legalTranslations[state.lang];
     return {
       about: {
         title: '소개',
@@ -1656,6 +2036,10 @@
         ]
       }
     };
+  }
+
+  function legalMetaContent() {
+    return legalMetaTranslations[state.lang] || legalMetaTranslations.en;
   }
 
   async function renderAdminPage() {
@@ -2087,7 +2471,7 @@
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js?v=20260629-adminlock', { updateViaCache: 'none' })
+      navigator.serviceWorker.register('./sw.js?v=20260629-legal-i18n', { updateViaCache: 'none' })
         .then(registration => registration.update())
         .catch(error => console.warn('Service worker registration failed:', error));
     });

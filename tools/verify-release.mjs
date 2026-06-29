@@ -47,8 +47,8 @@ for (const file of htmlFiles) {
   assert(!html.includes('frame-ancestors'), `${file}: frame-ancestors must be an HTTP header, not meta CSP`);
   assert(html.includes('object-src'), `${file}: CSP missing object-src`);
   assert(html.includes('mobile-web-app-capable'), `${file}: missing mobile web app meta`);
-  assert(html.includes('app.js?v=20260629-adminlock'), `${file}: stale app.js cache version`);
-  assert(html.includes('styles.css?v=20260629-adminlock'), `${file}: stale styles.css cache version`);
+  assert(html.includes('app.js?v=20260629-legal-i18n'), `${file}: stale app.js cache version`);
+  assert(html.includes('styles.css?v=20260629-legal-i18n'), `${file}: stale styles.css cache version`);
   assert(html.includes('data-ad-slot="left-rail"'), `${file}: left rail ad placeholder is missing`);
   assert(html.includes('data-ad-slot="footer"'), `${file}: footer ad placeholder is missing`);
   assert(html.includes('data-ad-provider="none"'), `${file}: ads must stay disabled by default`);
@@ -57,10 +57,10 @@ for (const file of htmlFiles) {
 assert(includes('admin/index.html', 'noindex,nofollow'), 'admin page must be noindex,nofollow');
 assert(!includes('index.html', 'data-route="admin"'), 'public home must not link admin route');
 assert(!sw.includes('./admin/index.html'), 'service worker must not precache admin page');
-assert(sw.includes("const CACHE_NAME = 'toolkit-v28'"), 'service worker cache name not bumped');
+assert(sw.includes("const CACHE_NAME = 'toolkit-v29'"), 'service worker cache name not bumped');
 assert(sw.includes("const OFFLINE_URL = './offline.html'"), 'service worker missing offline fallback');
-assert(sw.includes("'./app.js?v=20260629-adminlock'"), 'service worker has stale app cache version');
-assert(app.includes("./sw.js?v=20260629-adminlock"), 'app registers a stale service worker cache version');
+assert(sw.includes("'./app.js?v=20260629-legal-i18n'"), 'service worker has stale app cache version');
+assert(app.includes("./sw.js?v=20260629-legal-i18n"), 'app registers a stale service worker cache version');
 assert(!sitemap.includes('/admin/'), 'sitemap must not include admin page');
 assert(sitemap.includes('xmlns:xhtml="http://www.w3.org/1999/xhtml"'), 'sitemap must include xhtml namespace for hreflang');
 for (const lang of ['ko', 'en', 'ja', 'zh', 'es', 'fr', 'de', 'pt', 'hi', 'ar', 'x-default']) {
@@ -74,6 +74,7 @@ assert(existsSync(join(root, 'offline.html')), 'offline fallback page is missing
 assert(existsSync(join(root, 'docs/LAUNCH_RUNBOOK.md')), 'launch runbook is missing');
 assert(existsSync(join(root, 'tools/generate-metadata.mjs')), 'metadata generator is missing');
 assert(existsSync(join(root, 'tools/security-fixtures.mjs')), 'security fixture verifier is missing');
+assert(existsSync(join(root, 'tools/verify-i18n.mjs')), 'i18n verifier is missing');
 assert(existsSync(join(root, 'tools/verify-launch-docs.mjs')), 'launch docs verifier is missing');
 assert(existsSync(join(root, 'tools/verify-ui-shell.mjs')), 'UI shell verifier is missing');
 assert(headers.includes("frame-ancestors 'none'"), '_headers must include frame-ancestors');
@@ -82,6 +83,7 @@ assert(packageJson.scripts?.metadata === 'node tools/generate-metadata.mjs', 'me
 assert(packageJson.scripts?.['metadata:check'] === 'node tools/generate-metadata.mjs --check', 'metadata check script is missing');
 assert(packageJson.scripts?.check?.includes('node tools/generate-metadata.mjs --check'), 'release check must verify generated metadata');
 assert(packageJson.scripts?.check?.includes('node tools/security-fixtures.mjs'), 'release check must run security fixtures');
+assert(packageJson.scripts?.check?.includes('node tools/verify-i18n.mjs'), 'release check must verify i18n coverage');
 assert(packageJson.scripts?.check?.includes('node tools/verify-launch-docs.mjs'), 'release check must verify launch docs');
 assert(packageJson.scripts?.check?.includes('node tools/verify-ui-shell.mjs'), 'release check must verify the UI shell');
 assert(launchRunbook.includes('## Phase 2: Custom Domain'), 'launch runbook must include custom domain phase');
