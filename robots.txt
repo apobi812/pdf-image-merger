@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://apobi812.github.io/pdf-image-merger/sitemap.xml

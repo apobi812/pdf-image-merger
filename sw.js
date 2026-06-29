@@ -1,8 +1,12 @@
-const CACHE_NAME = 'pdf-image-merger-v2';
+const CACHE_NAME = 'toolkit-v1';
 const APP_SHELL = [
   './',
   './index.html',
+  './styles.css',
+  './app.js',
   './manifest.webmanifest',
+  './robots.txt',
+  './sitemap.xml',
   './vendor/pdf.min.js',
   './vendor/pdf.worker.min.js',
   './vendor/pdf-lib.min.js',

@@ -1,12 +1,12 @@
 {
-  "name": "PDF 이미지 병합",
-  "short_name": "PDF 병합",
-  "description": "PDF와 이미지 파일을 선택해 하나의 PDF로 병합합니다.",
+  "name": "툴킷 - PDF, 글자수, 동영상 추출",
+  "short_name": "툴킷",
+  "description": "PDF 관리, 글자수 세기, 동영상 프레임 추출을 브라우저 안에서 처리하는 웹 툴킷입니다.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#0f1117",
-  "theme_color": "#0f1117",
+  "theme_color": "#111827",
   "orientation": "any",
   "icons": [
     {
