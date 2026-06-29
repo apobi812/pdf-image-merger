@@ -15,13 +15,16 @@ function assert(condition, message) {
 
 const runbookPath = join(root, 'docs/LAUNCH_RUNBOOK.md');
 const operationsPath = join(root, 'docs/OPERATIONS.md');
+const architecturePath = join(root, 'docs/ARCHITECTURE.md');
 const readmePath = join(root, 'README.md');
 
 assert(existsSync(runbookPath), 'docs/LAUNCH_RUNBOOK.md is missing');
 assert(existsSync(operationsPath), 'docs/OPERATIONS.md is missing');
+assert(existsSync(architecturePath), 'docs/ARCHITECTURE.md is missing');
 
 const runbook = existsSync(runbookPath) ? read('docs/LAUNCH_RUNBOOK.md') : '';
 const operations = existsSync(operationsPath) ? read('docs/OPERATIONS.md') : '';
+const architecture = existsSync(architecturePath) ? read('docs/ARCHITECTURE.md') : '';
 const readme = existsSync(readmePath) ? read('README.md') : '';
 
 for (const heading of [
@@ -58,8 +61,24 @@ for (const requiredText of [
 }
 
 assert(operations.includes('docs/LAUNCH_RUNBOOK.md') || readme.includes('docs/LAUNCH_RUNBOOK.md'), 'README or operations docs must link the launch runbook');
+assert(operations.includes('docs/ARCHITECTURE.md') || readme.includes('docs/ARCHITECTURE.md'), 'README or operations docs must link the architecture doc');
 assert(!runbook.includes('ca-pub-1234567890123456'), 'launch runbook must not include fake AdSense publisher IDs');
 assert(!runbook.includes('replace-with-real-password'), 'launch runbook must not include placeholder passwords');
+
+for (const requiredText of [
+  'Ready tool routes: `/pdf/`, `/word-count/`, `/video-extractor/`',
+  'Hidden admin route: `/admin/`',
+  '10 flag buttons',
+  '3 ready tools and 17 planned slots',
+  'Browser-only processing',
+  'Encrypted PDFs are blocked',
+  'SVG and active/vector image formats are rejected',
+  'Production analytics is opt-in',
+  'Ad slots are present in the left rail, right rail, and footer',
+  'Completion Evidence'
+]) {
+  assert(architecture.includes(requiredText), `architecture doc missing required text: ${requiredText}`);
+}
 
 if (errors.length) {
   console.error(`Launch docs verification failed (${errors.length}):`);
