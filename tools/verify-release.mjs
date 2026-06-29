@@ -38,6 +38,7 @@ const workerHashScript = read('worker/generate-admin-secret.mjs');
 const schema = read('worker/schema.sql');
 const config = read('config.js');
 const headers = read('_headers');
+const packageJson = JSON.parse(read('package.json'));
 
 for (const file of htmlFiles) {
   const html = read(file);
@@ -66,8 +67,12 @@ assert(sitemap.includes('/video-extractor/?lang=ar'), 'sitemap missing video Ara
 assert(existsSync(join(root, '.well-known/security.txt')), 'security.txt is missing');
 assert(existsSync(join(root, '_headers')), '_headers template is missing');
 assert(existsSync(join(root, 'offline.html')), 'offline fallback page is missing');
+assert(existsSync(join(root, 'tools/generate-metadata.mjs')), 'metadata generator is missing');
 assert(headers.includes("frame-ancestors 'none'"), '_headers must include frame-ancestors');
 assert(headers.includes('X-Frame-Options: DENY'), '_headers must include X-Frame-Options');
+assert(packageJson.scripts?.metadata === 'node tools/generate-metadata.mjs', 'metadata generation script is missing');
+assert(packageJson.scripts?.['metadata:check'] === 'node tools/generate-metadata.mjs --check', 'metadata check script is missing');
+assert(packageJson.scripts?.check?.includes('node tools/generate-metadata.mjs --check'), 'release check must verify generated metadata');
 
 assert(manifest.id === '/pdf-image-merger/', 'manifest id is missing or incorrect');
 assert(manifest.display === 'standalone', 'manifest display must be standalone');

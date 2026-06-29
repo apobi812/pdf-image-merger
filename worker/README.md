@@ -84,6 +84,8 @@ window.TOOLKIT_CONFIG = {
 
 For the current GitHub Pages deployment, keep `siteOrigin: 'https://apobi812.github.io'` and `basePath: '/pdf-image-merger/'`.
 
+After changing `siteOrigin` or `basePath`, run `npm run metadata` from the project root so `sitemap.xml`, `robots.txt`, and static canonical tags match the new frontend URL.
+
 For a separate Worker URL, set `apiBaseUrl` to the Worker `/api` URL and update the frontend Content Security Policy `connect-src` to include that exact origin.
 
 ## Security Notes

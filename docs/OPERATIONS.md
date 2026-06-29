@@ -34,6 +34,14 @@ window.TOOLKIT_CONFIG = {
 
 This keeps `connect-src 'self'` valid and avoids adding broad external API origins.
 The runtime canonical and `hreflang` links use `siteOrigin` and `basePath`.
+After editing `config.js`, run:
+
+```bash
+npm run metadata
+npm run check
+```
+
+This regenerates `sitemap.xml`, `robots.txt`, and static canonical tags from the same domain settings.
 
 ### Acceptable Temporary Setup
 
@@ -77,6 +85,7 @@ unset ADMIN_PASSWORD
 Run this before each deploy:
 
 ```bash
+npm run metadata:check
 npm run check
 sqlite3 :memory: ".read worker/schema.sql"
 ```
