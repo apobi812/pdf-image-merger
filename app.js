@@ -12,14 +12,18 @@
   const MAX_IMAGE_PIXELS = 70_000_000;
   const STORE_KEY = 'toolkitStats.v1';
   const ADMIN_KEY = 'toolkitAdmin.v1';
+  const SESSION_KEY = 'toolkitSession.v1';
+  const ADMIN_TOKEN_KEY = 'toolkitAdminToken.v1';
   const ALLOWED_IMAGE_TYPES = new Set(['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/bmp']);
   const ALLOWED_VIDEO_TYPES = new Set(['video/mp4', 'video/quicktime', 'video/webm', 'video/ogg', 'video/x-m4v']);
   const IMAGE_EXT_RE = /\.(png|jpe?g|webp|gif|bmp)$/i;
   const VIDEO_EXT_RE = /\.(mp4|m4v|mov|webm|ogv|ogg)$/i;
   const BASE_PATH = getBasePath();
+  const API_BASE_URL = normalizeApiBaseUrl(window.TOOLKIT_CONFIG && window.TOOLKIT_CONFIG.apiBaseUrl);
   const routeMap = {
-    '': 'pdf',
-    '/': 'pdf',
+    '': 'home',
+    '/': 'home',
+    home: 'home',
     pdf: 'pdf',
     'word-count': 'word-count',
     word: 'word-count',
@@ -32,6 +36,7 @@
     security: 'security'
   };
   const routePaths = {
+    home: '',
     pdf: 'pdf/',
     'word-count': 'word-count/',
     'video-extractor': 'video-extractor/',
@@ -41,6 +46,29 @@
     terms: 'terms/',
     security: 'security/'
   };
+
+  const toolCatalog = [
+    { route: 'pdf', symbol: 'PDF', title: 'PDF 관리', desc: 'PDF와 이미지를 병합', category: 'PDF', status: 'ready' },
+    { route: 'word-count', symbol: 'TXT', title: '글자수 세기', desc: '글자, 단어, 문장 분석', category: '텍스트', status: 'ready' },
+    { route: 'video-extractor', symbol: 'VID', title: '동영상 프레임 추출', desc: '영상에서 PNG 프레임 추출', category: '미디어', status: 'ready' },
+    { symbol: 'SPL', title: 'PDF 분할', desc: '원하는 페이지를 분리', category: 'PDF', status: 'planned' },
+    { symbol: 'ZIP', title: 'PDF 압축', desc: '용량 줄이기', category: 'PDF', status: 'planned' },
+    { symbol: 'ROT', title: 'PDF 회전', desc: '페이지 방향 정리', category: 'PDF', status: 'planned' },
+    { symbol: 'DEL', title: '페이지 삭제', desc: '불필요한 페이지 제거', category: 'PDF', status: 'planned' },
+    { symbol: 'I2P', title: '이미지 PDF 변환', desc: '이미지를 PDF로 저장', category: 'PDF', status: 'planned' },
+    { symbol: 'P2I', title: 'PDF 이미지 변환', desc: '페이지를 이미지로 추출', category: 'PDF', status: 'planned' },
+    { symbol: 'LCK', title: 'PDF 보호', desc: '암호 설정', category: 'PDF', status: 'planned' },
+    { symbol: 'ULK', title: 'PDF 잠금해제', desc: '권한 있는 문서 해제', category: 'PDF', status: 'planned' },
+    { symbol: 'WMK', title: '워터마크', desc: '문서에 표시 추가', category: 'PDF', status: 'planned' },
+    { symbol: 'OCR', title: 'OCR 텍스트 추출', desc: '이미지 문자를 텍스트로', category: '문서', status: 'planned' },
+    { symbol: 'Aa', title: '대소문자 변환', desc: '영문 서식 변환', category: '텍스트', status: 'planned' },
+    { symbol: 'DIF', title: '텍스트 비교', desc: '두 문장의 차이 확인', category: '텍스트', status: 'planned' },
+    { symbol: 'KEY', title: '키워드 추출', desc: '반복 단어 요약', category: '텍스트', status: 'planned' },
+    { symbol: 'UNQ', title: '중복 줄 제거', desc: '목록 정리', category: '텍스트', status: 'planned' },
+    { symbol: 'IMG', title: '이미지 리사이즈', desc: '크기와 비율 조정', category: '이미지', status: 'planned' },
+    { symbol: 'CMP', title: '이미지 압축', desc: '이미지 용량 줄이기', category: '이미지', status: 'planned' },
+    { symbol: 'QR', title: 'QR 생성', desc: '텍스트를 QR로 변환', category: '기타', status: 'planned' }
+  ];
 
   const languages = [
     ['ko', '🇰🇷', '한국어'], ['en', '🇺🇸', 'English'], ['ja', '🇯🇵', '日本語'],
@@ -61,6 +89,8 @@
       localNotice: '개인 파일은 이 브라우저 안에서 처리됩니다. 분석에는 파일명과 파일 내용이 저장되지 않습니다.',
       chooseFiles: '파일 선택', dropPdf: 'PDF 또는 이미지 파일을 여기에 놓거나 선택하세요', mergeDownload: 'PDF 병합 및 다운로드',
       clear: '초기화', emptyFiles: '아직 추가된 파일이 없습니다.', settings: '설정', outputName: '출력 파일명',
+      homeTitle: '툴킷', homeDesc: '필요한 브라우저 도구를 선택하세요. 파일은 가능한 한 사용자의 기기 안에서 처리됩니다.',
+      allTools: '전체 도구', availableNow: '사용 가능', plannedTools: '준비중', openTool: '열기', comingSoon: '준비중',
       textInput: '텍스트 입력', pasteText: '여기에 텍스트를 붙여넣으세요.', chars: '글자수', charsNoSpace: '공백 제외', words: '단어수',
       sentences: '문장', paragraphs: '문단', reading: '읽기 시간', keywords: '주요 단어',
       videoChoose: '동영상 선택', extractCurrent: '현재 프레임 추출', extractInterval: '간격 추출', frames: '추출 프레임',
@@ -79,6 +109,8 @@
     localNotice: 'Private files are processed in this browser. Analytics never stores file names or file contents.',
     chooseFiles: 'Choose files', dropPdf: 'Drop PDF or image files here, or choose files', mergeDownload: 'Merge and download PDF',
     clear: 'Clear', emptyFiles: 'No files added yet.', settings: 'Settings', outputName: 'Output file name',
+    homeTitle: 'Toolkit', homeDesc: 'Choose a browser tool. Files are processed locally whenever possible.',
+    allTools: 'All tools', availableNow: 'Available', plannedTools: 'Planned', openTool: 'Open', comingSoon: 'Soon',
     textInput: 'Text input', pasteText: 'Paste text here.', chars: 'Characters', charsNoSpace: 'No spaces', words: 'Words',
     sentences: 'Sentences', paragraphs: 'Paragraphs', reading: 'Reading time', keywords: 'Top words',
     videoChoose: 'Choose video', extractCurrent: 'Extract current frame', extractInterval: 'Extract by interval', frames: 'Extracted frames',
@@ -177,7 +209,9 @@
     wordText: '',
     wordSettings: { includeSpaces: true, readingWpm: 250 },
     video: { file: null, url: '', duration: 0, interval: 5, maxFrames: 12, frames: [] },
-    filenameResolver: null
+    filenameResolver: null,
+    sessionId: getSessionId(),
+    adminToken: sessionStorage.getItem(ADMIN_TOKEN_KEY) || ''
   };
 
   const $ = selector => document.querySelector(selector);
@@ -190,6 +224,36 @@
     return '/';
   }
 
+  function normalizeApiBaseUrl(value) {
+    const raw = String(value || '').trim().replace(/\/+$/g, '');
+    if (!raw) return '';
+    if (raw.startsWith('/')) return raw;
+    try {
+      const url = new URL(raw);
+      return url.origin + url.pathname.replace(/\/+$/g, '');
+    } catch {
+      console.warn('Invalid apiBaseUrl ignored');
+      return '';
+    }
+  }
+
+  function getSessionId() {
+    let id = sessionStorage.getItem(SESSION_KEY);
+    if (!id) {
+      id = uid();
+      sessionStorage.setItem(SESSION_KEY, id);
+    }
+    return id;
+  }
+
+  function hasAnalyticsBackend() {
+    return Boolean(API_BASE_URL);
+  }
+
+  function apiUrl(path) {
+    return `${API_BASE_URL}${path}`;
+  }
+
   function readRoute() {
     const hashRoute = location.hash.replace('#', '');
     if (hashRoute) return routeMap[hashRoute] || 'pdf';
@@ -200,12 +264,12 @@
   }
 
   function routeUrl(route) {
-    const path = routePaths[route] || routePaths.pdf;
+    const path = routePaths[route] ?? routePaths.pdf;
     return `${BASE_PATH}${path}`;
   }
 
   function absoluteRouteUrl(route) {
-    const path = routePaths[route] || routePaths.pdf;
+    const path = routePaths[route] ?? routePaths.pdf;
     return `https://apobi812.github.io/pdf-image-merger/${path}`;
   }
 
@@ -263,6 +327,26 @@
     stats.days[day] = (stats.days[day] || 0) + 1;
     stats.lastSeen = Date.now();
     localStorage.setItem(STORE_KEY, JSON.stringify(stats));
+    sendAnalyticsEvent(eventName, tool);
+  }
+
+  function sendAnalyticsEvent(eventName, tool) {
+    if (!hasAnalyticsBackend()) return;
+    const payload = JSON.stringify({
+      event: eventName,
+      tool,
+      route: state.route,
+      lang: state.lang,
+      sessionId: state.sessionId,
+      screen: `${Math.round(window.innerWidth)}x${Math.round(window.innerHeight)}`
+    });
+    fetch(apiUrl('/events'), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: payload,
+      keepalive: true,
+      credentials: 'omit'
+    }).catch(() => {});
   }
 
   function setRoute(route) {
@@ -289,7 +373,7 @@
   }
 
   function renderHeader(meta) {
-    const title = `${meta.title} - 툴킷`;
+    const title = state.route === 'home' ? '툴킷 - 무료 브라우저 도구 모음' : `${meta.title} - 툴킷`;
     document.title = title;
     const description = document.querySelector('meta[name="description"]');
     const canonical = document.querySelector('link[rel="canonical"]');
@@ -303,11 +387,58 @@
 
   function render() {
     renderChrome();
-    if (state.route === 'word-count') renderWordTool();
+    if (state.route === 'home') renderHomePage();
+    else if (state.route === 'word-count') renderWordTool();
     else if (state.route === 'video-extractor') renderVideoTool();
     else if (state.route === 'admin') renderAdminPage();
     else if (['about', 'privacy', 'terms', 'security'].includes(state.route)) renderLegalPage(state.route);
     else renderPdfTool();
+  }
+
+  function renderHomePage() {
+    renderHeader({ eyebrow: 'Toolkit', title: t('homeTitle'), description: t('homeDesc') });
+    const readyCount = toolCatalog.filter(tool => tool.status === 'ready').length;
+    const plannedCount = toolCatalog.length - readyCount;
+    workspace.innerHTML = `
+      <section class="home-tools">
+        <div class="home-tools-head">
+          <div>
+            <h2>${t('allTools')}</h2>
+            <p>${readyCount} ${t('availableNow')} · ${plannedCount} ${t('plannedTools')}</p>
+          </div>
+        </div>
+        <div class="tool-grid">
+          ${toolCatalog.map(renderToolCard).join('')}
+        </div>
+      </section>
+    `;
+    settingsPanel.innerHTML = `
+      <h2>${t('settings')}</h2>
+      <div class="setting-group">
+        <div class="setting-label">${t('availableNow')}</div>
+        <p class="file-meta">${readyCount} tools can be opened now. Planned tools stay visible so the layout can scale to about 20 tools.</p>
+      </div>
+      <div class="rail-ad"><span>${t('adLabel')}</span><small>300x250</small></div>
+    `;
+    bindHomeEvents();
+  }
+
+  function renderToolCard(tool) {
+    const disabled = tool.status !== 'ready';
+    return `<button class="tool-card ${disabled ? 'is-planned' : 'is-ready'}" type="button" ${disabled ? 'disabled' : `data-route="${tool.route}"`}>
+      <span class="tool-symbol">${escapeHtml(tool.symbol)}</span>
+      <span class="tool-card-body">
+        <strong>${escapeHtml(tool.title)}</strong>
+        <small>${escapeHtml(tool.desc)}</small>
+      </span>
+      <span class="tool-card-meta">${disabled ? t('comingSoon') : t('openTool')}</span>
+    </button>`;
+  }
+
+  function bindHomeEvents() {
+    workspace.querySelectorAll('.tool-card[data-route]').forEach(button => {
+      button.addEventListener('click', () => setRoute(button.dataset.route));
+    });
   }
 
   function renderPdfTool() {
@@ -728,19 +859,73 @@
   }
 
   function renderLegalPage(page) {
-    const content = {
-      about: ['소개', '툴킷은 PDF 관리, 글자수 세기, 동영상 프레임 추출을 제공하는 브라우저 기반 웹앱입니다. 대부분의 작업은 사용자의 기기 안에서 처리됩니다.'],
-      privacy: ['개인정보처리방침', '현재 정적 버전은 파일 내용, 파일명, 원본 문서, 동영상을 서버로 업로드하지 않습니다. 로컬 통계는 이 브라우저의 localStorage에만 저장됩니다. 향후 광고 또는 서버형 분석을 붙일 때는 쿠키 동의와 별도 고지를 추가해야 합니다.'],
-      terms: ['이용약관', '사용자는 본인이 처리 권한을 가진 파일만 사용해야 합니다. 이 도구는 무보증으로 제공되며, 중요한 문서는 결과물을 직접 검수해야 합니다. 불법 자료, 악성 파일, 타인의 권리를 침해하는 파일 처리는 금지됩니다.'],
-      security: ['보안', '파일 크기, 확장자, MIME, 실제 파일 시그니처를 확인하고 SVG 같은 병합 대상이 아닌 형식은 거절합니다. 콘텐츠 보안 정책을 적용하며, 파일 내용 분석을 서버로 보내지 않습니다. 단, GitHub Pages 정적 배포만으로는 진짜 서버 관리자 인증이나 전체 사용자 분석을 안전하게 제공할 수 없습니다. 해당 기능은 서버리스 백엔드와 인증 계층을 연결해야 합니다.']
-    }[page];
-    renderHeader({ eyebrow: 'Docs', title: content[0], description: content[1] });
-    workspace.innerHTML = `<section class="panel legal-page"><div class="panel-body"><h2>${content[0]}</h2><p>${content[1]}</p><ul><li>문의: apobi812@gmail.com</li><li>마지막 업데이트: 2026-06-29</li></ul></div></section>`;
+    const content = legalContent()[page] || legalContent().about;
+    renderHeader({ eyebrow: 'Docs', title: content.title, description: content.description });
+    workspace.innerHTML = `<section class="panel legal-page"><div class="panel-body">
+      <h2>${escapeHtml(content.title)}</h2>
+      <p class="legal-lead">${escapeHtml(content.description)}</p>
+      ${content.sections.map(section => `<section class="legal-section"><h3>${escapeHtml(section.title)}</h3><ul>${section.items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul></section>`).join('')}
+      <section class="legal-section"><h3>문의 및 업데이트</h3><ul><li>문의: apobi812@gmail.com</li><li>마지막 업데이트: 2026-06-29</li></ul></section>
+    </div></section>`;
     settingsPanel.innerHTML = `<h2>${t('settings')}</h2><div class="rail-ad"><span>${t('adLabel')}</span><small>300x250</small></div>`;
   }
 
+  function legalContent() {
+    return {
+      about: {
+        title: '소개',
+        description: '툴킷은 PDF 관리, 글자수 세기, 동영상 프레임 추출을 제공하는 브라우저 기반 도구 모음입니다.',
+        sections: [
+          { title: '서비스 목적', items: ['반복적인 문서·텍스트·미디어 작업을 설치 없이 빠르게 처리할 수 있도록 돕습니다.', '현재 제공 기능은 PDF와 이미지 병합, 글자수·단어수 계산, 동영상 프레임 추출입니다.', '홈 화면은 약 20개 내외의 도구를 담을 수 있는 구조로 설계되어 향후 기능 확장이 가능합니다.'] },
+          { title: '처리 방식', items: ['가능한 작업은 사용자의 브라우저 안에서 실행되며 원본 파일을 서버로 업로드하지 않습니다.', '서버형 분석을 연결하더라도 파일명, 파일 내용, 원본 문서, 원본 동영상은 수집하지 않습니다.', '광고 영역은 운영비를 충당하기 위한 위치이며 실제 광고 코드는 AdSense 승인 이후 별도로 연결합니다.'] },
+          { title: '운영 원칙', items: ['기능은 단순하고 명확한 작업 흐름을 우선합니다.', '보안상 위험한 파일 형식은 허용하지 않고, 처리 가능한 형식도 크기와 시그니처를 확인합니다.', '중요한 업무 문서는 결과물을 다운로드한 뒤 사용자가 직접 검수해야 합니다.'] }
+        ]
+      },
+      privacy: {
+        title: '개인정보처리방침',
+        description: '툴킷은 파일 처리 도구의 특성을 고려해 파일 원본과 파일명을 수집하지 않는 것을 기본 원칙으로 합니다.',
+        sections: [
+          { title: '수집하지 않는 정보', items: ['PDF, 이미지, 텍스트, 동영상 원본 파일은 서버로 업로드하지 않습니다.', '파일명, 파일 내용, 문서 안의 개인정보, 영상 프레임 내용은 분석 목적으로 저장하지 않습니다.', '기본 GitHub Pages 정적 배포 상태에서는 전체 사용자 분석 데이터베이스가 존재하지 않습니다.'] },
+          { title: '브라우저 안에 저장되는 정보', items: ['언어 선택, 로컬 사용 횟수, 로컬 관리자 잠금 설정은 사용자의 브라우저 localStorage 또는 sessionStorage에 저장될 수 있습니다.', '이 정보는 같은 브라우저의 사용자 경험을 유지하기 위한 것이며, 정적 배포 상태에서는 운영자 서버로 전송되지 않습니다.', '사용자는 브라우저 사이트 데이터 삭제 기능으로 이 정보를 삭제할 수 있습니다.'] },
+          { title: '서버형 분석 연결 시 수집될 수 있는 정보', items: ['Cloudflare Worker + D1 백엔드를 연결하면 이벤트명, 도구명, 경로, 언어, 화면 크기, 브라우저 계열, Cloudflare 국가 코드, 일별 방문자 해시가 저장될 수 있습니다.', '방문자 해시는 원 IP를 저장하지 않고 일 단위로 회전하도록 설계되어 장기 추적을 줄입니다.', '수집 목적은 접속자 수, 기능 사용 횟수, 국가·언어별 사용 통계를 확인하고 서비스를 개선하기 위한 것입니다.'] },
+          { title: '광고와 쿠키', items: ['AdSense 등 광고를 연결하는 경우 광고 제공자가 쿠키 또는 유사 기술을 사용할 수 있습니다.', '광고와 쿠키 기반 분석을 실제로 활성화하기 전에는 별도의 고지와 필요한 동의 절차를 추가해야 합니다.', '광고 영역은 현재 자리만 마련되어 있으며, 승인 전에는 실제 광고 스크립트를 넣지 않습니다.'] },
+          { title: '보관 기간과 권리', items: ['로컬 저장 정보는 사용자가 브라우저 데이터를 삭제할 때까지 남을 수 있습니다.', '서버형 집계 데이터의 보관 기간은 운영 정책에 따라 정하고, 법령 또는 보안상 필요한 경우를 제외하고 불필요한 장기 보관을 피합니다.', '개인정보 관련 문의, 삭제 요청, 오류 정정 요청은 문의 이메일로 접수할 수 있습니다.'] }
+        ]
+      },
+      terms: {
+        title: '이용약관',
+        description: '본 약관은 사용자가 툴킷의 웹 도구를 이용할 때 적용되는 기본 조건입니다.',
+        sections: [
+          { title: '서비스 제공 범위', items: ['툴킷은 브라우저 기반 PDF, 텍스트, 미디어 처리 도구를 제공합니다.', '서비스는 무료로 제공될 수 있으며, 운영자는 광고, 유료 기능, 제휴 기능을 추후 추가할 수 있습니다.', '기능, 화면, 지원 형식, 사용 제한은 보안과 운영 상황에 따라 변경될 수 있습니다.'] },
+          { title: '사용자의 책임', items: ['사용자는 본인이 처리 권한을 가진 파일과 텍스트만 사용해야 합니다.', '개인정보, 영업비밀, 저작권 자료 등 민감한 자료를 처리할 때는 결과물과 보관 위치를 직접 관리해야 합니다.', '중요한 문서, 법률 문서, 계약서, 제출용 파일은 다운로드 후 원본과 결과물을 반드시 직접 검수해야 합니다.'] },
+          { title: '금지 행위', items: ['악성코드, 불법 자료, 타인의 권리를 침해하는 자료를 처리하거나 배포하는 행위는 금지됩니다.', '서비스 보안, 우회 제한, 과도한 자동화 요청, 비정상적인 트래픽으로 운영을 방해하는 행위는 금지됩니다.', '관리자 페이지, API, 분석 시스템에 무단 접근하거나 인증을 우회하려는 행위는 금지됩니다.'] },
+          { title: '결과물과 책임 제한', items: ['툴킷은 사용자가 입력한 파일을 바탕으로 결과물을 생성하지만, 모든 환경에서 완전한 호환성을 보장하지 않습니다.', '암호화, 손상, 특수 포맷, 브라우저 제한, 기기 메모리 부족으로 작업이 실패할 수 있습니다.', '운영자는 고의 또는 중대한 과실이 없는 한 사용자가 결과물을 사용해 발생한 간접 손해, 영업 손실, 데이터 손실에 대해 책임을 지지 않습니다.'] },
+          { title: '광고와 외부 서비스', items: ['서비스에는 광고 영역과 외부 광고 네트워크가 포함될 수 있습니다.', '외부 서비스의 개인정보 처리와 쿠키 사용은 해당 서비스의 정책이 함께 적용될 수 있습니다.', '사용자는 광고 차단, 쿠키 설정, 브라우저 개인정보 설정을 직접 관리할 수 있습니다.'] }
+        ]
+      },
+      security: {
+        title: '보안',
+        description: '툴킷은 파일 처리 도구에서 가장 중요한 원칙을 원본 파일 최소 수집과 입력 검증으로 둡니다.',
+        sections: [
+          { title: '클라이언트 처리', items: ['PDF, 이미지, 텍스트, 동영상 처리는 가능한 한 브라우저 안에서 실행합니다.', '정적 배포 상태에서는 원본 파일을 받는 서버 업로드 엔드포인트가 없습니다.', '다운로드 결과물은 사용자의 브라우저에서 생성됩니다.'] },
+          { title: '파일 입력 방어', items: ['PDF는 실제 PDF 시그니처를 확인한 뒤 처리합니다.', '이미지는 PNG, JPG, WebP, GIF, BMP 등 허용 형식만 받고 SVG 같은 능동 콘텐츠 가능성이 있는 형식은 병합 대상에서 제외합니다.', '이미지는 디코딩 후 픽셀 수 제한을 적용해 과도한 메모리 사용을 줄입니다.', '동영상은 MP4, MOV, WebM, OGG 계열의 일반 브라우저 지원 형식으로 제한합니다.'] },
+          { title: '브라우저 보안 정책', items: ['Content Security Policy를 적용해 외부 스크립트와 임의 네트워크 연결을 기본 차단합니다.', 'object-src와 frame-ancestors를 차단해 임베드와 클릭재킹 위험을 줄입니다.', '서비스워커는 앱 셸 캐시를 관리하되 설정 파일과 내비게이션은 새 버전을 우선 확인하도록 설계했습니다.'] },
+          { title: '관리자와 분석 보안', items: ['화면에서 관리자 링크를 노출하지 않고, 관리자는 직접 주소를 알고 접근하는 방식으로 분리합니다.', '정적 배포의 로컬 관리자 잠금은 운영 보안 경계가 아니며, 실제 운영용 관리는 Worker 백엔드의 서버 인증을 연결해야 합니다.', '서버형 분석은 파일명과 파일 내용을 저장하지 않고, 집계 통계와 일별 방문자 해시만 저장하도록 설계했습니다.'] },
+          { title: '남은 운영 과제', items: ['도메인 연결 후에는 HTTPS, 보안 헤더, 관리자 비밀번호 정책, 백업, 로그 보관 기간을 운영 정책으로 확정해야 합니다.', '광고와 쿠키 기반 분석을 붙이면 동의 배너와 개인정보 고지를 보강해야 합니다.', '법적 문서는 실제 운영 주체, 국가, 수익 귀속 구조에 맞춰 법무·세무 검토가 필요합니다.'] }
+        ]
+      }
+    };
+  }
+
   async function renderAdminPage() {
-    renderHeader({ eyebrow: 'Admin', title: t('adminTitle'), description: t('adminDesc') });
+    const adminDescription = hasAnalyticsBackend()
+      ? '서버형 관리자 인증과 개인정보 보호 집계를 사용합니다. 파일명과 파일 내용은 수집하지 않습니다.'
+      : t('adminDesc');
+    renderHeader({ eyebrow: 'Admin', title: t('adminTitle'), description: adminDescription });
+    if (hasAnalyticsBackend()) {
+      await renderServerAdminPage();
+      return;
+    }
     const admin = getAdminConfig();
     if (!admin) {
       workspace.innerHTML = renderAdminSetup();
@@ -751,6 +936,67 @@
     }
     settingsPanel.innerHTML = `<h2>${t('settings')}</h2><p class="file-meta">Production admin auth should move to Cloudflare Access, GitHub OAuth, or another server-side identity layer.</p>`;
     bindAdminEvents();
+  }
+
+  async function renderServerAdminPage() {
+    settingsPanel.innerHTML = `<h2>${t('settings')}</h2><p class="file-meta">Server analytics is enabled. Admin sessions expire after 8 hours.</p>`;
+    if (!state.adminToken) {
+      workspace.innerHTML = renderServerAdminLogin();
+      bindServerAdminEvents();
+      return;
+    }
+
+    workspace.innerHTML = `<section class="panel"><div class="panel-body"><p class="file-meta">Loading server analytics...</p></div></section>`;
+    try {
+      const summary = await apiRequest('/admin/summary');
+      workspace.innerHTML = renderServerAdminDashboard(summary);
+      bindServerAdminEvents();
+    } catch (error) {
+      if (error.status === 401) {
+        clearAdminToken();
+        workspace.innerHTML = renderServerAdminLogin('Session expired. Sign in again.');
+      } else {
+        workspace.innerHTML = `<section class="panel admin-lock"><div class="panel-body"><h2>Server analytics unavailable</h2><p class="file-meta">${escapeHtml(error.message || 'Could not load analytics.')}</p></div></section>`;
+      }
+      bindServerAdminEvents();
+    }
+  }
+
+  function renderServerAdminLogin(message = '') {
+    return `<section class="panel admin-lock"><div class="panel-body"><h2>Server admin login</h2>${message ? `<p class="file-meta">${escapeHtml(message)}</p>` : ''}<input class="input" id="serverAdminPass" type="password" autocomplete="current-password" placeholder="Admin password"><button class="button primary" id="serverAdminLogin" type="button">Sign in</button></div></section>`;
+  }
+
+  function renderServerAdminDashboard(summary) {
+    const tools = renderMetricRows(summary.tools, 'Tool');
+    const events = renderMetricRows(summary.events, 'Event');
+    const days = renderMetricRows(summary.days, 'Day');
+    const countries = renderMetricRows(summary.countries, 'Country');
+    const languages = renderMetricRows(summary.languages, 'Language');
+    const browsers = renderMetricRows(summary.browsers, 'Browser');
+    return `<section class="admin-dashboard">
+      <div class="panel"><div class="panel-body stats-grid">
+        ${statBox('Total events', summary.totals?.events || 0)}
+        ${statBox('Unique visitors', summary.totals?.visitors || 0)}
+        ${statBox('File names stored', summary.privacy?.fileNamesStored ? 'Yes' : 'No')}
+        ${statBox('Raw IP stored', summary.privacy?.rawIpStored ? 'Yes' : 'No')}
+      </div></div>
+      <div class="panel"><div class="panel-header"><h2 class="panel-title">Server analytics</h2><div class="button-row"><button class="button" id="refreshServerStats" type="button">Refresh</button><button class="button" id="exportServerStats" type="button">Export</button><button class="button danger" id="logoutServerAdmin" type="button">Logout</button></div></div><div class="panel-body"><p class="file-meta">Generated ${escapeHtml(summary.generatedAt || '')}</p></div></div>
+      ${metricTable('Tools', tools)}
+      ${metricTable('Events', events)}
+      ${metricTable('Last 30 days', days)}
+      ${metricTable('Countries', countries)}
+      ${metricTable('Languages', languages)}
+      ${metricTable('Browsers', browsers)}
+    </section>`;
+  }
+
+  function renderMetricRows(rows, label) {
+    return (rows || []).map(row => `<tr><td>${escapeHtml(row.key)}</td><td>${row.count}</td><td>${row.visitors}</td></tr>`).join('')
+      || `<tr><td colspan="3">No ${escapeHtml(label.toLowerCase())} data yet</td></tr>`;
+  }
+
+  function metricTable(title, rows) {
+    return `<div class="panel"><div class="panel-header"><h2 class="panel-title">${escapeHtml(title)}</h2></div><div class="panel-body"><table class="data-table"><thead><tr><th>Name</th><th>Events</th><th>Visitors</th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
   }
 
   function renderAdminSetup() {
@@ -790,6 +1036,61 @@
         renderAdminPage();
       } else showToast('Wrong passcode', 'error');
     });
+  }
+
+  function bindServerAdminEvents() {
+    $('#serverAdminLogin')?.addEventListener('click', async () => {
+      const password = $('#serverAdminPass')?.value || '';
+      try {
+        const result = await apiRequest('/admin/login', {
+          method: 'POST',
+          body: JSON.stringify({ password })
+        });
+        state.adminToken = result.token;
+        sessionStorage.setItem(ADMIN_TOKEN_KEY, result.token);
+        showToast('Server admin unlocked');
+        renderAdminPage();
+      } catch (error) {
+        showToast(error.status === 401 ? 'Wrong admin password' : 'Login failed', 'error');
+      }
+    });
+    $('#refreshServerStats')?.addEventListener('click', () => renderAdminPage());
+    $('#exportServerStats')?.addEventListener('click', async () => {
+      try {
+        const result = await apiRequest('/admin/export');
+        downloadBlob(new Blob([JSON.stringify(result, null, 2)], { type: 'application/json' }), 'toolkit-server-analytics.json');
+      } catch {
+        showToast('Export failed', 'error');
+      }
+    });
+    $('#logoutServerAdmin')?.addEventListener('click', () => {
+      clearAdminToken();
+      renderAdminPage();
+    });
+  }
+
+  async function apiRequest(path, options = {}) {
+    const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) };
+    if (state.adminToken) headers.Authorization = `Bearer ${state.adminToken}`;
+    const response = await fetch(apiUrl(path), {
+      method: options.method || 'GET',
+      headers,
+      body: options.body,
+      credentials: 'omit'
+    });
+    let data = {};
+    try { data = await response.json(); } catch {}
+    if (!response.ok) {
+      const error = new Error(data.error || `HTTP ${response.status}`);
+      error.status = response.status;
+      throw error;
+    }
+    return data;
+  }
+
+  function clearAdminToken() {
+    state.adminToken = '';
+    sessionStorage.removeItem(ADMIN_TOKEN_KEY);
   }
 
   function getAdminConfig() {
@@ -891,6 +1192,7 @@
   }
 
   function bindGlobalEvents() {
+    $('#brandHome')?.addEventListener('click', () => setRoute('home'));
     $('#toolNav').addEventListener('click', e => {
       const button = e.target.closest('[data-route]');
       if (button) setRoute(button.dataset.route);
@@ -902,7 +1204,6 @@
       localStorage.setItem('toolkitLang', state.lang);
       render();
     });
-    $('#adminButton').addEventListener('click', () => setRoute('admin'));
     document.querySelector('.footer-links').addEventListener('click', e => {
       const button = e.target.closest('[data-page]');
       if (button) setRoute(button.dataset.page);
@@ -927,7 +1228,7 @@
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js?v=20260629-cache-reload', { updateViaCache: 'none' })
+      navigator.serviceWorker.register('./sw.js?v=20260629-home-nav', { updateViaCache: 'none' })
         .then(registration => registration.update())
         .catch(error => console.warn('Service worker registration failed:', error));
     });

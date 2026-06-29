@@ -1,0 +1,20 @@
+name = "toolkit-api"
+main = "src/index.js"
+compatibility_date = "2026-06-29"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "toolkit_analytics"
+database_id = "replace-with-d1-database-id"
+
+[vars]
+# Comma-separated allowed frontend origins.
+# Add your custom domain later, for example:
+# ALLOWED_ORIGINS = "https://apobi812.github.io,https://toolkit.example.com"
+ALLOWED_ORIGINS = "https://apobi812.github.io"
+
+# Store these with `wrangler secret put`, not in this file:
+# VISITOR_SALT
+# ADMIN_PASSWORD_SALT
+# ADMIN_PASSWORD_HASH
+# ADMIN_SESSION_SECRET

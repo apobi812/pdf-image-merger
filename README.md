@@ -4,6 +4,7 @@
 
 ## 포함된 도구
 
+- 홈: `/`에서 약 20개 내외의 도구 심볼 그리드를 표시하고, 현재 사용 가능한 도구를 선택
 - PDF 관리: `/pdf/`에서 PDF와 이미지 파일을 하나의 PDF로 병합
 - 글자수 세기: `/word-count/`에서 글자수, 공백 제외 글자수, 단어수, 문장수, 문단수, 읽기 시간, 주요 단어 계산
 - 동영상 추출: `/video-extractor/`에서 동영상의 현재 프레임 또는 일정 간격 프레임을 PNG로 추출
@@ -16,9 +17,30 @@
 - PDF와 이미지 파일은 실제 파일 시그니처를 확인하고, SVG 등 병합 대상이 아닌 형식은 거절합니다.
 - 동영상은 MP4, MOV, WebM, OGG 계열만 허용합니다.
 - CSP를 적용해 외부 스크립트와 임의 네트워크 연결을 막습니다.
-- 관리자 페이지는 현재 정적 배포용 로컬 잠금과 로컬 집계만 제공합니다.
+- 관리자 페이지는 기본 정적 배포에서는 로컬 잠금과 로컬 집계를 제공합니다.
+- 관리자 페이지는 일반 화면에 링크하지 않고 `/admin/` 직접 주소 접근으로만 사용합니다.
+- `worker/`의 Cloudflare Worker + D1 백엔드를 연결하면 서버형 관리자 로그인과 전체 사용자 집계가 활성화됩니다.
 
-중요: GitHub Pages 같은 정적 호스팅만으로는 진짜 서버 관리자 인증, 전체 사용자 분석, 원격 계정 잠금, 악성 파일 서버 격리 처리를 완성할 수 없습니다. 해당 기능은 Cloudflare Worker/D1, Supabase, Firebase, 자체 서버 등 서버 측 인증과 저장소를 붙이는 다음 단계에서 구현해야 합니다.
+중요: GitHub Pages 같은 정적 호스팅만으로는 진짜 서버 관리자 인증, 전체 사용자 분석, 원격 계정 잠금, 악성 파일 서버 격리 처리를 완성할 수 없습니다. 해당 기능은 `worker/`의 서버리스 백엔드를 배포하고 `config.js`의 `apiBaseUrl`을 연결해야 활성화됩니다.
+
+## 서버형 관리자/분석
+
+Cloudflare Worker + D1 코드가 `worker/`에 포함되어 있습니다.
+
+- 이벤트 수집: `/api/events`
+- 관리자 로그인: `/api/admin/login`
+- 집계 조회: `/api/admin/summary`
+- 집계 내보내기: `/api/admin/export`
+
+프론트엔드 연결은 `config.js`에서 설정합니다.
+
+```js
+window.TOOLKIT_CONFIG = {
+  apiBaseUrl: '/api'
+};
+```
+
+별도 Worker 도메인을 쓰는 경우에는 `apiBaseUrl`을 해당 `/api` URL로 바꾸고, `index.html` 및 각 전용 페이지의 CSP `connect-src`에 그 정확한 origin을 추가해야 합니다. 보안상 넓은 와일드카드는 권장하지 않습니다.
 
 ## 로컬 확인
 
@@ -50,5 +72,5 @@ https://apobi812.github.io/pdf-image-merger/
 - 커스텀 도메인 연결
 - AdSense 승인 후 광고 슬롯에 실제 광고 코드 삽입
 - Search Console, sitemap, robots.txt 추가
-- Cloudflare Worker/D1 기반 서버형 분석과 관리자 인증 구현
+- Cloudflare Worker/D1 배포 및 `config.js` 연결
 - 개인정보처리방침/이용약관을 실제 운영 주체와 세무 구조에 맞게 법무 검토

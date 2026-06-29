@@ -7,25 +7,25 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="툴킷">
-<meta name="description" content="PDF 관리, 글자수 세기, 동영상 프레임 추출을 브라우저 안에서 처리하는 무료 웹 툴킷입니다.">
+<meta name="description" content="PDF 관리, 글자수 세기, 동영상 프레임 추출 등 여러 작업을 브라우저 안에서 처리하는 무료 웹 툴킷입니다.">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; media-src 'self' blob: data:; worker-src 'self' blob:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests">
 <link rel="canonical" href="https://apobi812.github.io/pdf-image-merger/">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
-<link rel="stylesheet" href="styles.css?v=20260629-cache-reload">
-<title>툴킷 - PDF, 글자수, 동영상 추출</title>
+<link rel="stylesheet" href="styles.css?v=20260629-home-nav">
+<title>툴킷 - 무료 브라우저 도구 모음</title>
 </head>
 <body>
 <div class="app-shell">
   <aside class="left-rail" aria-label="도구 메뉴">
-    <div class="brand">
+    <button class="brand brand-button" id="brandHome" type="button" aria-label="툴킷 홈">
       <div class="brand-mark">TK</div>
       <div>
         <div class="brand-name" data-i18n="brand">툴킷</div>
         <div class="brand-sub" data-i18n="brandSub">빠른 브라우저 도구</div>
       </div>
-    </div>
+    </button>
     <nav class="tool-nav" id="toolNav">
       <button class="tool-link" data-route="pdf" type="button">
         <span class="tool-icon">PDF</span>
@@ -55,7 +55,6 @@
       </section>
       <div class="top-actions">
         <div class="language-picker" id="languagePicker" aria-label="언어 선택"></div>
-        <button class="small-button" id="adminButton" type="button" data-i18n="admin">관리</button>
       </div>
     </header>
 
@@ -102,6 +101,7 @@
 
 <script src="vendor/pdf.min.js"></script>
 <script src="vendor/pdf-lib.min.js"></script>
-<script src="app.js?v=20260629-cache-reload"></script>
+<script src="config.js?v=20260629-home-nav"></script>
+<script src="app.js?v=20260629-home-nav"></script>
 </body>
 </html>

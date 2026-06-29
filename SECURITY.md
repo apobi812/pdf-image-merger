@@ -14,18 +14,23 @@ This project is a static, client-side PWA. It is designed so user files are proc
 - Video uploads are limited to common browser formats: MP4, MOV, WebM, and OGG
 - No file-name or file-content analytics
 - Local-only admin dashboard with a browser passcode
+- Admin UI is not linked from the public navigation; `/admin/` is direct-address only
+- Optional Cloudflare Worker + D1 backend for server-side admin auth and aggregate analytics
+- Server analytics stores daily visitor hashes, not raw IP addresses
 
 ## Limits
 
 The local admin passcode is not a production authentication boundary. Anyone with browser/storage access or source access can bypass it. Use it only for local aggregate visibility.
 
-For production-grade administration, add a server-side identity layer such as Cloudflare Access, GitHub OAuth, Supabase Auth, Firebase Auth, or a custom backend.
+For production-grade administration, deploy the `worker/` backend and connect it through `config.js`. A same-origin `/api` route behind a custom domain is preferred because the frontend CSP can keep `connect-src 'self'`.
+
+If the Worker is hosted on a separate origin, update the CSP `connect-src` directive to that exact origin and keep `ALLOWED_ORIGINS` restricted to the frontend origin.
 
 ## Recommended Production Additions
 
-- Server-side admin auth
-- Privacy-safe event ingestion endpoint
-- Rate limiting
+- Cloudflare Worker deployment with D1 migrations applied
+- Strong admin password, unique salts, and long `ADMIN_SESSION_SECRET`
+- Same-origin custom domain route for `/api`
 - Consent management for ads and analytics
 - Security headers at the hosting/CDN layer
 - Dependency update process
