@@ -31,6 +31,7 @@ This project is a static, client-side PWA. It is designed so user files are proc
 - `_headers` provides production security headers for Cloudflare Pages or compatible static hosting
 - The app includes a JavaScript frame guard for static hosts that cannot apply `frame-ancestors` headers
 - `tools/verify-release.mjs` checks release security invariants before deployment
+- `tools/security-fixtures.mjs` runs byte-level fixtures for risky PDF markers, active image formats, disguised scripts, and allowed video container signatures
 
 ## Limits
 
