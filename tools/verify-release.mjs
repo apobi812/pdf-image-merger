@@ -38,6 +38,7 @@ const workerHashScript = read('worker/generate-admin-secret.mjs');
 const schema = read('worker/schema.sql');
 const config = read('config.js');
 const headers = read('_headers');
+const launchRunbook = read('docs/LAUNCH_RUNBOOK.md');
 const packageJson = JSON.parse(read('package.json'));
 
 for (const file of htmlFiles) {
@@ -70,8 +71,10 @@ assert(sitemap.includes('/video-extractor/?lang=ar'), 'sitemap missing video Ara
 assert(existsSync(join(root, '.well-known/security.txt')), 'security.txt is missing');
 assert(existsSync(join(root, '_headers')), '_headers template is missing');
 assert(existsSync(join(root, 'offline.html')), 'offline fallback page is missing');
+assert(existsSync(join(root, 'docs/LAUNCH_RUNBOOK.md')), 'launch runbook is missing');
 assert(existsSync(join(root, 'tools/generate-metadata.mjs')), 'metadata generator is missing');
 assert(existsSync(join(root, 'tools/security-fixtures.mjs')), 'security fixture verifier is missing');
+assert(existsSync(join(root, 'tools/verify-launch-docs.mjs')), 'launch docs verifier is missing');
 assert(existsSync(join(root, 'tools/verify-ui-shell.mjs')), 'UI shell verifier is missing');
 assert(headers.includes("frame-ancestors 'none'"), '_headers must include frame-ancestors');
 assert(headers.includes('X-Frame-Options: DENY'), '_headers must include X-Frame-Options');
@@ -79,7 +82,12 @@ assert(packageJson.scripts?.metadata === 'node tools/generate-metadata.mjs', 'me
 assert(packageJson.scripts?.['metadata:check'] === 'node tools/generate-metadata.mjs --check', 'metadata check script is missing');
 assert(packageJson.scripts?.check?.includes('node tools/generate-metadata.mjs --check'), 'release check must verify generated metadata');
 assert(packageJson.scripts?.check?.includes('node tools/security-fixtures.mjs'), 'release check must run security fixtures');
+assert(packageJson.scripts?.check?.includes('node tools/verify-launch-docs.mjs'), 'release check must verify launch docs');
 assert(packageJson.scripts?.check?.includes('node tools/verify-ui-shell.mjs'), 'release check must verify the UI shell');
+assert(launchRunbook.includes('## Phase 2: Custom Domain'), 'launch runbook must include custom domain phase');
+assert(launchRunbook.includes('## Phase 3: Worker And D1 Analytics'), 'launch runbook must include Worker/D1 phase');
+assert(launchRunbook.includes('## Phase 4: AdSense'), 'launch runbook must include AdSense phase');
+assert(launchRunbook.includes('## Emergency Rollback'), 'launch runbook must include rollback phase');
 
 assert(manifest.id === '/pdf-image-merger/', 'manifest id is missing or incorrect');
 assert(manifest.display === 'standalone', 'manifest display must be standalone');

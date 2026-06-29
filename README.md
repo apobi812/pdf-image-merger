@@ -102,3 +102,4 @@ https://apobi812.github.io/pdf-image-merger/
 - 개인정보처리방침/이용약관을 실제 운영 주체와 세무 구조에 맞게 법무 검토
 
 운영 구조, 도메인 연결 방식, 보안 불변조건은 `docs/OPERATIONS.md`를 기준으로 관리합니다.
+도메인 구매 후 실제 출시 순서는 `docs/LAUNCH_RUNBOOK.md`를 따라 진행합니다.

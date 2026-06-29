@@ -4,6 +4,6 @@
   "scripts": {
     "metadata": "node tools/generate-metadata.mjs",
     "metadata:check": "node tools/generate-metadata.mjs --check",
-    "check": "node --check app.js && node --check sw.js && node --check worker/src/index.js && node --check worker/generate-admin-secret.mjs && node --check tools/generate-metadata.mjs && node --check tools/security-fixtures.mjs && node --check tools/verify-release.mjs && node --check tools/verify-ui-shell.mjs && node --check tools/worker-smoke.mjs && node tools/generate-metadata.mjs --check && node tools/security-fixtures.mjs && node tools/verify-release.mjs && node tools/verify-ui-shell.mjs && node tools/worker-smoke.mjs"
+    "check": "node --check app.js && node --check sw.js && node --check worker/src/index.js && node --check worker/generate-admin-secret.mjs && node --check tools/generate-metadata.mjs && node --check tools/security-fixtures.mjs && node --check tools/verify-launch-docs.mjs && node --check tools/verify-release.mjs && node --check tools/verify-ui-shell.mjs && node --check tools/worker-smoke.mjs && node tools/generate-metadata.mjs --check && node tools/security-fixtures.mjs && node tools/verify-launch-docs.mjs && node tools/verify-release.mjs && node tools/verify-ui-shell.mjs && node tools/worker-smoke.mjs"
   }
 }

@@ -2,6 +2,8 @@
 
 This document is the production runbook for the Toolkit site.
 
+For the step-by-step launch sequence after buying a domain, use `docs/LAUNCH_RUNBOOK.md`.
+
 ## Target Architecture
 
 ```text
