@@ -1,4 +1,4 @@
-const CACHE_NAME = 'toolkit-v13';
+const CACHE_NAME = 'toolkit-v14';
 const APP_SHELL = [
   './',
   './index.html',
@@ -9,8 +9,8 @@ const APP_SHELL = [
   './privacy/index.html',
   './terms/index.html',
   './security/index.html',
-  './styles.css?v=20260629-ops1',
-  './app.js?v=20260629-ops1',
+  './styles.css?v=20260629-admin-kdf',
+  './app.js?v=20260629-admin-kdf',
   './manifest.webmanifest',
   './robots.txt',
   './sitemap.xml',

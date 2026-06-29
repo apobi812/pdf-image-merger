@@ -13,6 +13,7 @@
   const STORE_KEY = 'toolkitStats.v1';
   const ADMIN_KEY = 'toolkitAdmin.v1';
   const ADMIN_TOKEN_KEY = 'toolkitAdminToken.v1';
+  const ADMIN_PBKDF2_ITERATIONS = 210_000;
   const ALLOWED_IMAGE_TYPES = new Set(['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/bmp']);
   const ALLOWED_VIDEO_TYPES = new Set(['video/mp4', 'video/quicktime', 'video/webm', 'video/ogg', 'video/x-m4v']);
   const IMAGE_EXT_RE = /\.(png|jpe?g|webp|gif|bmp)$/i;
@@ -1547,24 +1548,88 @@
   }
 
   async function setAdminPass(pass) {
-    if (!pass || pass.length < 8) {
-      showToast('Use at least 8 characters', 'error');
+    if (!pass || pass.length < 10) {
+      showToast('Use at least 10 characters', 'error');
       return;
     }
-    const salt = crypto.randomUUID();
-    const hash = await sha256(`${salt}:${pass}`);
-    localStorage.setItem(ADMIN_KEY, JSON.stringify({ salt, hash }));
+    await saveAdminPass(pass);
     showToast('Admin lock created');
   }
 
   async function verifyAdminPass(pass) {
     const cfg = getAdminConfig();
-    return cfg && await sha256(`${cfg.salt}:${pass}`) === cfg.hash;
+    if (!cfg || !pass) return false;
+    if (cfg.kdf === 'pbkdf2-sha256') {
+      const hash = await pbkdf2Sha256(pass, cfg.salt, cfg.iterations || ADMIN_PBKDF2_ITERATIONS);
+      return timingSafeStringEqual(hash, cfg.hash);
+    }
+
+    const legacyOk = cfg.salt && cfg.hash && timingSafeStringEqual(await sha256(`${cfg.salt}:${pass}`), cfg.hash);
+    if (legacyOk) await saveAdminPass(pass);
+    return legacyOk;
+  }
+
+  async function saveAdminPass(pass) {
+    const salt = randomHex(16);
+    const hash = await pbkdf2Sha256(pass, salt, ADMIN_PBKDF2_ITERATIONS);
+    localStorage.setItem(ADMIN_KEY, JSON.stringify({
+      kdf: 'pbkdf2-sha256',
+      iterations: ADMIN_PBKDF2_ITERATIONS,
+      salt,
+      hash
+    }));
+  }
+
+  async function pbkdf2Sha256(pass, saltHex, iterations) {
+    const keyMaterial = await crypto.subtle.importKey(
+      'raw',
+      new TextEncoder().encode(pass),
+      'PBKDF2',
+      false,
+      ['deriveBits']
+    );
+    const bits = await crypto.subtle.deriveBits(
+      { name: 'PBKDF2', salt: hexToBytes(saltHex), iterations, hash: 'SHA-256' },
+      keyMaterial,
+      256
+    );
+    return hex(new Uint8Array(bits));
   }
 
   async function sha256(text) {
     const bytes = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
-    return [...new Uint8Array(bytes)].map(b => b.toString(16).padStart(2, '0')).join('');
+    return hex(new Uint8Array(bytes));
+  }
+
+  function randomHex(byteLength) {
+    const bytes = new Uint8Array(byteLength);
+    crypto.getRandomValues(bytes);
+    return hex(bytes);
+  }
+
+  function hexToBytes(value) {
+    const clean = String(value || '').replace(/[^a-f0-9]/gi, '');
+    const bytes = new Uint8Array(Math.floor(clean.length / 2));
+    for (let i = 0; i < bytes.length; i++) {
+      bytes[i] = Number.parseInt(clean.slice(i * 2, i * 2 + 2), 16);
+    }
+    return bytes;
+  }
+
+  function timingSafeStringEqual(a, b) {
+    const left = String(a || '');
+    const right = String(b || '');
+    if (!left || !right) return false;
+    let mismatch = left.length ^ right.length;
+    const length = Math.max(left.length, right.length);
+    for (let i = 0; i < length; i++) {
+      mismatch |= left.charCodeAt(i % left.length) ^ right.charCodeAt(i % right.length);
+    }
+    return mismatch === 0;
+  }
+
+  function hex(bytes) {
+    return [...bytes].map(b => b.toString(16).padStart(2, '0')).join('');
   }
 
   function requestFileName(defaultName) {
@@ -1693,7 +1758,7 @@
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js?v=20260629-ops1', { updateViaCache: 'none' })
+      navigator.serviceWorker.register('./sw.js?v=20260629-admin-kdf', { updateViaCache: 'none' })
         .then(registration => registration.update())
         .catch(error => console.warn('Service worker registration failed:', error));
     });

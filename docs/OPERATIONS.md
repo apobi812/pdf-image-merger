@@ -91,6 +91,7 @@ Do not loosen these without a specific reason:
 - No browser session IDs in analytics.
 - No `ignoreEncryption` PDF loading.
 - No SVG input for PDF merging.
+- Local admin lock uses PBKDF2-SHA-256 and remains labeled as local-only protection.
 - No wildcard CORS.
 - No wildcard CSP `connect-src`.
 

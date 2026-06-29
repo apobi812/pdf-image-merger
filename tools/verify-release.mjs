@@ -41,14 +41,14 @@ for (const file of htmlFiles) {
   assert(html.includes('Content-Security-Policy'), `${file}: missing CSP meta tag`);
   assert(html.includes('frame-ancestors'), `${file}: CSP missing frame-ancestors`);
   assert(html.includes('object-src'), `${file}: CSP missing object-src`);
-  assert(html.includes('app.js?v=20260629-ops1'), `${file}: stale app.js cache version`);
-  assert(html.includes('styles.css?v=20260629-ops1'), `${file}: stale styles.css cache version`);
+  assert(html.includes('app.js?v=20260629-admin-kdf'), `${file}: stale app.js cache version`);
+  assert(html.includes('styles.css?v=20260629-admin-kdf'), `${file}: stale styles.css cache version`);
 }
 
 assert(includes('admin/index.html', 'noindex,nofollow'), 'admin page must be noindex,nofollow');
 assert(!includes('index.html', 'data-route="admin"'), 'public home must not link admin route');
 assert(!sw.includes('./admin/index.html'), 'service worker must not precache admin page');
-assert(sw.includes("const CACHE_NAME = 'toolkit-v13'"), 'service worker cache name not bumped');
+assert(sw.includes("const CACHE_NAME = 'toolkit-v14'"), 'service worker cache name not bumped');
 assert(!sitemap.includes('/admin/'), 'sitemap must not include admin page');
 assert(existsSync(join(root, '.well-known/security.txt')), 'security.txt is missing');
 assert(existsSync(join(root, '_headers')), '_headers template is missing');
@@ -58,6 +58,8 @@ assert(app.includes("includesAscii(data, '/Encrypt')"), 'encrypted PDF guard is 
 assert(app.includes('hasAllowedVideoSignature'), 'video signature guard is missing');
 assert(!app.includes('sessionId'), 'frontend must not send sessionId to analytics');
 assert(!app.includes('toolkitSession'), 'frontend session storage key must not exist');
+assert(app.includes('pbkdf2-sha256'), 'local admin lock must use PBKDF2');
+assert(app.includes('ADMIN_PBKDF2_ITERATIONS = 210_000'), 'local admin PBKDF2 iterations changed or missing');
 
 assert(worker.includes('unsupported_media_type'), 'worker must reject non-JSON API writes');
 assert(!worker.includes('session_id'), 'worker must not store session_id');

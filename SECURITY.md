@@ -16,7 +16,7 @@ This project is a static, client-side PWA. It is designed so user files are proc
 - Video files are checked against expected container headers before browser decoding
 - No file-name or file-content analytics
 - No browser session IDs are sent to the optional analytics backend
-- Local-only admin dashboard with a browser passcode
+- Local-only admin dashboard with a browser passcode stored with PBKDF2-SHA-256
 - Admin UI is not linked from the public navigation; `/admin/` is direct-address only
 - Optional Cloudflare Worker + D1 backend for server-side admin auth and aggregate analytics
 - Server analytics stores daily visitor hashes, not raw IP addresses
@@ -25,7 +25,7 @@ This project is a static, client-side PWA. It is designed so user files are proc
 
 ## Limits
 
-The local admin passcode is not a production authentication boundary. Anyone with browser/storage access or source access can bypass it. Use it only for local aggregate visibility.
+The local admin passcode is stored with PBKDF2-SHA-256, but it is still not a production authentication boundary. Anyone with browser/storage access or source access can bypass it. Use it only for local aggregate visibility.
 
 For production-grade administration, deploy the `worker/` backend and connect it through `config.js`. A same-origin `/api` route behind a custom domain is preferred because the frontend CSP can keep `connect-src 'self'`.
 
