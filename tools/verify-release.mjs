@@ -45,17 +45,17 @@ for (const file of htmlFiles) {
   assert(!html.includes('frame-ancestors'), `${file}: frame-ancestors must be an HTTP header, not meta CSP`);
   assert(html.includes('object-src'), `${file}: CSP missing object-src`);
   assert(html.includes('mobile-web-app-capable'), `${file}: missing mobile web app meta`);
-  assert(html.includes('app.js?v=20260629-consent2'), `${file}: stale app.js cache version`);
-  assert(html.includes('styles.css?v=20260629-consent2'), `${file}: stale styles.css cache version`);
+  assert(html.includes('app.js?v=20260629-langurl'), `${file}: stale app.js cache version`);
+  assert(html.includes('styles.css?v=20260629-langurl'), `${file}: stale styles.css cache version`);
 }
 
 assert(includes('admin/index.html', 'noindex,nofollow'), 'admin page must be noindex,nofollow');
 assert(!includes('index.html', 'data-route="admin"'), 'public home must not link admin route');
 assert(!sw.includes('./admin/index.html'), 'service worker must not precache admin page');
-assert(sw.includes("const CACHE_NAME = 'toolkit-v20'"), 'service worker cache name not bumped');
+assert(sw.includes("const CACHE_NAME = 'toolkit-v21'"), 'service worker cache name not bumped');
 assert(sw.includes("const OFFLINE_URL = './offline.html'"), 'service worker missing offline fallback');
-assert(sw.includes("'./app.js?v=20260629-consent2'"), 'service worker has stale app cache version');
-assert(app.includes("./sw.js?v=20260629-consent2"), 'app registers a stale service worker cache version');
+assert(sw.includes("'./app.js?v=20260629-langurl'"), 'service worker has stale app cache version');
+assert(app.includes("./sw.js?v=20260629-langurl"), 'app registers a stale service worker cache version');
 assert(!sitemap.includes('/admin/'), 'sitemap must not include admin page');
 assert(existsSync(join(root, '.well-known/security.txt')), 'security.txt is missing');
 assert(existsSync(join(root, '_headers')), '_headers template is missing');
@@ -83,6 +83,9 @@ assert(app.includes('hasAnalyticsConsent()'), 'analytics consent gate is missing
 assert(app.includes("consent: 'analytics'"), 'analytics payload consent marker is missing');
 assert(app.includes('renderConsentBanner()'), 'analytics consent banner is missing');
 assert(app.includes('privacyControlsHtml()'), 'privacy page consent controls are missing');
+assert(app.includes('readUrlLang()'), 'URL language reader is missing');
+assert(app.includes('languageQuery()'), 'shareable language URL helper is missing');
+assert(app.includes('setLanguage(button.dataset.lang)'), 'language picker must update URL state');
 assert(!app.includes('sessionId'), 'frontend must not send sessionId to analytics');
 assert(!app.includes('toolkitSession'), 'frontend session storage key must not exist');
 assert(app.includes('pbkdf2-sha256'), 'local admin lock must use PBKDF2');

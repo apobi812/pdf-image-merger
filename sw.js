@@ -1,4 +1,4 @@
-const CACHE_NAME = 'toolkit-v20';
+const CACHE_NAME = 'toolkit-v21';
 const OFFLINE_URL = './offline.html';
 const APP_SHELL = [
   './',
@@ -11,8 +11,8 @@ const APP_SHELL = [
   './privacy/index.html',
   './terms/index.html',
   './security/index.html',
-  './styles.css?v=20260629-consent2',
-  './app.js?v=20260629-consent2',
+  './styles.css?v=20260629-langurl',
+  './app.js?v=20260629-langurl',
   './manifest.webmanifest',
   './robots.txt',
   './sitemap.xml',

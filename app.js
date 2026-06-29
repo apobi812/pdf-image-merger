@@ -22,6 +22,7 @@
   const ADMIN_KEY = 'toolkitAdmin.v1';
   const ADMIN_TOKEN_KEY = 'toolkitAdminToken.v1';
   const CONSENT_KEY = 'toolkitConsent.v1';
+  const DEFAULT_LANG = 'ko';
   const ADMIN_PBKDF2_ITERATIONS = 210_000;
   const ALLOWED_IMAGE_TYPES = new Set(['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/bmp']);
   const ALLOWED_VIDEO_TYPES = new Set(['video/mp4', 'video/quicktime', 'video/webm', 'video/ogg', 'video/x-m4v']);
@@ -86,6 +87,7 @@
     ['de', '🇩🇪', 'Deutsch'], ['pt', '🇧🇷', 'Português'], ['hi', '🇮🇳', 'हिन्दी'],
     ['ar', '🇸🇦', 'العربية']
   ];
+  const supportedLanguages = new Set(languages.map(([code]) => code));
 
   const i18n = {
     ko: {
@@ -611,7 +613,7 @@
   };
 
   const state = {
-    lang: localStorage.getItem('toolkitLang') || 'ko',
+    lang: readInitialLang(),
     route: readRoute(),
     pdfItems: [],
     pdfOutputName: 'merged.pdf',
@@ -659,6 +661,28 @@
     return `${API_BASE_URL}${path}`;
   }
 
+  function normalizeLang(value) {
+    const code = String(value || '').trim().toLowerCase().replace('_', '-').split('-')[0];
+    return supportedLanguages.has(code) ? code : '';
+  }
+
+  function readUrlLang() {
+    return normalizeLang(new URLSearchParams(location.search).get('lang'));
+  }
+
+  function readInitialLang() {
+    const browserLang = normalizeLang((navigator.languages && navigator.languages[0]) || navigator.language);
+    return readUrlLang()
+      || normalizeLang(localStorage.getItem('toolkitLang'))
+      || browserLang
+      || DEFAULT_LANG;
+  }
+
+  function languageQuery(lang = state.lang) {
+    const code = normalizeLang(lang);
+    return code && code !== DEFAULT_LANG ? `?lang=${encodeURIComponent(code)}` : '';
+  }
+
   function readRoute() {
     const hashRoute = location.hash.replace('#', '');
     if (hashRoute) return routeMap[hashRoute] || 'pdf';
@@ -670,7 +694,7 @@
 
   function routeUrl(route) {
     const path = routePaths[route] ?? routePaths.pdf;
-    return `${BASE_PATH}${path}`;
+    return `${BASE_PATH}${path}${languageQuery()}`;
   }
 
   function absoluteRouteUrl(route) {
@@ -774,9 +798,20 @@
   function setRoute(route) {
     state.route = routeMap[route] || 'pdf';
     const nextUrl = routeUrl(state.route);
-    if (location.pathname !== nextUrl) history.pushState({ route: state.route }, '', nextUrl);
+    if (`${location.pathname}${location.search}` !== nextUrl) history.pushState({ route: state.route, lang: state.lang }, '', nextUrl);
     render();
     track('route_open', state.route);
+  }
+
+  function setLanguage(lang) {
+    const nextLang = normalizeLang(lang);
+    if (!nextLang) return;
+    state.lang = nextLang;
+    localStorage.setItem('toolkitLang', state.lang);
+    const nextUrl = routeUrl(state.route);
+    if (`${location.pathname}${location.search}` !== nextUrl) history.replaceState({ route: state.route, lang: state.lang }, '', nextUrl);
+    render();
+    track('language_change', 'system');
   }
 
   function renderChrome() {
@@ -1853,9 +1888,7 @@
     $('#languagePicker').addEventListener('click', e => {
       const button = e.target.closest('[data-lang]');
       if (!button) return;
-      state.lang = button.dataset.lang;
-      localStorage.setItem('toolkitLang', state.lang);
-      render();
+      setLanguage(button.dataset.lang);
     });
     document.querySelector('.footer-links').addEventListener('click', e => {
       const button = e.target.closest('[data-page]');
@@ -1874,6 +1907,8 @@
     });
     window.addEventListener('popstate', () => {
       state.route = readRoute();
+      state.lang = readInitialLang();
+      localStorage.setItem('toolkitLang', state.lang);
       render();
     });
   }
@@ -1885,7 +1920,7 @@
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js?v=20260629-consent2', { updateViaCache: 'none' })
+      navigator.serviceWorker.register('./sw.js?v=20260629-langurl', { updateViaCache: 'none' })
         .then(registration => registration.update())
         .catch(error => console.warn('Service worker registration failed:', error));
     });

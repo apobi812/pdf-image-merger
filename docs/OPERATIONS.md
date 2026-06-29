@@ -88,6 +88,7 @@ Then verify the live site:
 - `/.well-known/security.txt` is reachable.
 - `/offline.html` is reachable.
 - `manifest.webmanifest` exposes the three ready tool shortcuts.
+- Direct language URLs such as `/?lang=en` and `/pdf/?lang=ja` render the requested language and keep the route.
 
 ## Security Invariants
 
@@ -105,6 +106,7 @@ Do not loosen these without a specific reason:
 - No SVG input for PDF merging.
 - Local admin lock uses PBKDF2-SHA-256 and remains labeled as local-only protection.
 - PWA install metadata, tool shortcuts, and offline fallback stay enabled.
+- Language switching keeps a shareable `?lang=` URL and does not create separate language HTML files.
 - Keep `frame-ancestors` in HTTP headers, not HTML meta CSP.
 - Keep the JavaScript frame guard enabled for static hosts without header control.
 - No wildcard CORS.
